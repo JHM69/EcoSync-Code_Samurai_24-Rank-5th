@@ -1,3 +1,5 @@
+import { NextFunction, Request, Response } from "express";
+
 const jwt = require('express-jwt');
 
 const getTokenFromHeaders = (req: { headers: { authorization: string } }): string | null => {
@@ -10,7 +12,7 @@ const getTokenFromHeaders = (req: { headers: { authorization: string } }): strin
   return null;
 };
 
-const auth = {
+const auth = { 
   required: jwt({
     secret: process.env.JWT_SECRET || 'superSecret',
     getToken: getTokenFromHeaders,
@@ -22,6 +24,30 @@ const auth = {
     getToken: getTokenFromHeaders,
     algorithms: ['HS256'],
   }),
+  isSystemAdmin: (req: Request, res: Response, next: NextFunction) => {
+    // Assuming 'admin' is the role name for administrators
+    if (req.user && req.user.role.type === 'SystemAdmin') {
+      next();
+    } else {
+      res.status(403).json({ message: 'Forbidden: System Admin access required.' });
+    }
+  },
+  isSTSManager : (req: Request, res: Response, next: NextFunction) => {
+    // Assuming 'manager' is the role name for managers
+    if (req.user && req.user.role.type === 'STSManager') {
+      next();
+    } else {
+      res.status(403).json({ message: 'Forbidden: Manager access required.' });
+    }
+  },
+  isLandfillManager : (req: Request, res: Response, next: NextFunction) => {
+    // Assuming 'manager' is the role name for managers
+    if (req.user && req.user.role.type === 'LandfillManager') {
+      next();
+    } else {
+      res.status(403).json({ message: 'Forbidden: Manager access required.' });
+    }
+  },
 };
 
 export default auth;

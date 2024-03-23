@@ -1,69 +1,58 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import auth from '../utils/auth';
-import { createUser, getCurrentUser, login, updateUser } from '../services/auth.service';
+import * as authService from '../services/auth.service';
 
 const router = Router();
 
-/**
- * Create an user
- * @auth none
- * @route {POST} /users
- * @bodyparam user User
- * @returns user User
- */
-router.post('/users', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/create', auth.required, auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await createUser(req.body.user);
+    const user = await authService.createUser(req.body);
+    res.status(201).json({ user });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/auth/login', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password } = req.body;
+    const user = await authService.login(email, password);
     res.json({ user });
   } catch (error) {
     next(error);
   }
 });
 
-/**
- * Login
- * @auth none
- * @route {POST} /users/login
- * @bodyparam user User
- * @returns user User
- */
-router.post('/users/login', async (req: Request, res: Response, next: NextFunction) => {
-  
- 
+router.post('/auth/logout', auth.required, async (req: Request, res: Response) => {
+  // Logout functionality depends on your session/token management strategy
+  res.status(200).json({ message: 'Successfully logged out' });
+});
+
+router.post('/auth/reset-password/initiate', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await login(req.body.user);
-    res.json({ user });
+    await authService.initiatePasswordReset(req.body.email);
+    res.status(200).json({ message: 'If a matching account was found, an email was sent to reset your password.' });
   } catch (error) {
     next(error);
   }
 });
 
-/**
- * Get current user
- * @auth required
- * @route {GET} /user
- * @returns user User
- */
-router.get('/user', auth.required, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/reset-password/confirm', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await getCurrentUser(req.user?.username as string);
-    res.json({ user });
+    const { token, newPassword } = req.body;
+    await authService.confirmPasswordReset(token, newPassword);
+    res.status(200).json({ message: 'Your password has been reset successfully.' });
   } catch (error) {
     next(error);
   }
 });
 
-/**
- * Update user
- * @auth required
- * @route {PUT} /user
- * @bodyparam user User
- * @returns user User
- */
-router.put('/user', auth.required, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/change-password', auth.required, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await updateUser(req.body.user, req.user?.username as string);
-    res.json({ user });
+    const { oldPassword, newPassword } = req.body;
+    const user = req.user; // Assume req.user is populated by your auth middleware
+    await authService.changePassword(user?.id, oldPassword, newPassword);
+    res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
     next(error);
   }

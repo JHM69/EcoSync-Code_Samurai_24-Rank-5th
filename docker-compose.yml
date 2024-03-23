@@ -1,16 +1,5 @@
 version: '3.8'
 services:
-  postgres:
-    image: postgres:12
-    container_name: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: quantum_guys
-      POSTGRES_PASSWORD: quantum_guys
-      POSTGRES_DB: quantum_guys
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
   
   express-server:
     build: ./express-server
@@ -20,7 +9,7 @@ services:
       - ./express-server:/usr/src/app
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgres://quantum_guys:quantum_guys@postgres:5432/quantum_guys
+      DATABASE_URL : 'postgresql://shunodb:CSE+JnU-2024@shunodb.ccsmmzgh5uxt.us-east-1.rds.amazonaws.com:5432/shunodb'
       GOOGLE_API_KEY : 'AIzaSyBDnCKjtcNXHUsKl4yGKY9JN9lQvpTwxpg'
       PORT : 5000
       AWS_ACCESS_KEY_ID : "AKIATUHQJFZDBMUPHTFW"
