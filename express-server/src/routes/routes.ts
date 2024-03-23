@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Router } from 'express'; 
 import authController from '../controllers/auth.controller';
 import systemAdminController from '../controllers/systemadmin.controller'; 
@@ -12,3 +13,14 @@ const api = Router()
 
 
 export default Router().use('/', api);
+=======
+const { Router } = require('express');
+ 
+
+// const api = Router()
+//   .use(tagsController)
+//   .use(articlesController)
+
+
+// export default Router().use('/api', api);
+>>>>>>> 8369752 (removed unwanted codes)

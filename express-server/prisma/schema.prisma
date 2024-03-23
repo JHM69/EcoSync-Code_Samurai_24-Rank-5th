@@ -1,6 +1,6 @@
  
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -8,6 +8,7 @@ generator client {
   provider        = "prisma-client-js"
 }
 
+<<<<<<< HEAD
 enum VehicleType {
   OpenTruck
   DumpTruck
@@ -120,3 +121,5 @@ model Landfill {
   manager         User?    @relation(fields: [managerId], references: [id])
   truckDumpEntries TruckDumpEntry[]
 }
+=======
+>>>>>>> 8369752 (removed unwanted codes)
