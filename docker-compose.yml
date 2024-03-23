@@ -9,12 +9,12 @@ services:
       - ./express-server:/usr/src/app
     environment:
       NODE_ENV: development
-      DATABASE_URL : 'postgresql://shunodb:CSE+JnU-2024@shunodb.ccsmmzgh5uxt.us-east-1.rds.amazonaws.com:5432/shunodb'
-      GOOGLE_API_KEY : 'AIzaSyBDnCKjtcNXHUsKl4yGKY9JN9lQvpTwxpg'
-      PORT : 5000
-      AWS_ACCESS_KEY_ID : "AKIATUHQJFZDBMUPHTFW"
-      AWS_SECRET_ACCESS_KEY : "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"
-      AWS_REGION : "us-east-1"
+      GOOGLE_API_KEY  :  'AIzaSyBDnCKjtcNXHUsKl4yGKY9JN9lQvpTwxpg'
+      PORT  :  5000
+      JWT_SECRET  :  'ecb9cb92dfce1f2b357aca2d1c5ee39e'
+      DATABASE_URL  :  'postgresql://shunodb:CSE+JnU-2024@shunodb.ccsmmzgh5uxt.us-east-1.rds.amazonaws.com:5432/shunodb'
+
+      NODEMAILER_CONFIG : {'service':'gmail','auth':{'user': 'jahangirhossainm69@gmail.com','pass': 'gtom dkpj thxu kzky'}}
 
   react-app:
     build: ./react-app
