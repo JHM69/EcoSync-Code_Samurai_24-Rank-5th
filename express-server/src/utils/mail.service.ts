@@ -1,7 +1,8 @@
-// eslint-disable-next-line import/no-unresolved
 import nodemailer from 'nodemailer';
 import { env } from 'process';
- 
+import dotenv from 'dotenv';
+dotenv.config();
+
 type EmailPayload = {
   to: string;
   subject: string;
@@ -10,13 +11,19 @@ type EmailPayload = {
 
 const nodemailerConfig = JSON.parse(String(env.NODEMAILER_CONFIG));
 
-// eslint-disable-next-line import/prefer-default-export
 export const sendEmail = async (data: EmailPayload) => {
   const transporter = nodemailer.createTransport(nodemailerConfig);
 
-  // eslint-disable-next-line no-return-await
-  return await transporter.sendMail({
-    from: nodemailerConfig?.auth?.user,
-    ...data,
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: nodemailerConfig?.auth?.user,
+      ...data,
+    });
+
+    console.log('Email sent:', info.messageId);
+    return info;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error; // Rethrow the error for handling at a higher level
+  }
 };

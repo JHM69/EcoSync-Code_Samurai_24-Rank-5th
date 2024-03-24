@@ -13,17 +13,26 @@ import HttpException from '../models/http-exception.model';
 const sendResetPasswordEmail = async (email : string, token : string) => {
   console.log(`Sending password reset email to ${email} with token ${token}`);
 
-  await sendEmail({
+  const data= await sendEmail({
     to: email as string,
     subject: 'Verification Token',
     html: `
       <h1>Your verification token is: ${token}</h1>
     `
   });
+  console.log(data);
 };
 
 const createUser = async (userData : any) => {
   const { email, password, name } = userData;
+  // check if data is not null
+  if (!email || !password || !name) {
+    throw new HttpException(400, 'Missing required fields: email, password, name');
+  }
+  // check email is valid or not
+  if (!email.includes('@') || !email.includes('.')) {
+    throw new HttpException(400, 'Invalid email address');
+  }
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new HttpException(400, 'User already exists');
@@ -42,18 +51,26 @@ const createUser = async (userData : any) => {
       },
     },
   });
-  const token = generateToken(user); // Assume generateToken creates a JWT
+  const token = generateToken(user);
   return { ...user, token };
 };
 
 const login = async (email  : string, password : string) => {
+  // check not null
+  if (!email || !password) {
+    throw new HttpException(400, 'Missing required fields: email, password');
+  }
+  // check email is valid or not
+  if (!email.includes('@') || !email.includes('.')) {
+    throw new HttpException(400, 'Invalid email address');
+  }
   const user = await prisma.user.findUnique({ where: { email }, include: { role: true } } );
   if (!user) {
-    throw new HttpException(401, 'Authentication failed');
+    throw new HttpException(401, 'No user found with this email address');
   }
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new HttpException(401, 'Authentication failed');
+    throw new HttpException(401, 'Wrong password');
   }
   const token = generateToken(user);
   return { ...user, token };
@@ -66,6 +83,10 @@ const logout = async (userId : string) => {
 };
 
 const initiatePasswordReset = async (email : string) => {
+  // check if email is present and valid
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    throw new HttpException(400, 'Invalid email address');
+  }
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
     throw new HttpException(404, 'User not found');
@@ -73,6 +94,11 @@ const initiatePasswordReset = async (email : string) => {
 
   const resetToken = crypto.randomBytes(20).toString('hex');
   const expiration = new Date(Date.now() + 3600000); // 1 hour from now
+
+  // if already exists, delete the old one
+  await prisma.passwordResetToken.deleteMany({
+    where: { userId: user.id },
+  });
 
   await prisma.passwordResetToken.create({
     data: {
@@ -85,6 +111,10 @@ const initiatePasswordReset = async (email : string) => {
   sendResetPasswordEmail(email, resetToken);
 };
 const confirmPasswordReset = async (token : string, newPassword : string) => {
+  // check not null
+  if (!token || !newPassword) {
+    throw new HttpException(400, 'Missing required fields: token, newPassword');
+  }
   const passwordResetToken = await prisma.passwordResetToken.findFirst({
     where: {
       token: token,
@@ -112,7 +142,11 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
     where: { id: passwordResetToken.id },
   });
 };
-const changePassword = async (userId : string, oldPassword : string, newPassword : string) => {
+const changePassword = async (userId : number, oldPassword : string, newPassword : string) => {
+  // check not null
+  if (!userId || !oldPassword || !newPassword) {
+    throw new HttpException(400, 'Missing required fields: userId, oldPassword, newPassword');
+  }
   const user = await prisma.user.findUnique({ where: { id: Number(userId) } });
   if (!user) {
     throw new HttpException(404, 'User not found');

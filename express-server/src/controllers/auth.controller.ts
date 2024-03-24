@@ -50,8 +50,12 @@ router.post('/auth/reset-password/confirm', async (req: Request, res: Response, 
 router.post('/auth/change-password', auth.required, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const user = req.user; // Assume req.user is populated by your auth middleware
-    await authService.changePassword(user?.id, oldPassword, newPassword);
+    const user = req.user;
+    if (!user) {
+      throw new Error('Invalid Token');
+    }
+    // @ts-ignore
+    await authService.changePassword(user.id, oldPassword, newPassword);
     res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
     next(error);

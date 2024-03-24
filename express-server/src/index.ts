@@ -1,18 +1,15 @@
 import express, { NextFunction, Request, Response } from 'express';
-import cors from 'cors'; 
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './routes/routes';
 import HttpException from './models/http-exception.model';
- 
-const app = express();
 
+const app = express();
 
 /**
  * App Configuration
  */
-app.use(cors({ credentials: true, origin: [
-  'http://localhost:3000'
-] }));
+app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,22 +18,14 @@ app.use(routes);
 // Serves images
 app.use(express.static('public'));
 
-
 app.get('/', (req: Request, res: Response) => {
-  res.json({ status: 'API is running on /api' });
+  res.json({ status: 'API is running' });
+});
+app.post('/', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  res.json({ status: 'your auth header', authHeader });
 });
 
-
-
-
-
-
-
-
-
-
-
- 
 /* eslint-disable */
 app.use((err: Error | HttpException, req: Request, res: Response, next: NextFunction) => {
   // @ts-ignore
@@ -48,15 +37,11 @@ app.use((err: Error | HttpException, req: Request, res: Response, next: NextFunc
     // @ts-ignore
   } else if (err && err.errorCode) {
     // @ts-ignore
-    res.status(err.errorCode).json(err.message);
+    res.status(err.errorCode).json({ status: 'error', message: err.message });
   } else if (err) {
-    res.status(500).json(err.message);
+    res.status(500).json({ status: 'error', message: err.message });
   }
 });
-
-
-
-
 
 /**
  * Server activation
