@@ -16,3 +16,5 @@ router.post('/users', auth.required, auth.isSystemAdmin, async (req: Request, re
     res.status(400).json({ message: error.message });
   }
 });
+
+export default router;
