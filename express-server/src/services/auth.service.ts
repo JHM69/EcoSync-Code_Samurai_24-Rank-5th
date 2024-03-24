@@ -23,7 +23,7 @@ const sendResetPasswordEmail = async (email : string, token : string) => {
 };
 
 const createUser = async (userData : any) => {
-  const { email, password, role, name } = userData;
+  const { email, password, name } = userData;
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new HttpException(400, 'User already exists');
@@ -36,8 +36,8 @@ const createUser = async (userData : any) => {
       name,
       role: {
         connectOrCreate: {
-          where: { type: role },
-          create: { type: role },
+          where: { type: "Unassigned" },
+          create: { type: "Unassigned" },
         },
       },
     },

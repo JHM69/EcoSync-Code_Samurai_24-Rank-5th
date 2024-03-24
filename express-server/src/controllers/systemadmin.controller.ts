@@ -58,7 +58,7 @@ router.get('/roles', auth.required, auth.isSystemAdmin, async (req: Request, res
 });
 
 // Create a new permission
-router.post('/permissions', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+router.post('/rbac/permissions', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     const permission = await createPermission(req.body);
     res.status(201).json(permission);
@@ -68,7 +68,7 @@ router.post('/permissions', auth.required, auth.isSystemAdmin, async (req: Reque
 });
 
 // List all permissions
-router.get('/permissions', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+router.get('/rbac/permissions', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     const permissions = await listPermissions();
     res.json(permissions);

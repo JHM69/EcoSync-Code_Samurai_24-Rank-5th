@@ -21,7 +21,6 @@ enum RoleType {
   LandfillManager
   Unassigned
 }
-
 model User {
   id         Int       @id @default(autoincrement())
   email      String    @unique
@@ -32,11 +31,11 @@ model User {
   updatedAt  DateTime  @default(now())
   roleId     Int       @default(4)
   role       Role      @relation(fields: [roleId], references: [id])
-  vehicleEntries  VehicleEntry[]
-  managerOfSTS    STS[]
-  truckDumpEntries TruckDumpEntry[]
-  managerOfLandfill Landfill[]
-  passwordResetToken PasswordResetToken? 
+  vehicleEntries       VehicleEntry[] //STSManagers can have multiple vehicle entries
+  managerOfSTS         STS[]    //System Admin can manage multiple STS
+  truckDumpEntries     TruckDumpEntry[] //Landfill Managers can have multiple truck dump entries
+  managerOfLandfill    Landfill[]  // System Admin can manage multiple landfills
+  passwordResetToken   PasswordResetToken? 
 }
 model PasswordResetToken {
   id                Int      @id @default(autoincrement())
@@ -61,33 +60,38 @@ model Permission {
   role  Role   @relation(fields: [roleId], references: [id])
 }
  
-model Vehicle {
+model Vehicle {  // 147 vehicles
   id            Int      @id @default(autoincrement())
   vehicleNumber String   @unique
   type          VehicleType
-  capacity      Float
+  capacity      Int
+  lat           Float
+  lon           Float
+  isFull        Boolean
+  currentVolume Float
   vehicleEntries VehicleEntry[]
   truckDumpEntries TruckDumpEntry[]
 }
 
-model STS {
-  id          Int      @id @default(autoincrement())
-  wardNumber  Int
-  capacity    Int      // Capacity in tonnes for clearer understanding
-  lat         Float
-  lon         Float
-  managerId   Int?
-  manager     User?    @relation(fields: [managerId], references: [id])
-  vehicleEntries VehicleEntry[]
+model STS {  // 54 STS 
+  id                  Int      @id @default(autoincrement())
+  wardNumber          String
+  capacity            Float
+  currentWasteVolume  Float
+  lat                 Float
+  lon                 Float
+  managerId           Int?
+  manager             User?    @relation(fields: [managerId], references: [id])
+  vehicleEntries      VehicleEntry[]
 }
 
-model VehicleEntry {
+model VehicleEntry {  //StsManager can entry multiple vehicles enties 
   id              Int      @id @default(autoincrement())
   stsId           Int
   sts             STS      @relation(fields: [stsId], references: [id])
   vehicleId       Int
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
-  volumeOfWaste   Int
+  volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
   userId          Int
@@ -98,7 +102,7 @@ model TruckDumpEntry {
   id              Int      @id @default(autoincrement())
   vehicleId       Int
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
-  volumeOfWaste   Int
+  volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
   landfillId      Int

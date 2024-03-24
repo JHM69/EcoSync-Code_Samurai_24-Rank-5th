@@ -3,9 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './routes/routes';
 import HttpException from './models/http-exception.model';
-import { upload } from './upload';
-import { uploadToS3 } from './s3Upload';
-
+ 
 const app = express();
 
 
@@ -13,8 +11,7 @@ const app = express();
  * App Configuration
  */
 app.use(cors({ credentials: true, origin: [
-  'http://localhost:5001',
-  'http://54.80.47.120:5001'
+  'http://localhost:3000'
 ] }));
 
 app.use(bodyParser.json());
@@ -23,33 +20,6 @@ app.use(routes);
 
 // Serves images
 app.use(express.static('public'));
-
-
-
-app.post('/api/upload-image', upload.single('image'), async (req, res) => {
-  try {
-    if (!req.file) throw new Error("File is required");
-    const fileUrl = await uploadToS3(req.file, 'shunofiles', 'images');
-    res.json({ message: 'Image uploaded successfully', fileUrl });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
-    res.status(500).json({ message: error instanceof Error ? error.message : 'An error occurred' });
-  }
-});
-
-app.post('/api/upload-audio', upload.single('audio'), async (req, res) => {
-  try {
-    if (!req.file) throw new Error("File is required");
-    const fileUrl = await uploadToS3(req.file, 'shunofiles', 'audios');
-    res.json({ message: 'Audio uploaded successfully', fileUrl });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
-    res.status(500).json({ message: error instanceof Error ? error.message : 'An error occurred' });
-  }
-});
-
 
 
 app.get('/', (req: Request, res: Response) => {

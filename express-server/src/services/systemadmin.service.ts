@@ -69,8 +69,9 @@ export const createVehicle = async (vehicleData: { vehicleNumber: string; type:
 export const createSTS = async (stsData: { wardNumber: string; capacity: string; lat: string; lon: string; managerId?: string }) => {
   return await prisma.sTS.create({
     data: {
-      wardNumber: Number(stsData.wardNumber),
+      wardNumber: stsData.wardNumber,
       capacity: Number(stsData.capacity),
+      currentWasteVolume: 0, // Add the missing property
       lat: Number(stsData.lat),
       lon: Number(stsData.lon),
       manager: stsData.managerId ? { connect: { id: Number(stsData.managerId) } } : undefined,
