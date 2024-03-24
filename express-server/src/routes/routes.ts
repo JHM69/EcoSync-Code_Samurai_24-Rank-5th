@@ -1,26 +1,24 @@
-<<<<<<< HEAD
-import { Router } from 'express'; 
+import { Router } from 'express';
+import tagsController from '../controllers/tag.controller';
+import articlesController from '../controllers/article.controller';
 import authController from '../controllers/auth.controller';
-import systemAdminController from '../controllers/systemadmin.controller'; 
-import stsManagerController from  '../controllers/stsmanager.controller';
-import landfillController from  '../controllers/landfillmanager.controller';
+import profileController from '../controllers/profile.controller';
+import songController from '../controllers/song.controller';
+import albumController from '../controllers/album.controller';
+import artistController from '../controllers/artist.controller';
+import playlistController from '../controllers/playlist.controller';  
+import homeController from '../controllers/home.controller';  
 
-const api = Router() 
-  .use(systemAdminController) 
+const api = Router()
+  .use(tagsController)
+  .use(articlesController)
+  .use(profileController)
+  .use(songController)
+  .use(albumController)
+  .use(artistController)
+  .use(playlistController)
   .use(authController)
-  .use(stsManagerController)
-  .use(landfillController);
+  .use(homeController)
 
 
-export default Router().use('/', api);
-=======
-const { Router } = require('express');
- 
-
-// const api = Router()
-//   .use(tagsController)
-//   .use(articlesController)
-
-
-// export default Router().use('/api', api);
->>>>>>> 8369752 (removed unwanted codes)
+export default Router().use('/api', api);

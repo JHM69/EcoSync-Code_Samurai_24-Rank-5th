@@ -9,6 +9,7 @@ generator client {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 enum VehicleType {
   OpenTruck
   DumpTruck
@@ -123,3 +124,5 @@ model Landfill {
 }
 =======
 >>>>>>> 8369752 (removed unwanted codes)
+=======
+>>>>>>> 8369752ef34917d4c71c36e0600bffaba0431ec1
