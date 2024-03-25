@@ -26,10 +26,10 @@ async function isImageURL(url: string) {
 export const createUser = async (userId: number, name: string, image: string) => {
   if (userId && name) {
     // Validate the image URL
-    if(image)
-    if ((await isImageURL(image)) === false) {
-      throw new HttpException(400, 'Invalid image URL.');
-    }
+    if (image)
+      if ((await isImageURL(image)) === false) {
+        throw new HttpException(400, 'Invalid image URL.');
+      }
 
     // Try to find the user with the given userId
     const existingUser = await prisma.user.findUnique({
@@ -45,7 +45,7 @@ export const createUser = async (userId: number, name: string, image: string) =>
       where: { id: Number(userId) },
       data: {
         name: name,
-        image: image? image : undefined,
+        image: image ? image : undefined,
       },
     });
   } else {
@@ -54,16 +54,17 @@ export const createUser = async (userId: number, name: string, image: string) =>
 };
 
 // Function to update user
-export const updateUser = async (req:Request, userId: number, name: string, image: string) => {
-  if (userId && name) {
-    if(!req.user) throw new HttpException(400, 'Invalid token');
-    if(req.user.role.type !== 'SystemAdmin' && req.user.id !== userId) throw new HttpException(400, 'Not authorized to update user');
-    
+export const updateUser = async (req: Request, userId: number, name: string, image: string) => {
+  if (userId) {
+    if (!req.user) throw new HttpException(400, 'Invalid token');
+    if (req.user.role.type !== 'SystemAdmin' && req.user.id !== userId)
+      throw new HttpException(400, 'Not authorized to update user');
+
     // Validate the image URL
-    if(image)
-    if ((await isImageURL(image)) === false) {
-      throw new HttpException(400, 'Invalid image URL.');
-    }
+    if (image)
+      if ((await isImageURL(image)) === false) {
+        throw new HttpException(400, 'Invalid image URL.');
+      }
 
     // Try to find the user with the given userId
     const existingUser = await prisma.user.findUnique({
@@ -78,12 +79,12 @@ export const updateUser = async (req:Request, userId: number, name: string, imag
     return await prisma.user.update({
       where: { id: Number(userId) },
       data: {
-        name: name,
-        image: image? image : undefined,
+        name: name ? name : undefined,
+        image: image ? image : undefined,
       },
     });
   } else {
-    throw new HttpException(400, 'Missing required fields: userId, name');
+    throw new HttpException(400, 'Missing required fields: userId');
   }
 };
 
@@ -144,8 +145,8 @@ export const listRoles = async () => {
 };
 // Function to assign a role to a user
 export const assignUserRole = async (userId: string, roleId: string) => {
-  if(!userId || !roleId) throw new HttpException(400, 'Missing required fields: userId, roleId');
-  if(Number(roleId)>4 || Number(roleId)<1) throw new HttpException(400, 'Invalid roleId');
+  if (!userId || !roleId) throw new HttpException(400, 'Missing required fields: userId, roleId');
+  if (Number(roleId) > 4 || Number(roleId) < 1) throw new HttpException(400, 'Invalid roleId');
 
   // check if user exists
   const user = await prisma.user.findUnique({ where: { id: Number(userId) } });
@@ -156,7 +157,7 @@ export const assignUserRole = async (userId: string, roleId: string) => {
   return await prisma.user.update({
     where: { id: Number(userId) },
     data: { role: { connect: { id: Number(roleId) } } },
-    include: { role: true }
+    include: { role: true },
   });
 };
 
@@ -175,10 +176,10 @@ export const getProfile = async (userId: string) => {
 // Function to update profile
 export const updateProfile = async (userId: number, name: string, image: string) => {
   // Validate the image URL
-  if(image)
-  if ((await isImageURL(image)) === false) {
-    throw new HttpException(400, 'Invalid image URL.');
-  }
+  if (image)
+    if ((await isImageURL(image)) === false) {
+      throw new HttpException(400, 'Invalid image URL.');
+    }
 
   // Try to find the user with the given userId
   const existingUser = await prisma.user.findUnique({

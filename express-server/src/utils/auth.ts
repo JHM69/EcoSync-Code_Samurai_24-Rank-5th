@@ -1,7 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
+import e, { NextFunction, Request, Response } from 'express';
 
 const jwt = require('express-jwt');
 import dotenv from 'dotenv';
+import prisma from '../../prisma/prisma-client';
+import { User } from '@prisma/client';
+import HttpException from '../models/http-exception.model';
 dotenv.config();
 
 const getTokenFromHeaders = (req: { headers: { authorization: string } }): string | null => {
@@ -15,19 +18,43 @@ const getTokenFromHeaders = (req: { headers: { authorization: string } }): strin
   return null;
 };
 
-const auth = {
-  required: jwt({
+const secureMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  await jwt({
     secret: process.env.JWT_SECRET || 'superSecret',
     getToken: getTokenFromHeaders,
     algorithms: ['HS256'],
-  }),
+  })(req, res, async () => {
+    try {
+      if (!req.user) throw new HttpException(400, 'Invalid token');
+      
+      const existingUser = await prisma.user.findUnique({
+        where: { id: req.user.id },
+        include: { role: true },
+      });
+      if (!existingUser) throw new HttpException(404, 'Token User not found.');
+
+      if (existingUser.role.type !== req.user.role.type)
+        throw new HttpException(403, 'Forbidden: Role type mismatch. Login again.');
+
+      if (existingUser.password !== req.user.password)
+        throw new HttpException(403, 'Forbidden: Password mismatch. Login again.');
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
+const auth = {
+  required: secureMiddleware,
   optional: jwt({
     secret: process.env.JWT_SECRET || 'superSecret',
     credentialsRequired: false,
     getToken: getTokenFromHeaders,
     algorithms: ['HS256'],
   }),
-  isSystemAdmin: (req: Request, res: Response, next: NextFunction) => {
+  isSystemAdmin: async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.user);
     if (req.user && req.user.role.type === 'SystemAdmin') {
       next();
@@ -35,7 +62,7 @@ const auth = {
       res.status(403).json({ message: 'Forbidden: System Admin access required.' });
     }
   },
-  isSTSManager: (req: Request, res: Response, next: NextFunction) => {
+  isSTSManager: async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.user);
     if (req.user && req.user.role.type === 'STSManager') {
       next();
@@ -43,7 +70,7 @@ const auth = {
       res.status(403).json({ message: 'Forbidden: STS Manager access required.' });
     }
   },
-  isLandfillManager: (req: Request, res: Response, next: NextFunction) => {
+  isLandfillManager: async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.user);
     if (req.user && req.user.role.type === 'LandfillManager') {
       next();
