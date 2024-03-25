@@ -24,9 +24,9 @@ const sendResetPasswordEmail = async (email : string, token : string) => {
 };
 
 const createUser = async (userData : any) => {
-  const { email, password, name } = userData;
+  const { email, password} = userData;
   // check if data is not null
-  if (!email || !password || !name) {
+  if (!email || !password) {
     throw new HttpException(400, 'Missing required fields: email, password, name');
   }
   // check email is valid or not
@@ -38,6 +38,7 @@ const createUser = async (userData : any) => {
     throw new HttpException(400, 'User already exists');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
+  let name = 'unknown';
   const user = await prisma.user.create({
     data: {
       email,
@@ -49,6 +50,9 @@ const createUser = async (userData : any) => {
           create: { type: "Unassigned" },
         },
       },
+    },
+    include: {
+      role: true,
     },
   });
   const token = generateToken(user);
