@@ -70,8 +70,6 @@ function login() {
             Login
           </button>
 
-        
-
         </div>
     </div>
   )

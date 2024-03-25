@@ -70,7 +70,7 @@ model Vehicle {  // 147 vehicles
   isFull        Boolean
   currentVolume Float
   vehicleEntries VehicleEntry[]
-  truckDumpEntries TruckDumpEntry[]
+  truckDumpEntries TruckDumpEntry[] 
 }
 
 model STS {  // 54 STS 

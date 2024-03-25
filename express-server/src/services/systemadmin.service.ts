@@ -71,7 +71,7 @@ export const createSTS = async (stsData: { wardNumber: string; capacity: string;
     data: {
       wardNumber: stsData.wardNumber,
       capacity: Number(stsData.capacity),
-      currentWasteVolume: 0, // Add the missing property
+      currentWasteVolume: 0, 
       lat: Number(stsData.lat),
       lon: Number(stsData.lon),
       manager: stsData.managerId ? { connect: { id: Number(stsData.managerId) } } : undefined,
