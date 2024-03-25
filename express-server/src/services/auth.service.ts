@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/extensions */
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -15,19 +16,19 @@ const sendResetPasswordEmail = async (email : string, token : string) => {
 
   const data= await sendEmail({
     to: email as string,
-    subject: 'Verification Token',
+    subject: 'DNCC Verification Token',
     html: `
-      <h1>Your verification token is: ${token}</h1>
+      <h1>Your DNCC EcoSync verification token is: ${token}</h1>
     `
   });
   console.log(data);
 };
 
 const createUser = async (userData : any) => {
-  const { email, password} = userData;
+  const { email, password, name} = userData;
   // check if data is not null
   if (!email || !password) {
-    throw new HttpException(400, 'Missing required fields: email, password, name');
+    throw new HttpException(400, 'Missing required fields: email, password');
   }
   // check email is valid or not
   if (!email.includes('@') || !email.includes('.')) {
@@ -38,12 +39,12 @@ const createUser = async (userData : any) => {
     throw new HttpException(400, 'User already exists');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  let name = 'unknown';
+  
   const user = await prisma.user.create({
     data: {
       email,
       password: hashedPassword,
-      name,
+      name : name || email.split('@')[0],
       role: {
         connectOrCreate: {
           where: { type: "Unassigned" },
@@ -56,14 +57,29 @@ const createUser = async (userData : any) => {
     },
   });
   const token = generateToken(user);
+
+  // Optionally, send a welcome email to the user with email and onetime password
+   await sendEmail({
+    to: email as string,
+    subject: 'Your DNCC EcoSync Account is ready!',
+    html: `
+      <h1>Welcome to DNCC EcoSync</h1>
+      <p>Your account has been created with email: </pre>${email}</pre></p>
+      <p>Your temporary password is: <pre>${password}</pre></p>
+      <p>Use this password to login and change your password</p>
+      <p>Thank you for joining us!</p>
+    `
+  }); 
   return { ...user, token };
 };
 
 const login = async (email  : string, password : string) => {
+  console.log(email, password);
   // check not null
   if (!email || !password) {
     throw new HttpException(400, 'Missing required fields: email, password');
   }
+
   // check email is valid or not
   if (!email.includes('@') || !email.includes('.')) {
     throw new HttpException(400, 'Invalid email address');
@@ -82,6 +98,7 @@ const login = async (email  : string, password : string) => {
 
 const logout = async (userId : string) => {
   // code to logout user
+  // eslint-disable-next-line no-console
   console.log(`User with ID ${userId} logged out`);
 
 };
@@ -108,7 +125,7 @@ const initiatePasswordReset = async (email : string) => {
     data: {
       token: resetToken,
       userId: user.id,
-      expiration: expiration,
+      expiration,
     },
   });
 
@@ -121,7 +138,7 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
   }
   const passwordResetToken = await prisma.passwordResetToken.findFirst({
     where: {
-      token: token,
+      token,
       expiration: {
         gt: new Date(),
       },
@@ -131,6 +148,7 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
     },
   });
 
+
   if (!passwordResetToken) {
     throw new HttpException(400, 'Invalid or expired token');
   }
@@ -138,7 +156,10 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   await prisma.user.update({
     where: { id: passwordResetToken.userId },
-    data: { password: hashedPassword },
+    data: { 
+      password: hashedPassword, 
+      changedAdminPassword : true
+    },
   });
 
   // Optionally, delete the token after successful password reset

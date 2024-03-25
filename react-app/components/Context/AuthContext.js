@@ -6,7 +6,7 @@ const AuthContext = createContext();
 // Create a provider component
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
-
+   
   // Function to update the login state
   function login() {
     setLoggedIn(true);

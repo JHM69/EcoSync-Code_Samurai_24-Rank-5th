@@ -36,6 +36,8 @@ model User {
   truckDumpEntries     TruckDumpEntry[] //Landfill Managers can have multiple truck dump entries
   managerOfLandfill    Landfill[]  // System Admin can manage multiple landfills
   passwordResetToken   PasswordResetToken? 
+  changedAdminPassword Boolean @default(false)
+  @@index([roleId], name: "idx_user_role")
 }
 model PasswordResetToken {
   id                Int      @id @default(autoincrement())
@@ -68,7 +70,8 @@ model Vehicle {  // 147 vehicles
   lat           Float
   lon           Float
   isFull        Boolean
-  currentVolume Float
+  loaddedFuelCost Float
+  unloadedFuelCost Float
   vehicleEntries VehicleEntry[]
   truckDumpEntries TruckDumpEntry[] 
 }

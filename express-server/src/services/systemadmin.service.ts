@@ -1,13 +1,12 @@
 /* eslint-disable no-return-await */
 /* eslint-disable arrow-body-style */
-/* eslint-disable import/order */
-import { User } from '@prisma/client';
+/* eslint-disable import/order */ 
 import prisma from '../../prisma/prisma-client';
 import HttpException from '../models/http-exception.model';
 import axios from 'axios';
 import { Request } from 'express';
 
-//check valid image
+ 
 async function isImageURL(url: string) {
   try {
     const response = await axios.head(url);
@@ -44,13 +43,14 @@ export const createUser = async (userId: number, name: string, image: string) =>
     return await prisma.user.update({
       where: { id: Number(userId) },
       data: {
-        name: name,
-        image: image ? image : undefined,
+        name,
+        image: image || undefined,
+
       },
     });
-  } else {
+  } 
     throw new HttpException(400, 'Missing required fields: userId, name');
-  }
+  
 };
 
 // Function to update user
@@ -79,13 +79,13 @@ export const updateUser = async (req: Request, userId: number, name: string, ima
     return await prisma.user.update({
       where: { id: Number(userId) },
       data: {
-        name: name ? name : undefined,
-        image: image ? image : undefined,
+        name: name || "Unknown",
+        image: image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       },
     });
-  } else {
+  } 
     throw new HttpException(400, 'Missing required fields: userId');
-  }
+  
 };
 
 // Function to delete a user
@@ -102,9 +102,9 @@ export const deleteUser = async (userId: number) => {
     return await prisma.user.delete({
       where: { id: Number(userId) },
     });
-  } else {
+  } 
     throw new HttpException(400, 'Missing required fields: userId.');
-  }
+  
 };
 
 // Function to list all users
@@ -194,8 +194,8 @@ export const updateProfile = async (userId: number, name: string, image: string)
   return await prisma.user.update({
     where: { id: Number(userId) },
     data: {
-      name: name ? name : undefined,
-      image: image ? image : undefined,
+      name: name || undefined,
+      image: image || undefined,
     },
   });
 };

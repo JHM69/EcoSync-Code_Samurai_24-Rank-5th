@@ -105,6 +105,7 @@ router.put(
 router.get('/profile', auth.required, async (req: Request, res: Response) => {
   try {
     const user = await getProfile(String(req.user?.id));
+    // eslint-disable-next-line no-console
     console.log(user);
     res.status(200).json(user);
   } catch (error: any) {
