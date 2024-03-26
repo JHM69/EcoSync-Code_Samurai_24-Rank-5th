@@ -15,7 +15,11 @@ function PasswordRecovery () {
   const [token, setToken] = useState('')
 
   useEffect(() => {
-    setToken(router.query.token)
+    if (router.query.token) {
+      setToken(router.query.token)
+    } else {
+      setToken(localStorage.getItem('token'))
+    }
   }, [router.query.token])
 
   const validatePasswords = () => {
@@ -57,7 +61,7 @@ function PasswordRecovery () {
         window.location.href = '/'
       }).catch((error) => {
         console.log(error)
-        setError( error.response.data.message || 'Failed to reset password')
+        setError(error.response.data.message || 'Failed to reset password')
       })
     } catch (error) {
       console.log(error)
