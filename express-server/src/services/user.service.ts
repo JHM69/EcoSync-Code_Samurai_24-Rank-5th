@@ -197,40 +197,6 @@ export const updateProfile = async (userId: number, name: string, image: string)
   });
 };
 
-// Function to create a new vehicle
-// export const createVehicle = async (vehicleData: {
-//   vehicleNumber: string;
-//   type: 'OpenTruck' | 'DumpTruck' | 'Compactor' | 'ContainerCarrier';
-//   capacity: string;
-// }) => {
-//   return await prisma.vehicle.create({
-//     data: {
-//       vehicleNumber: vehicleData.vehicleNumber,
-//       type: vehicleData.type,
-//       capacity: Number(vehicleData.capacity),
-//     },
-//   });
-// };
-
-// Function to create a new STS
-export const createSTS = async (stsData: {
-  wardNumber: string;
-  capacity: string;
-  lat: string;
-  lon: string;
-  managerId?: string;
-}) => {
-  return await prisma.sTS.create({
-    data: {
-      wardNumber: stsData.wardNumber,
-      capacity: Number(stsData.capacity),
-      currentWasteVolume: 0,
-      lat: Number(stsData.lat),
-      lon: Number(stsData.lon),
-      manager: stsData.managerId ? { connect: { id: Number(stsData.managerId) } } : undefined,
-    },
-  });
-};
 
 // Function to create a new permission
 export const createPermission = async (permissionData: { name: string; roleId: number }) => {
