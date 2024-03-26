@@ -3,30 +3,33 @@ import React, { Fragment, useState } from 'react'
 
 import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import SongForm from '../SongForm'
-
+import UserForm from '../UserForm'
 import { getBaseUrl } from '../../utils/url'
-const AddSong = ({ props }) => {
+const UpdateUser = ({ user, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
+
   const onFormSubmit = async (data) => {
     try {
-      console.log(data)
-      const user = JSON.parse(localStorage.getItem('user'));
-      await fetch(getBaseUrl()+`/songs`, {
-        method: 'POST',
+      const token = localStorage.getItem('token')
+      await fetch(getBaseUrl()+`/users/`+user.id, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ id: user.id, ...data }),
       }).then(() => {
         // handleClose()
         // window.location.reload()
         alert("Successfully Added.")
+      }).catch((error) => {
+        alert("Failed Adding.")
+        console.log(error)
       })
     } catch (error) {
+      alert("Failed Adding.")
       console.log(error)
     }
   }
@@ -34,7 +37,7 @@ const AddSong = ({ props }) => {
   return (
     <>
       <Button onClick={handleOpen} type="button" {...props}>
-        Add Song
+        Update
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
@@ -66,11 +69,15 @@ const AddSong = ({ props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Add Song</h3>
+                    <h3>Update User</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <SongForm type={'Add'} onFormSubmit={onFormSubmit} />
+                  <UserForm
+                    defaultValues={user}
+                    onFormSubmit={onFormSubmit}
+                    type={'Update'}
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -81,4 +88,4 @@ const AddSong = ({ props }) => {
   )
 }
 
-export default AddSong
+export default UpdateUser

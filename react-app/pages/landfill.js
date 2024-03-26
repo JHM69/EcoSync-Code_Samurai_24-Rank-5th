@@ -7,13 +7,13 @@ import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
 function Artists() {
   const [loading, setLoading] = useState(false)
-  const [artists, setArtists] = useState([])
+  const [landfills, setArtists] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-         axios.get(getBaseUrl()+`/artists`).then((res) => {
-            console.log(res.data.artists)
-            setArtists(res.data.artists)
+         axios.get(getBaseUrl()+`/landfills`).then((res) => {
+            console.log(res.data.landfills)
+            setArtists(res.data.landfills)
             }
             ).catch((err) => {
               console.log(err)
@@ -27,7 +27,7 @@ function Artists() {
   return (
     <div>
       <header className="mt-3 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-700">Artists</h1>
+        <h1 className="text-2xl font-bold text-gray-700">Landfills</h1>
         <div className="flex items-center space-x-2">
           <AddArtist />
         </div>
@@ -38,7 +38,7 @@ function Artists() {
       {loading ? (
         <ArtistItemsSkeleton />
       ) : (
-        <ArtistItems artists={artists} />
+        <ArtistItems landfills={landfills} />
       )}
     </div>
   )
@@ -47,5 +47,5 @@ function Artists() {
 export default Artists
 
 Artists.getLayout = function getLayout(page) {
-  return <Layout meta={{ name: 'Artists' }}>{page}</Layout>
+  return <Layout meta={{ name: 'Landfill' }}>{page}</Layout>
 }

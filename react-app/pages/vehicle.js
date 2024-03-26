@@ -12,7 +12,7 @@ function Albums() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-         axios.get(getBaseUrl()+`/albums`).then((res) => {
+         axios.get(getBaseUrl()+`/vehicle`).then((res) => {
             console.log(res.data.albums)
             setAlbums(res.data.albums)
             }
@@ -28,7 +28,7 @@ function Albums() {
   return (
     <div>
       <header className="mt-3 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-700">Albums</h1>
+        <h1 className="text-2xl font-bold text-gray-700">Vehicle</h1>
         <div className="flex items-center space-x-2">
           <AddAlbum />
         </div>
@@ -48,5 +48,5 @@ function Albums() {
 export default Albums
 
 Albums.getLayout = function getLayout(page) {
-  return <Layout meta={{ name: 'Albums' }}>{page}</Layout>
+  return <Layout meta={{ name: 'Vehicle' }}>{page}</Layout>
 }

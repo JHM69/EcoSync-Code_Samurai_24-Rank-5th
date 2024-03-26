@@ -2,13 +2,13 @@
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {
       screens: {
         laptop: '1024px',
-        desktop: '1281px',
+        desktop: '1281px'
       },
       fontFamily: {
         sans: [
@@ -19,9 +19,9 @@ module.exports = {
           'Roboto',
           'Helvetica Neue',
           'Ubuntu',
-          'sans-serif',
-        ],
-      },
-    },
-  },
+          'sans-serif'
+        ]
+      }
+    }
+  }
 }

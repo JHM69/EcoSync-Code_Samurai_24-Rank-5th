@@ -34,7 +34,7 @@ const PlaylistLayout = ({ playlist }) => {
           {playlist.thumbnail ? (
             <Link href={playlist.thumbnail}>
               <a target="_blank">
-                <Image
+                <img
                   height={281}
                   width={500}
                   className="aspect-video max-h-[281px] max-w-[500px] rounded"
@@ -55,7 +55,7 @@ const PlaylistLayout = ({ playlist }) => {
               {playlist.media?.map((i, idx) => (
                 <Link href={i} key={idx}>
                   <a target="_blank">
-                    <Image
+                    <img
                       height={138}
                       width={245}
                       className="aspect-video w-full overflow-hidden rounded p-1 lg:max-h-[138px] lg:max-w-[245px]"

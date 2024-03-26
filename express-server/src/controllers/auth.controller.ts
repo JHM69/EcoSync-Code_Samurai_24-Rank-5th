@@ -51,13 +51,13 @@ router.post('/auth/reset-password/confirm', async (req: Request, res: Response, 
 router.post('/auth/change-password', auth.required, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const user = req.user;
+    const {user} = req;
     if (!user) {
       throw new Error('Invalid Token');
     }
     // @ts-ignore
-    await authService.changePassword(user.id, oldPassword, newPassword);
-    res.status(200).json({ message: 'Password changed successfully.' });
+    const newUser = await authService.changePassword(user.id, oldPassword, newPassword);
+    res.status(200).json({ message: 'Password changed successfully.', newUser });
   } catch (error) {
     next(error);
   }

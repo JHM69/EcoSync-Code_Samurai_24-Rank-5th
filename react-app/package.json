@@ -8,13 +8,21 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@types/node": "20.11.30",
+    "@types/react": "18.2.71",
     "autoprefixer": "^10.4.12",
-    "eslint": "8.21.0",
+    "eslint": "^8.57.0",
     "eslint-config-next": "latest",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.34.1",
     "postcss": "^8.4.18",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
-    "tailwindcss": "^3.2.1"
+    "tailwindcss": "^3.2.1",
+    "typescript": "5.4.3"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",
@@ -25,7 +33,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-google-charts": "^4.0.1",
-    "react-hook-form": "^7.38.0"
+    "react-hook-form": "^7.38.0",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.0.1"
   },
   "prettier": {
     "tabWidth": 2,
