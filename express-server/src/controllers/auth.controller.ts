@@ -4,7 +4,7 @@ import * as authService from '../services/auth.service';
 
 const router = Router();
 
-router.post('/auth/create', auth.required, auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/create',auth.required,auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await authService.createUser(req.body);
     res.status(201).json({ user });
@@ -23,8 +23,9 @@ router.post('/auth/login', async (req: Request, res: Response, next: NextFunctio
   }
 });
 
-router.post('/auth/logout', auth.required, async (req: Request, res: Response) => {
+router.get('/auth/logout', auth.required, async (req: Request, res: Response) => {
   // Logout functionality depends on your session/token management strategy
+  await authService.logout(req.user.id);
   res.status(200).json({ message: 'Successfully logged out' });
 });
 
