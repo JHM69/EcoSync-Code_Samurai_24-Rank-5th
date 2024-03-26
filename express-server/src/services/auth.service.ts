@@ -65,7 +65,9 @@ const createUser = async (userData : any) => {
     html: `
       <h1>Welcome to DNCC EcoSync</h1>
       <p>Your account has been created with email: </pre>${email}</pre></p>
-      <p>Your temporary password is: <pre>${password}</pre></p>
+      <p>
+      Click here to Change your password: <a href="http://localhost:3000/reset-password?token=${token}">Change Password</a>
+      </p>
       <p>Use this password to login and change your password</p>
       <p>Thank you for joining us!</p>
     `
@@ -88,9 +90,14 @@ const login = async (email  : string, password : string) => {
   if (!user) {
     throw new HttpException(401, 'No user found with this email address');
   }
+  // if user role is not assigned
+ 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new HttpException(401, 'Wrong password');
+  }
+  if (user.role.type === 'Unassigned') {
+    throw new HttpException(401, 'User role is not assigned');
   }
   const token = generateToken(user);
   return { ...user, token };
@@ -183,8 +190,13 @@ const changePassword = async (userId : number, oldPassword : string, newPassword
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   await prisma.user.update({
     where: { id: Number(userId) },
-    data: { password: hashedPassword },
+    data: { password: hashedPassword, changedAdminPassword : true},
   });
+
+  // generate a new token after changing password
+  const token = generateToken(user);
+  return { ...user, token };
+ 
 };
 
 

@@ -22,3 +22,76 @@
     @apply bg-gray-400;
   }
 }
+
+
+@layer utilities {
+  .btn-follow-theme {
+    @apply text-gray-700  hover:text-white dark:border-white/70 dark:text-white/70 dark:hover:bg-dark-background;
+  }
+  .smooth-effect {
+    @apply transition-all duration-300;
+  }
+  .relative-x-center {
+    @apply left-1/2 -translate-x-1/2;
+  }
+  .absolute-center {
+    @apply flex items-center justify-center;
+  }
+  .relative-center {
+    @apply left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
+  .full-size {
+    @apply h-full w-full;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ 
+ 
+
+*:focus {
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-2xl bg-gray-400;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+textarea {
+  resize: none;
+}
+
+#nprogress .bar {
+  background: #facc15 !important;
+  z-index: 1500 !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: yellow !important;
+  border-left-color: yellow !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px red, 0 0 5px red !important;
+}

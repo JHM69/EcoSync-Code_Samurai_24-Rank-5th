@@ -4,7 +4,7 @@ import * as authService from '../services/auth.service';
 
 const router = Router();
 
-router.post('/auth/create', auth.required, auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/create', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await authService.createUser(req.body);
     res.status(201).json({ user });
@@ -50,13 +50,13 @@ router.post('/auth/reset-password/confirm', async (req: Request, res: Response, 
 router.post('/auth/change-password', auth.required, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const user = req.user;
+    const {user} = req;
     if (!user) {
       throw new Error('Invalid Token');
     }
     // @ts-ignore
-    await authService.changePassword(user.id, oldPassword, newPassword);
-    res.status(200).json({ message: 'Password changed successfully.' });
+    const newUser = await authService.changePassword(user.id, oldPassword, newPassword);
+    res.status(200).json({ message: 'Password changed successfully.', newUser });
   } catch (error) {
     next(error);
   }

@@ -1,18 +1,18 @@
 import Layout from '../components/layout'
 import PlaylistItems from '../components/Playlists/PlaylistItems'
 import { useEffect, useState } from 'react'
-import PlaylistItemsSkeleton from '../components/Playlists/PlaylistItemsSkeleton' 
+import PlaylistItemsSkeleton from '../components/Playlists/PlaylistItemsSkeleton'
 import AddPlaylist from '../components/Playlist/AddPlaylist'
 import { getBaseUrl } from '../utils/url'
 
-function Playlists() {
+function Playlists () {
   const [loading, setLoading] = useState(false)
   const [playlists, setPlaylists] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const res = await fetch(getBaseUrl()+`/playlists`)
+        const res = await fetch(getBaseUrl() + '/playlists')
         const { data } = await res.json()
         setPlaylists(data)
       } catch (error) {
@@ -44,17 +44,19 @@ function Playlists() {
       <div className="flex-1"></div>
     </div>
     </div>
-      {loading ? (
+      {loading
+        ? (
         <PlaylistItemsSkeleton />
-      ) : (
+          )
+        : (
         <PlaylistItems playlists={playlists} />
-      )}
+          )}
     </div>
   )
 }
 
 export default Playlists
 
-Playlists.getLayout = function getLayout(page) {
+Playlists.getLayout = function getLayout (page) {
   return <Layout meta={{ name: 'Playlists' }}>{page}</Layout>
 }
