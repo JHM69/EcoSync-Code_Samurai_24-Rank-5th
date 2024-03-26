@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-computed-key */
 import clsx from 'clsx'
 import React, { Children } from 'react'
 
@@ -18,16 +19,16 @@ export default React.forwardRef(function Button(
   }
 
   const variantClassname = clsx({
-    ['bg-sky-600 text-white disabled:bg-sky-400 disabled:ring-0']:
+    ['bg-[#76C75E] text-white my-2 disabled:bg-green-400 disabled:ring-0']:
       variant === 'primary',
-    ['text-sky-600 disabled:text-sky-400']: variant === 'text',
+    ['text-[#76C75E] disabled:text-green-400']: variant === 'text',
   })
 
   return (
     <button
       {...attributes}
       className={clsx(
-        'inline-block cursor-pointer rounded-md px-6 py-2 text-sm font-semibold leading-snug ring-sky-300 transition duration-150 ease-in-out hover:ring focus:ring',
+        'inline-block cursor-pointer rounded-md px-6 py-2 text-sm font-semibold leading-snug ring-green-300 transition duration-150 ease-in-out hover:ring focus:ring',
         variantClassname,
         attributes.className
       )}

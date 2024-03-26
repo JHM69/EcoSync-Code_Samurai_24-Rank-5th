@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import BellNotification from './notifications/BellNotification';
 import SearchBox from './search/SearchBox';
 import { SettingsModal } from './sidebar/profile/SettingsModal';
-
+import SwitchLanguage from './common/SwitchLanguage';
 /**
  * The top bar of the application, with the model and purpose selection, and menu/settings icons
  */
@@ -54,7 +54,7 @@ const ApplicationBar: React.FC<{
            
               <>
               <BellNotification/>
-              <div  onClick={toggleModal} className="flex mr-10 flex-row items-center smooth-effect rounded-xl px-3 py-1 bg-gray-300 hover:bg-green-300">
+              <div  onClick={toggleModal} className="flex mr-10 flex-row items-center smooth-effect rounded-xl px-3 py-1 bg-green-100 hover:bg-green-300">
                
                 <img
                   className="inline-block h-[27px] w-[27px] rounded-full cursor-pointer"
@@ -72,6 +72,7 @@ const ApplicationBar: React.FC<{
                 </div>
                 
               </div>
+              <SwitchLanguage />
               </> 
           </div>
 

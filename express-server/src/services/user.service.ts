@@ -124,6 +124,8 @@ export const getUser = async (userId: string) => {
     select: {
       id: true,
       name: true,
+      email: true,
+      roleId: true,
       image: true,
       role: {
         select: {
@@ -131,6 +133,8 @@ export const getUser = async (userId: string) => {
           type: true,
         },
       },
+      sts: true,
+      landfills: true,
     },
   });
 };

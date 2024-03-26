@@ -69,7 +69,7 @@ async function main() {
   // Creating a default SystemAdmin user
   const password = '12345678';
   const hashedPassword = await bcrypt.hash(password, 10);
- await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: 'jahangirhossainm69@gmail.com',
       name: 'Jahangir Hossain',

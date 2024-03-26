@@ -69,6 +69,7 @@ model Vehicle {  // 147 vehicles
   id            Int      @id @default(autoincrement())
   registrationNumber String   @unique
   type          VehicleType
+  name          String?
   capacity      Int
   remainingCapacity Int
   lat           Float @default(0)

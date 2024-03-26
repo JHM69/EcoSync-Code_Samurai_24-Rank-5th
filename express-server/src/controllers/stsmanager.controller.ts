@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
+
 const router = Router();
 
 const createSTS = async (stsData: {
@@ -38,6 +39,7 @@ const createSTS = async (stsData: {
   if (Number(stsData.wardNumber) < 1 || Number(stsData.wardNumber) > 54)
     throw new Error('Invalid ward number. Ward number should be between 1 and 54');
 
+  // eslint-disable-next-line no-return-await
   return await prisma.sTS.create({
     data: {
       wardNumber: stsData.wardNumber,
@@ -96,6 +98,7 @@ router.put(
   '/sts/:id/manager',
   auth.required,
   auth.isSystemAdmin,
+  // eslint-disable-next-line consistent-return
   async (req: Request, res: Response) => {
     try {
       const manager = await prisma.user.findUnique({
@@ -116,7 +119,7 @@ router.put(
       });
       if (!sts) {
         res.status(404).json({ message: 'STS not found' });
-        return;
+       
       }
       if (manager.role.type !== 'STSManager') {
         return res.status(400).json({ message: 'Manager role type should be STS Manager' });

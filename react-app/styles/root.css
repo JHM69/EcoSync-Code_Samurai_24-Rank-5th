@@ -95,3 +95,41 @@ textarea {
 #nprogress .peg {
   box-shadow: 0 0 10px red, 0 0 5px red !important;
 }
+
+
+.language-switch {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 10px;
+  width: 110px;
+  cursor: pointer;
+}
+
+.language-option {
+  flex: 1;
+  text-align: center;
+  padding: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.en {
+  background-color: #76C75E;
+  color: white;
+}
+
+.bn {
+  background-color: white;
+  color: black;
+}
+
+/* This will change the background color of the Bengali side when it's active */
+.active-bn .bn {
+  background-color: #76C75E;
+  color: white;
+}
+
+.active-bn .en {
+  background-color: white;
+  color: black;
+}
