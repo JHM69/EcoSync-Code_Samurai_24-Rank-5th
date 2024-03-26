@@ -118,8 +118,7 @@ router.put(
         },
       });
       if (!sts) {
-        res.status(404).json({ message: 'STS not found' });
-       
+       return res.status(404).json({ message: 'STS not found' });
       }
       if (manager.role.type !== 'STSManager') {
         return res.status(400).json({ message: 'Manager role type should be STS Manager' });

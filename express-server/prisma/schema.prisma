@@ -35,7 +35,7 @@ model User {
   role       Role      @relation(fields: [roleId], references: [id])
   vehicleEntries       VehicleEntry[] //STSManagers can have multiple vehicle entries 
   truckDumpEntries     TruckDumpEntry[] //Landfill Managers can have multiple truck dump entries
-  sts                  STS?
+  sts                  STS[]
   landfills            Landfill[]
   passwordResetToken   PasswordResetToken? 
   changedAdminPassword Boolean @default(false)
@@ -92,10 +92,10 @@ model STS {  // 54 STS
   currentWasteVolume  Float
   lat                 Float
   lon                 Float
-  manager             User?    @relation(fields: [managerId], references: [id])
-  managerId           Int? @unique
+  address             String?
+  logo                String?
+  managers             User[]
   vehicleEntries      VehicleEntry[]
-  @@index([managerId], name: "idx_sts_manager")
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
 }
@@ -142,12 +142,11 @@ model Landfill {
   name            String
   capacity        Int
   gpsCoords       String
-  managerId       Int?
   lat             Float
   lon             Float
+  address         String?
   managers        User[]  
   truckDumpEntries TruckDumpEntry[]
-  @@index([managerId], name: "idx_landfill_manager")
   @@index([name], name: "idx_landfill_name")
   @@index([capacity], name: "idx_landfill_capacity")
 }

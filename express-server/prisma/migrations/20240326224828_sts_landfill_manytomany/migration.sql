@@ -51,12 +51,14 @@ CREATE TABLE "Permission" (
 -- CreateTable
 CREATE TABLE "Vehicle" (
     "id" SERIAL NOT NULL,
-    "vehicleNumber" TEXT NOT NULL,
+    "registrationNumber" TEXT NOT NULL,
     "type" "VehicleType" NOT NULL,
+    "name" TEXT,
     "capacity" INTEGER NOT NULL,
-    "lat" DOUBLE PRECISION NOT NULL,
-    "lon" DOUBLE PRECISION NOT NULL,
-    "isFull" BOOLEAN NOT NULL,
+    "remainingCapacity" INTEGER NOT NULL,
+    "lat" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "lon" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "isFull" BOOLEAN NOT NULL DEFAULT false,
     "loaddedFuelCost" DOUBLE PRECISION NOT NULL,
     "unloadedFuelCost" DOUBLE PRECISION NOT NULL,
 
@@ -71,7 +73,8 @@ CREATE TABLE "STS" (
     "currentWasteVolume" DOUBLE PRECISION NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
     "lon" DOUBLE PRECISION NOT NULL,
-    "managerId" INTEGER,
+    "address" TEXT,
+    "logo" TEXT,
 
     CONSTRAINT "STS_pkey" PRIMARY KEY ("id")
 );
@@ -108,15 +111,21 @@ CREATE TABLE "Landfill" (
     "name" TEXT NOT NULL,
     "capacity" INTEGER NOT NULL,
     "gpsCoords" TEXT NOT NULL,
-    "managerId" INTEGER,
     "lat" DOUBLE PRECISION NOT NULL,
     "lon" DOUBLE PRECISION NOT NULL,
+    "address" TEXT,
 
     CONSTRAINT "Landfill_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "_PermissionToRole" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_STSToUser" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -155,7 +164,7 @@ CREATE UNIQUE INDEX "Role_type_key" ON "Role"("type");
 CREATE UNIQUE INDEX "Permission_name_key" ON "Permission"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Vehicle_vehicleNumber_key" ON "Vehicle"("vehicleNumber");
+CREATE UNIQUE INDEX "Vehicle_registrationNumber_key" ON "Vehicle"("registrationNumber");
 
 -- CreateIndex
 CREATE INDEX "idx_vehicle_type" ON "Vehicle"("type");
@@ -165,12 +174,6 @@ CREATE INDEX "idx_vehicle_capacity" ON "Vehicle"("capacity");
 
 -- CreateIndex
 CREATE INDEX "idx_vehicle_loadded_fuel_cost" ON "Vehicle"("loaddedFuelCost");
-
--- CreateIndex
-CREATE UNIQUE INDEX "STS_managerId_key" ON "STS"("managerId");
-
--- CreateIndex
-CREATE INDEX "idx_sts_manager" ON "STS"("managerId");
 
 -- CreateIndex
 CREATE INDEX "idx_sts_ward_number" ON "STS"("wardNumber");
@@ -209,9 +212,6 @@ CREATE INDEX "idx_truck_dump_entry_time_of_arrival" ON "TruckDumpEntry"("timeOfA
 CREATE INDEX "idx_truck_dump_entry_time_of_departure" ON "TruckDumpEntry"("timeOfDeparture");
 
 -- CreateIndex
-CREATE INDEX "idx_landfill_manager" ON "Landfill"("managerId");
-
--- CreateIndex
 CREATE INDEX "idx_landfill_name" ON "Landfill"("name");
 
 -- CreateIndex
@@ -224,6 +224,12 @@ CREATE UNIQUE INDEX "_PermissionToRole_AB_unique" ON "_PermissionToRole"("A", "B
 CREATE INDEX "_PermissionToRole_B_index" ON "_PermissionToRole"("B");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "_STSToUser_AB_unique" ON "_STSToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_STSToUser_B_index" ON "_STSToUser"("B");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_LandfillToUser_AB_unique" ON "_LandfillToUser"("A", "B");
 
 -- CreateIndex
@@ -234,9 +240,6 @@ ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFE
 
 -- AddForeignKey
 ALTER TABLE "PasswordResetToken" ADD CONSTRAINT "PasswordResetToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "STS" ADD CONSTRAINT "STS_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "VehicleEntry" ADD CONSTRAINT "VehicleEntry_stsId_fkey" FOREIGN KEY ("stsId") REFERENCES "STS"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -261,6 +264,12 @@ ALTER TABLE "_PermissionToRole" ADD CONSTRAINT "_PermissionToRole_A_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "_PermissionToRole" ADD CONSTRAINT "_PermissionToRole_B_fkey" FOREIGN KEY ("B") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_STSToUser" ADD CONSTRAINT "_STSToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "STS"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_STSToUser" ADD CONSTRAINT "_STSToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_LandfillToUser" ADD CONSTRAINT "_LandfillToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Landfill"("id") ON DELETE CASCADE ON UPDATE CASCADE;
