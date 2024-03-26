@@ -11,14 +11,11 @@ import {
   assignUserRole,
   listUsers,
   listRoles,
-  createPermission,
-  listPermissions,
-  createSTS,
   updateUser,
   deleteUser,
   getProfile,
   updateProfile,
-} from '../services/systemadmin.service';
+} from '../services/user.service';
 import HttpException from '../models/http-exception.model';
 
 // Create a new user
@@ -116,60 +113,9 @@ router.get('/profile', auth.required, async (req: Request, res: Response) => {
 // update profile
 router.put('/profile', auth.required, async (req: Request, res: Response) => {
   try {
-    if(!req.user?.id) throw new HttpException(400, 'Invalid token');
+    if (!req.user?.id) throw new HttpException(400, 'Invalid token');
     const user = await updateProfile(req.user.id, req.body.name, req.body.image);
     res.status(200).json(user);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-
-// Create a new permission
-router.post(
-  '/rbac/permissions',
-  auth.required,
-  auth.isSystemAdmin,
-  async (req: Request, res: Response) => {
-    try {
-      const permission = await createPermission(req.body);
-      res.status(201).json(permission);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-);
-
-// List all permissions
-router.get(
-  '/rbac/permissions',
-  auth.required,
-  auth.isSystemAdmin,
-  async (req: Request, res: Response) => {
-    try {
-      const permissions = await listPermissions();
-      res.json(permissions);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-);
-
-// Create a new vehicle
-// router.post('/vehicles', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
-//   try {
-//     const vehicle = await createVehicle(req.body);
-//     res.status(201).json(vehicle);
-//   } catch (error: any) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
-
-// Create a new STS
-router.post('/sts', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
-  try {
-    const sts = await createSTS(req.body);
-    res.status(201).json(sts);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }

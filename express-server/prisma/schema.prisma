@@ -54,14 +54,13 @@ model Role {
   id          Int      @id @default(autoincrement())
   type        RoleType @default(Unassigned) @unique
   users       User[]
-  permissions Permission[] 
+  permissions Permission[]
 }
 
 model Permission {
   id    Int    @id @default(autoincrement())
   name  String @unique
-  roleId Int
-  role  Role   @relation(fields: [roleId], references: [id])
+  roles Role[]
 }
  
 model Vehicle {  // 147 vehicles

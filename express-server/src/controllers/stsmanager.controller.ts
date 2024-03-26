@@ -6,6 +6,16 @@ const router = Router();
 
 // eslint-disable-next-line import/no-unresolved
 import { createVehicleEntry } from '../services/stsmanager.service'
+
+// Create a new STS
+router.post('/sts', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+  try {
+    // const sts = await createSTS(req.body);
+    // res.status(201).json(sts);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
  
 // Create a new STS
 router.post('/vehicle-entry', auth.required, auth.isSTSManager, async (req: Request, res: Response) => {
