@@ -4,28 +4,28 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
 // eslint-disable-next-line import/no-unresolved
-import prisma from '../../prisma/prisma-client'; 
+import prisma from '../../prisma/prisma-client';
 import generateToken from '../utils/token.utils';
 import { sendEmail } from '../utils/mail.service';
 import HttpException from '../models/http-exception.model';
- 
+
 // Example utility function for sending reset password email
 // You need to implement this based on your email service
-const sendResetPasswordEmail = async (email : string, token : string) => {
+const sendResetPasswordEmail = async (email: string, token: string) => {
   console.log(`Sending password reset email to ${email} with token ${token}`);
 
-  const data= await sendEmail({
+  const data = await sendEmail({
     to: email as string,
     subject: 'DNCC Verification Token',
     html: `
       <h1>Your DNCC EcoSync verification token is: ${token}</h1>
-    `
+    `,
   });
   console.log(data);
 };
 
-const createUser = async (userData : any) => {
-  const { email, password, name} = userData;
+const createUser = async (userData: any) => {
+  const { email, password, name } = userData;
   // check if data is not null
   if (!email || !password) {
     throw new HttpException(400, 'Missing required fields: email, password');
@@ -39,16 +39,18 @@ const createUser = async (userData : any) => {
     throw new HttpException(400, 'User already exists');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  
+
   const user = await prisma.user.create({
     data: {
       email,
       password: hashedPassword,
-      name : name || email.split('@')[0],
+      name: name || email.split('@')[0],
+      lastLogin: new Date(),
+      lastLogout: new Date(),
       role: {
         connectOrCreate: {
-          where: { type: "Unassigned" },
-          create: { type: "Unassigned" },
+          where: { type: 'Unassigned' },
+          create: { type: 'Unassigned' },
         },
       },
     },
@@ -59,7 +61,7 @@ const createUser = async (userData : any) => {
   const token = generateToken(user);
 
   // Optionally, send a welcome email to the user with email and onetime password
-   await sendEmail({
+  await sendEmail({
     to: email as string,
     subject: 'Your DNCC EcoSync Account is ready!',
     html: `
@@ -70,13 +72,12 @@ const createUser = async (userData : any) => {
       </p>
       <p>Use this password to login and change your password</p>
       <p>Thank you for joining us!</p>
-    `
-  }); 
+    `,
+  });
   return { ...user, token };
 };
 
-const login = async (email  : string, password : string) => {
-  console.log(email, password);
+const login = async (email: string, password: string) => {
   // check not null
   if (!email || !password) {
     throw new HttpException(400, 'Missing required fields: email, password');
@@ -86,31 +87,44 @@ const login = async (email  : string, password : string) => {
   if (!email.includes('@') || !email.includes('.')) {
     throw new HttpException(400, 'Invalid email address');
   }
-  const user = await prisma.user.findUnique({ where: { email }, include: { role: true } } );
+  const user = await prisma.user.findUnique({ where: { email }, include: { role: true } });
   if (!user) {
     throw new HttpException(401, 'No user found with this email address');
   }
-  // if user role is not assigned
- 
+  if (user.role.type === 'Unassigned') {
+    throw new HttpException(401, 'User is unassigned. Please contact admin');
+  }
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new HttpException(401, 'Wrong password');
   }
-  if (user.role.type === 'Unassigned') {
-    throw new HttpException(401, 'User role is not assigned');
-  }
-  const token = generateToken(user);
-  return { ...user, token };
+  // update last login
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: { lastLogin: new Date() },
+    include: {
+      role: {
+        include: { permissions: true }, // Including permissions information
+      },
+    },
+  });
+  console.log(updatedUser);
+  const token = await generateToken(updatedUser);
+  return { ...updatedUser, token };
 };
 
-const logout = async (userId : string) => {
+const logout = async (userId: number) => {
   // code to logout user
+  // update last logout
+  await prisma.user.update({
+    where: { id: userId },
+    data: { lastLogout: new Date() },
+  });
   // eslint-disable-next-line no-console
   console.log(`User with ID ${userId} logged out`);
-
 };
 
-const initiatePasswordReset = async (email : string) => {
+const initiatePasswordReset = async (email: string) => {
   // check if email is present and valid
   if (!email || !email.includes('@') || !email.includes('.')) {
     throw new HttpException(400, 'Invalid email address');
@@ -121,7 +135,7 @@ const initiatePasswordReset = async (email : string) => {
   }
 
   const resetToken = crypto.randomBytes(20).toString('hex');
-  const expiration = new Date(Date.now() + 3600000); // 1 hour from now
+  const expiration = new Date(Date.now() + 300000); // 5 minutes from now
 
   // if already exists, delete the old one
   await prisma.passwordResetToken.deleteMany({
@@ -138,7 +152,7 @@ const initiatePasswordReset = async (email : string) => {
 
   sendResetPasswordEmail(email, resetToken);
 };
-const confirmPasswordReset = async (token : string, newPassword : string) => {
+const confirmPasswordReset = async (token: string, newPassword: string) => {
   // check not null
   if (!token || !newPassword) {
     throw new HttpException(400, 'Missing required fields: token, newPassword');
@@ -155,7 +169,6 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
     },
   });
 
-
   if (!passwordResetToken) {
     throw new HttpException(400, 'Invalid or expired token');
   }
@@ -163,9 +176,9 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   await prisma.user.update({
     where: { id: passwordResetToken.userId },
-    data: { 
-      password: hashedPassword, 
-      changedAdminPassword : true
+    data: {
+      password: hashedPassword,
+      changedAdminPassword: true,
     },
   });
 
@@ -174,7 +187,7 @@ const confirmPasswordReset = async (token : string, newPassword : string) => {
     where: { id: passwordResetToken.id },
   });
 };
-const changePassword = async (userId : number, oldPassword : string, newPassword : string) => {
+const changePassword = async (userId: number, oldPassword: string, newPassword: string) => {
   // check not null
   if (!userId || !oldPassword || !newPassword) {
     throw new HttpException(400, 'Missing required fields: userId, oldPassword, newPassword');
@@ -199,12 +212,4 @@ const changePassword = async (userId : number, oldPassword : string, newPassword
  
 };
 
-
-export {
-  createUser,
-  login,
-  logout,
-  initiatePasswordReset,
-  confirmPasswordReset,
-  changePassword
-};
+export { createUser, login, logout, initiatePasswordReset, confirmPasswordReset, changePassword };

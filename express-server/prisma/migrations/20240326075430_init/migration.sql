@@ -2,21 +2,21 @@
 CREATE TYPE "VehicleType" AS ENUM ('OpenTruck', 'DumpTruck', 'Compactor', 'ContainerCarrier');
 
 -- CreateEnum
-CREATE TYPE "VehicleCapacity" AS ENUM ('Ton3', 'Ton5', 'Ton7');
-
--- CreateEnum
 CREATE TYPE "RoleType" AS ENUM ('SystemAdmin', 'STSManager', 'LandfillManager', 'Unassigned');
 
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "image" TEXT DEFAULT 'https://static.productionready.io/images/smiley-cyrus.jpg',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastLogin" TIMESTAMP(3),
+    "lastLogout" TIMESTAMP(3),
     "roleId" INTEGER NOT NULL DEFAULT 4,
+    "changedAdminPassword" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -54,7 +54,12 @@ CREATE TABLE "Vehicle" (
     "id" SERIAL NOT NULL,
     "vehicleNumber" TEXT NOT NULL,
     "type" "VehicleType" NOT NULL,
-    "capacity" "VehicleCapacity" NOT NULL,
+    "capacity" INTEGER NOT NULL,
+    "lat" DOUBLE PRECISION NOT NULL,
+    "lon" DOUBLE PRECISION NOT NULL,
+    "isFull" BOOLEAN NOT NULL,
+    "loaddedFuelCost" DOUBLE PRECISION NOT NULL,
+    "unloadedFuelCost" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "Vehicle_pkey" PRIMARY KEY ("id")
 );
@@ -62,8 +67,9 @@ CREATE TABLE "Vehicle" (
 -- CreateTable
 CREATE TABLE "STS" (
     "id" SERIAL NOT NULL,
-    "wardNumber" INTEGER NOT NULL,
-    "capacity" INTEGER NOT NULL,
+    "wardNumber" TEXT NOT NULL,
+    "capacity" DOUBLE PRECISION NOT NULL,
+    "currentWasteVolume" DOUBLE PRECISION NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
     "lon" DOUBLE PRECISION NOT NULL,
     "managerId" INTEGER,
@@ -76,7 +82,7 @@ CREATE TABLE "VehicleEntry" (
     "id" SERIAL NOT NULL,
     "stsId" INTEGER NOT NULL,
     "vehicleId" INTEGER NOT NULL,
-    "volumeOfWaste" INTEGER NOT NULL,
+    "volumeOfWaste" DOUBLE PRECISION NOT NULL,
     "timeOfArrival" TIMESTAMP(3) NOT NULL,
     "timeOfDeparture" TIMESTAMP(3) NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -88,7 +94,7 @@ CREATE TABLE "VehicleEntry" (
 CREATE TABLE "TruckDumpEntry" (
     "id" SERIAL NOT NULL,
     "vehicleId" INTEGER NOT NULL,
-    "volumeOfWaste" INTEGER NOT NULL,
+    "volumeOfWaste" DOUBLE PRECISION NOT NULL,
     "timeOfArrival" TIMESTAMP(3) NOT NULL,
     "timeOfDeparture" TIMESTAMP(3) NOT NULL,
     "landfillId" INTEGER NOT NULL,
@@ -112,7 +118,7 @@ CREATE TABLE "Landfill" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+CREATE INDEX "idx_user_role" ON "User"("roleId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PasswordResetToken_token_key" ON "PasswordResetToken"("token");

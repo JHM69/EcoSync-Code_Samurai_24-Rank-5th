@@ -29,6 +29,8 @@ model User {
   image      String?   @default("https://static.productionready.io/images/smiley-cyrus.jpg")
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
+  lastLogin  DateTime?
+  lastLogout DateTime?
   roleId     Int       @default(4)
   role       Role      @relation(fields: [roleId], references: [id])
   vehicleEntries       VehicleEntry[] //STSManagers can have multiple vehicle entries
@@ -52,14 +54,13 @@ model Role {
   id          Int      @id @default(autoincrement())
   type        RoleType @default(Unassigned) @unique
   users       User[]
-  permissions Permission[] 
+  permissions Permission[]
 }
 
 model Permission {
   id    Int    @id @default(autoincrement())
   name  String @unique
-  roleId Int
-  role  Role   @relation(fields: [roleId], references: [id])
+  roles Role[]
 }
  
 model Vehicle {  // 147 vehicles

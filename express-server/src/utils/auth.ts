@@ -32,6 +32,11 @@ const secureMiddleware = async (req: Request, res: Response, next: NextFunction)
         include: { role: true },
       });
       if (!existingUser) throw new HttpException(404, 'Token User not found.');
+      // if lastLogin is of token is less than lastLogout of user, then token is invalid
+      const lastLogin = new Date(req.user.lastLogin);
+      const lastLogout = new Date(existingUser.lastLogout);
+      if (lastLogin < lastLogout)
+        throw new HttpException(403, 'Forbidden: Token session expired. Login again.');
 
       if (existingUser.role.type !== req.user.role.type)
         throw new HttpException(403, 'Forbidden: Role type mismatch. Login again.');
