@@ -65,12 +65,13 @@ model Permission {
  
 model Vehicle {  // 147 vehicles
   id            Int      @id @default(autoincrement())
-  vehicleNumber String   @unique
+  registrationNumber String   @unique
   type          VehicleType
   capacity      Int
-  lat           Float
-  lon           Float
-  isFull        Boolean
+  remainingCapacity Int
+  lat           Float @default(0)
+  lon           Float @default(0)
+  isFull        Boolean @default(false)
   loaddedFuelCost Float
   unloadedFuelCost Float
   vehicleEntries VehicleEntry[]
