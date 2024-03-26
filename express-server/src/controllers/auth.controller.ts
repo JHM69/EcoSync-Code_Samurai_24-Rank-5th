@@ -4,7 +4,7 @@ import * as authService from '../services/auth.service';
 
 const router = Router();
 
-router.post('/auth/create',auth.required,auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/create', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await authService.createUser(req.body);
     res.status(201).json({ user });
@@ -62,5 +62,5 @@ router.post('/auth/change-password', auth.required, async (req: Request, res: Re
     next(error);
   }
 });
-
+ 
 export default router;

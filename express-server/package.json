@@ -11,7 +11,7 @@
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
     "prisma:generate:watch": "prisma generate --watch",
-    "prisma:seed": "prisma db seed --preview-feature",
+    "seed": "ts-node prisma/seed.ts",
     "prisma:studio": "prisma studio",
     "prisma:reset": "prisma migrate reset",
     "prettier:write": "npx prettier --write .",

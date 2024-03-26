@@ -3,6 +3,7 @@
 /* eslint-disable import/order */
 import prisma from '../../prisma/prisma-client';
 import HttpException from '../models/http-exception.model';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import axios from 'axios';
 import { Request } from 'express';
 

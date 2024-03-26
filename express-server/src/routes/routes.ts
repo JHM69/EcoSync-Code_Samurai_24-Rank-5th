@@ -1,9 +1,10 @@
 import { Router } from 'express'; 
-import authController from '../controllers/auth.controller';
+  
 import usersController from '../controllers/users.controller'; 
 import stsManagerController from  '../controllers/stsmanager.controller';
 import landfillController from  '../controllers/landfillmanager.controller';
 import rbacController from  '../controllers/rbac.controller';
+import authController from '../controllers/auth.controller';
 
 const api = Router() 
   .use(usersController) 

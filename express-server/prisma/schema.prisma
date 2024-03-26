@@ -33,13 +33,15 @@ model User {
   lastLogout DateTime?
   roleId     Int       @default(4)
   role       Role      @relation(fields: [roleId], references: [id])
-  vehicleEntries       VehicleEntry[] //STSManagers can have multiple vehicle entries
-  managerOfSTS         STS[]    //System Admin can manage multiple STS
+  vehicleEntries       VehicleEntry[] //STSManagers can have multiple vehicle entries 
   truckDumpEntries     TruckDumpEntry[] //Landfill Managers can have multiple truck dump entries
-  managerOfLandfill    Landfill[]  // System Admin can manage multiple landfills
+  sts                  STS?
+  landfills            Landfill[]
   passwordResetToken   PasswordResetToken? 
   changedAdminPassword Boolean @default(false)
   @@index([roleId], name: "idx_user_role")
+  @@index([name], name: "idx_user_name")
+  @@index([email], name: "idx_user_email")
 }
 model PasswordResetToken {
   id                Int      @id @default(autoincrement())
@@ -75,6 +77,10 @@ model Vehicle {  // 147 vehicles
   unloadedFuelCost Float
   vehicleEntries VehicleEntry[]
   truckDumpEntries TruckDumpEntry[] 
+  @@index([type], name: "idx_vehicle_type")  
+  @@index([capacity], name: "idx_vehicle_capacity")
+  @@index([loaddedFuelCost], name: "idx_vehicle_loadded_fuel_cost")
+
 }
 
 model STS {  // 54 STS 
@@ -84,9 +90,12 @@ model STS {  // 54 STS
   currentWasteVolume  Float
   lat                 Float
   lon                 Float
-  managerId           Int?
   manager             User?    @relation(fields: [managerId], references: [id])
+  managerId           Int? @unique
   vehicleEntries      VehicleEntry[]
+  @@index([managerId], name: "idx_sts_manager")
+  @@index([wardNumber], name: "idx_sts_ward_number") 
+  @@index([capacity], name: "idx_sts_capacity")
 }
 
 model VehicleEntry {  //StsManager can entry multiple vehicles enties 
@@ -100,6 +109,11 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   timeOfDeparture DateTime
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
+  @@index([stsId], name: "idx_vehicle_entry_sts")
+  @@index([vehicleId], name: "idx_vehicle_entry_vehicle")
+  @@index([userId], name: "idx_vehicle_entry_user")
+  @@index([timeOfArrival], name: "idx_vehicle_entry_time_of_arrival")
+  @@index([timeOfDeparture], name: "idx_vehicle_entry_time_of_departure")
 }
 
 model TruckDumpEntry {
@@ -113,6 +127,12 @@ model TruckDumpEntry {
   landfill        Landfill @relation(fields: [landfillId], references: [id])
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
+  @@index([vehicleId], name: "idx_truck_dump_entry_vehicle")
+  @@index([landfillId], name: "idx_truck_dump_entry_landfill")
+  @@index([userId], name: "idx_truck_dump_entry_user")
+  @@index([timeOfArrival], name: "idx_truck_dump_entry_time_of_arrival")
+  @@index([timeOfDeparture], name: "idx_truck_dump_entry_time_of_departure")
+
 }
 
 model Landfill {
@@ -123,6 +143,9 @@ model Landfill {
   managerId       Int?
   lat             Float
   lon             Float
-  manager         User?    @relation(fields: [managerId], references: [id])
+  managers        User[]  
   truckDumpEntries TruckDumpEntry[]
+  @@index([managerId], name: "idx_landfill_manager")
+  @@index([name], name: "idx_landfill_name")
+  @@index([capacity], name: "idx_landfill_capacity")
 }

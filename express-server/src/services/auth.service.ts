@@ -66,10 +66,15 @@ const createUser = async (userData: any) => {
     subject: 'Your DNCC EcoSync Account is ready!',
     html: `
       <h1>Welcome to DNCC EcoSync</h1>
-      <p>Your account has been created with email: </pre>${email}</pre></p>
-      <p>
+      <p>Your Credentials: </p>
+      <p>-------------------------------------------------</p>
+       </pre>Email :  ${email}</pre></p>
+       </pre>Password : ${password}</pre></p>
+      <p>-------------------------------------------------</p>
+
+      <b>
       Click here to Change your password: <a href="http://localhost:3000/reset-password?token=${token}">Change Password</a>
-      </p>
+      </b>
       <p>Use this password to login and change your password</p>
       <p>Thank you for joining us!</p>
     `,
@@ -211,5 +216,7 @@ const changePassword = async (userId: number, oldPassword: string, newPassword: 
   return { ...user, token };
  
 };
+
+
 
 export { createUser, login, logout, initiatePasswordReset, confirmPasswordReset, changePassword };

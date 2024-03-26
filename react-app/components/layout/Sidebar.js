@@ -1,14 +1,13 @@
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
-import { NavLink } from '../common/Links'
-
+ 
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 function Item ({ text, subtitle, icon, href, isActive }) {
   return (
     <Link href={href || '/'}>
-    <div className={`flex flex-row my-1 rounded-xl p-3 shadow hover:bg-[#daffce] ${isActive ? 'bg-[#76C75E] text-white hover:bg-[#3a8023]' : 'bg-[#E9E9E9] text-gray-900'}`}>
+    <div className={`flex flex-row my-1 justify-between items-center rounded-xl p-3 shadow hover:bg-[#daffce] ${isActive ? 'bg-[#76C75E] text-white hover:bg-[#3a8023]' : 'bg-[#E9E9E9] text-gray-900'}`}>
 
      <div className='p-3'>
         <img src={`/${isActive ? icon : icon + '-dark'}.png`} width={24} height={24} />
@@ -16,8 +15,8 @@ function Item ({ text, subtitle, icon, href, isActive }) {
 
      <div className='flex flex-col '>
 
-      <span className='text-lg font-semibold'>{text}</span>
-      <span className='text-sm font-light'>{subtitle}</span>
+      <span className='text-md font-semibold'>{text}</span>
+      <span className='text-xs font-light'>{subtitle}</span>
 
      </div>
 
@@ -53,7 +52,7 @@ const Sidebar = () => {
 
       <div
         className={clsx(
-          'h-max-content border-r-1 smooth-effect  absolute w-screen bg-[#DFDFDF] border-[1px] outline-1 p-3 shadow transition-all duration-300 ease-in-out lg:relative lg:block lg:max-w-[15vw] lg:translate-x-0 lg:border-gray-300',
+          'h-max-content border-r-1 smooth-effect  absolute w-screen bg-[#DFDFDF] border-[1px] outline-1 p-3 shadow transition-all duration-300 ease-in-out lg:relative lg:block lg:max-w-[20vw] lg:translate-x-0 lg:border-gray-300',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
