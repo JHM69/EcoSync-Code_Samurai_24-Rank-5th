@@ -133,3 +133,7 @@ textarea {
   background-color: white;
   color: black;
 }
+.sticky-sidebar {
+  position: sticky;
+  top: 0;
+}

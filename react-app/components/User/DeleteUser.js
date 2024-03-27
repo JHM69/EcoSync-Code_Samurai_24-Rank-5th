@@ -1,23 +1,25 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 import { getBaseUrl } from '../../utils/url'
-import Button from '../common/Button' 
-const DeleteSong = ({ songId, ...props }) => {
+import Button from '../common/Button'
+const DeleteSong = ({ userId, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
 
   const handleDelete = async () => {
     try {
-      await fetch(getBaseUrl()+`/songs/deleteSong`, {
+      const token = localStorage.getItem('token')
+      await fetch(getBaseUrl() + `/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ id: songId }),
+        body: JSON.stringify({ id: userId }),
       }).then(() => {
         handleClose()
-        window.location.replace('/songs')
+        window.location.replace('/user')
       })
     } catch (error) {
       console.log(error)
@@ -59,11 +61,11 @@ const DeleteSong = ({ songId, ...props }) => {
                     as="h3"
                     className="mb-5 text-lg font-semibold leading-6 text-gray-800"
                   >
-                    Delete Song
+                    Delete User
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Do you really want to delete the song?
+                      Do you really want to delete this user?
                     </p>
                   </div>
 

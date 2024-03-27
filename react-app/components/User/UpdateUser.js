@@ -5,33 +5,30 @@ import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
 import UserForm from '../UserForm'
 import { getBaseUrl } from '../../utils/url'
+import axios from 'axios'
 const UpdateUser = ({ user, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
 
   const onFormSubmit = async (data) => {
-    try {
-      const token = localStorage.getItem('token')
-      await fetch(getBaseUrl()+`/users/`+user.id, {
-        method: 'PUT',
+    const token = localStorage.getItem('token')
+    console.log(user)
+    await axios
+      .put(getBaseUrl() + `/users/${user.id}`, data, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ id: user.id, ...data }),
-      }).then(() => {
-        // handleClose()
-        // window.location.reload()
-        alert("Successfully Added.")
-      }).catch((error) => {
-        alert("Failed Adding.")
-        console.log(error)
       })
-    } catch (error) {
-      alert("Failed Adding.")
-      console.log(error)
-    }
+      .then((res) => {
+        console.log(res)
+        if (res.status === 200 || res.status === 201) {
+          alert('Successfully Added.')
+        } else {
+          alert(res.status)
+          console.log(res)
+        }
+      })
   }
 
   return (

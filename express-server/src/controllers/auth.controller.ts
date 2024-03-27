@@ -5,6 +5,7 @@ import * as authService from '../services/auth.service';
 const router = Router();
 
 router.post('/auth/create',auth.required,auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
+ console.log("auth.create");
   try {
     const user = await authService.createUser(req.body);
     res.status(201).json({ user });
