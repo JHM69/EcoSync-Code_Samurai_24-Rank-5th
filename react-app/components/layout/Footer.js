@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="h-[5vh] w-full border-t border-gray-200 bg-white p-3 text-center">
       <div className="flex justify-center items-center">
 
-          &copy; Quantum Quys - Jaganathan University
+          &copy; Quantum Quys - Jagannath University
 
       </div>
     </footer>
