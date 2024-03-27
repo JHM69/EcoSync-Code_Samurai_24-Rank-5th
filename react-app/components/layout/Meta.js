@@ -9,7 +9,7 @@ const makeTitle = (title, name) =>
 const Meta = ({
   title = 'EcoSync by Quantum Guys',
   name = '',
-  description = 'Content management system for Shuno',
+  description = 'Admin Panel for EcoSync',
   url = getBaseUrl(),
   image = '/logo.png',
   children,

@@ -239,6 +239,38 @@ const createVehicleEntry = async (vehicleEntryData: {
   timeOfArrival: string;
   timeOfDeparture: string;
 }, stsId: number, userId:number) => {
+  // get the vehicle
+  const vehicle = await prisma.vehicle.findUnique({
+    where: {
+      id: Number(vehicleEntryData.vehicleId),
+    },
+  });
+  // update the remaining capacity of the vehicle
+  await prisma.vehicle.update({
+    where: {
+      id: Number(vehicleEntryData.vehicleId),
+    },
+    data: {
+      // @ts-ignore
+      remainingCapacity: vehicle.remainingCapacity - Number(vehicleEntryData.volumeOfWaste),
+    },
+  });
+  const sts = await prisma.sTS.findUnique({
+    where: {
+      id: stsId,
+    },
+  });
+  // update sts currentWasteVolume
+  await prisma.sTS.update({
+    where: {
+      id: stsId,
+    },
+    data: {
+      // @ts-ignore
+      currentWasteVolume: sts.currentWasteVolume - Number(vehicleEntryData.volumeOfWaste),
+    },
+  });
+  
   return await prisma.vehicleEntry.create({
     data: {
       volumeOfWaste: Number(vehicleEntryData.volumeOfWaste),
@@ -284,6 +316,47 @@ router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) 
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
+});
+
+// add waste in sts
+router.post('/sts/:id/add', auth.required, auth.isSTSManager, async (req: Request, res: Response) => {
+  try {
+    const stsId = Number(req.params.id);
+    // check if the user is a manager of the STS
+    const sts = await prisma.sTS.findUnique({
+      where: {
+        id: stsId,
+      },
+      include: {
+        managers: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (!sts) {
+      return res.status(404).json({ message: 'STS not found' });
+    }
+    // @ts-ignore
+    const isManager = sts.managers.some(manager => manager.id === req.user.id);
+    if (!isManager) {
+      return res.status(403).json({ message: 'You are not a manager of this STS' });
+    }
+    // update the sts current waste volume
+    const updatedSts= await prisma.sTS.update({
+      where: {
+        id: stsId,
+      },
+      data: {
+        currentWasteVolume: sts.currentWasteVolume + Number(req.body.weight),
+      },
+    });
+    res.status(200).json(updatedSts);
+  }
+  catch (error: any) {
+    res.status(400).json({ message: error.message });
+  } 
 });
 
 export default router;
