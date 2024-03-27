@@ -1,9 +1,9 @@
 {
-  "name": "Shuno Backend API",
-  "description": " A backend API for the Shuno project using Node.js, Express, and Prisma",
+  "name": "EcoSync Backend API",
+  "description": " A backend API for the EcoSync project using Node.js, Express, and Prisma",
   "keywords": ["node", "express", "prisma"],
   "website": "https://jhm69.github.io/Backend/",
-  "repository": "https://github.com/jhm69?Shuno-Backend",
+  "repository": "https://github.com/JHM69/CS24-p2-quantum_guys",
   "addons": ["heroku-postgresql"],
   "env": {
     "JWT_SECRET": {

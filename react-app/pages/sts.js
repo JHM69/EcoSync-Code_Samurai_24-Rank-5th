@@ -1,8 +1,8 @@
 import Layout from '../components/layout'
-import ArtistItems from '../components/Artists/ArtistItems'
+import StsItems from '../components/Stss/StsItems'
 import { useEffect, useState } from 'react'
-import ArtistItemsSkeleton from '../components/Artists/ArtistItemsSkeleton' 
-import AddArtist from '../components/Artist/AddArtist' 
+import StsItemsSkeleton from '../components/Stss/StsItemsSkeleton'
+import AddSts from '../components/Sts/AddSts' 
 import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
 function Artists() {
@@ -29,16 +29,16 @@ function Artists() {
       <header className="mt-3 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-700">STS</h1>
         <div className="flex items-center space-x-2">
-          <AddArtist />
+          <AddSts />
         </div>
       </header>
       <div>
       
     </div>
       {loading ? (
-        <ArtistItemsSkeleton />
+        <StsItemsSkeleton />
       ) : (
-        <ArtistItems artists={artists} />
+        <StsItems artists={artists} />
       )}
     </div>
   )

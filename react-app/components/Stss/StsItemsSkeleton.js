@@ -11,7 +11,7 @@ const ItemSkeleton = () => {
   )
 }
 
-const UserItemsSkeleton = () => (
+const StsItemsSkeleton = () => (
   <>
     {new Array(5).fill(0).map((_, idx) => (
       <ItemSkeleton key={idx} />
@@ -19,4 +19,4 @@ const UserItemsSkeleton = () => (
   </>
 )
 
-export default UserItemsSkeleton
+export default StsItemsSkeleton
