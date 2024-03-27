@@ -1,45 +1,33 @@
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
+import ts from 'typescript';
 
 const router = Router();
+
+// Create a new STS
+router.post('/sts', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+  try {
+    const sts = await createSTS(req.body);
+    res.status(201).json(sts);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 const createSTS = async (stsData: {
   wardNumber: string;
   capacity: string;
   lat: string;
   lon: string;
-  managerId?: string;
+  managerIds?: string[];
+  address?: string;
+  logo?: string;
+  vehicleIds?: string[];
 }) => {
-  // check if the manager exists
-  if (stsData.managerId) {
-    const manager = await prisma.user.findUnique({
-      where: {
-        id: Number(stsData.managerId),
-      },
-      include: {
-        role: true,
-      }
-    });
-    if (!manager) {
-      throw new Error('STS Manager not found');
-    }
-    if (manager.role.type !== 'STSManager')
-      throw new Error('Manager role type should be STS Manager');
-  }
-  // if the manager already manages an STS then throw an error
-  const stsManager = await prisma.sTS.findFirst({
-    where: {
-      managerId: Number(stsData.managerId),
-    },
-  });
-  if (stsManager) {
-    throw new Error('Manager already manages an STS');
-  }
-  if (Number(stsData.wardNumber) < 1 || Number(stsData.wardNumber) > 54)
-    throw new Error('Invalid ward number. Ward number should be between 1 and 54');
+  const managerIds = stsData.managerIds ? stsData.managerIds.map(id => Number(id)) : [];
+  const vehicleIds = stsData.vehicleIds ? stsData.vehicleIds.map(id => Number(id)) : []; 
 
-  // eslint-disable-next-line no-return-await
   return await prisma.sTS.create({
     data: {
       wardNumber: stsData.wardNumber,
@@ -47,10 +35,95 @@ const createSTS = async (stsData: {
       currentWasteVolume: 0,
       lat: Number(stsData.lat),
       lon: Number(stsData.lon),
-      manager: stsData.managerId ? { connect: { id: Number(stsData.managerId) } } : undefined,
+      address: stsData.address,
+      logo: stsData.logo,
+      vehicles: {
+        connect: vehicleIds.map(id => ({ id })), // Connect vehicles by id
+      },
+      managers: {
+        connect: managerIds.map(id => ({ id })),
+      },
     },
     include: {
-      manager: true,
+      managers: true,
+      vehicles: true,
+    },
+  });
+};
+
+// Update STS by id
+router.put('/sts/:id', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+  try {
+    const sts = await updateSTS(req.body, Number(req.params.id));
+    res.status(200).json(sts);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+const updateSTS = async (stsData: {
+  wardNumber?: string;
+  capacity?: string;
+  currentWasteVolume?: string;
+  lat?: string;
+  lon?: string;
+  managerIds?: string[];
+  address?: string;
+  logo?: string;
+  vehicleIds?: string[];
+}, id: number) => {
+  const managerIds = stsData.managerIds ? stsData.managerIds.map(id => Number(id)) : [];
+  const vehicleIds = stsData.vehicleIds ? stsData.vehicleIds.map(id => Number(id)) : [];
+
+  if(stsData.managerIds){
+    // remove all managers
+    await prisma.sTS.update({
+      where: {
+        id,
+      },
+      data: {
+        managers: {
+         set: [],
+        },
+      },
+    });
+  }
+  if(stsData.vehicleIds){
+    // remove all vehicles
+    await prisma.sTS.update({
+      where: {
+        id,
+      },
+      data: {
+        vehicles: {
+          set: [],
+        },
+      },
+    });
+  }
+
+  return await prisma.sTS.update({
+    where: {
+      id,
+    },
+    data: {
+      wardNumber: stsData.wardNumber,
+      capacity: Number(stsData.capacity),
+      currentWasteVolume: Number(stsData.currentWasteVolume),
+      lat: Number(stsData.lat),
+      lon: Number(stsData.lon),
+      address: stsData.address,
+      logo: stsData.logo,
+      vehicles: {
+        connect: vehicleIds.map(id => ({ id })),
+      },
+      managers: {
+        connect: managerIds.map(id => ({ id })),
+      },
+    },
+    include: {
+      managers: true,
+      vehicles: true,
     },
   });
 };
@@ -58,7 +131,22 @@ const createSTS = async (stsData: {
 // get all STS
 router.get('/sts', auth.required, async (req: Request, res: Response) => {
   try {
-    const sts = await prisma.sTS.findMany();
+    const sts = await prisma.sTS.findMany({
+      include: {
+      managers: {
+        select: {
+        id: true,
+        name: true,
+        }
+      },
+      vehicles: {
+        select: {
+        id: true,
+        registrationNumber: true,
+        }
+      }
+      },
+    });
     res.status(200).json(sts);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -72,6 +160,20 @@ router.get('/sts/:id', auth.required, async (req: Request, res: Response) => {
       where: {
         id: Number(req.params.id),
       },
+      include: {
+        managers: {
+          select: {
+          id: true,
+          name: true,
+          }
+        },
+        vehicles: {
+          select: {
+          id: true,
+          registrationNumber: true,
+          }
+        }
+        },
     });
     if (!sts) {
       res.status(404).json({ message: 'STS not found' });
@@ -83,109 +185,105 @@ router.get('/sts/:id', auth.required, async (req: Request, res: Response) => {
   }
 });
 
-// Create a new STS
-router.post('/sts', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+// delete STS by id
+router.delete('/sts/:id', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
-    const sts = await createSTS(req.body);
-    res.status(201).json(sts);
+    await prisma.sTS.delete({
+      where: {
+        id: Number(req.params.id),
+      },
+    });
+    res.status(200).json({ message: 'STS deleted' });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 });
 
-// set sts manager
-router.put(
-  '/sts/:id/manager',
-  auth.required,
-  auth.isSystemAdmin,
-  // eslint-disable-next-line consistent-return
-  async (req: Request, res: Response) => {
-    try {
-      const manager = await prisma.user.findUnique({
-        where: {
-          id: Number(req.body.managerId),
-        },
-        include: {
-          role: true,
-        },
-      });
-      if (!manager) {
-        return res.status(404).json({ message: 'Manager not found' });
-      }
-      const sts = await prisma.sTS.findUnique({
-        where: {
-          id: Number(req.params.id),
-        },
-      });
-      if (!sts) {
-       return res.status(404).json({ message: 'STS not found' });
-      }
-      if (manager.role.type !== 'STSManager') {
-        return res.status(400).json({ message: 'Manager role type should be STS Manager' });
-      }
-      const stsManager = await prisma.sTS.findFirst({
-        where: {
-          managerId: Number(req.body.managerId),
-        },
-      });
-      if (stsManager) {
-        return res.status(400).json({ message: 'Manager already manages an STS' });
-      }
-      const updatedsts = await prisma.sTS.update({
-        where: {
-          id: Number(req.params.id),
-        },
-        data: {
-          manager: {
-            connect: {
-              id: Number(req.body.managerId),
-            },
+
+// STS managers can add entry of vehicles leaving the STS with STS ID, vehicle number, weight of waste, time of arrival and time of departure.
+router.post('/sts/:id/entry', auth.required,auth.isSTSManager, async (req: Request, res: Response) => {
+  try {
+    const stsId = Number(req.params.id);
+    // check if the user is a manager of the STS
+    const sts = await prisma.sTS.findUnique({
+      where: {
+        id: stsId,
+      },
+      include: {
+        managers: {
+          select: {
+            id: true,
           },
         },
-        include: {
-          manager: true,
-        },
-      });
-      res.status(200).json(updatedsts);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      },
+    });
+    if (!sts) {
+      return res.status(404).json({ message: 'STS not found' });
     }
-  },
-);
-// delete sts manager
-router.delete(
-  '/sts/:id/manager',
-  auth.required,
-  auth.isSystemAdmin,
-  async (req: Request, res: Response) => {
-    try {
-      const sts = await prisma.sTS.findUnique({
-        where: {
-          id: Number(req.params.id),
-        },
-      });
-      if (!sts) {
-        res.status(404).json({ message: 'STS not found' });
-        return;
-      }
-      const updatedsts = await prisma.sTS.update({
-        where: {
-          id: Number(req.params.id),
-        },
-        data: {
-          manager: {
-            disconnect: true,
-          },
-        },
-        include: {
-          manager: true,
-        },
-      });
-      res.status(200).json(updatedsts);
-    } catch (error: any) {
-      res.status(400).json({ message: error.message });
+    // @ts-ignore
+    const isManager = sts.managers.some(manager => manager.id === req.user.id);
+    if (!isManager) {
+      return res.status(403).json({ message: 'You are not a manager of this STS' });
     }
-  },
-);
+    // @ts-ignore
+    const vehicleEntry = await createVehicleEntry(req.body, stsId, req.user.id);
+    res.status(201).json(vehicleEntry);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+const createVehicleEntry = async (vehicleEntryData: {
+  vehicleId: string;
+  volumeOfWaste: string;
+  timeOfArrival: string;
+  timeOfDeparture: string;
+}, stsId: number, userId:number) => {
+  return await prisma.vehicleEntry.create({
+    data: {
+      volumeOfWaste: Number(vehicleEntryData.volumeOfWaste),
+      timeOfArrival: new Date(vehicleEntryData.timeOfArrival),
+      timeOfDeparture: new Date(vehicleEntryData.timeOfDeparture),
+      sts: {
+        connect: {
+          id: stsId,
+        },
+      },
+      vehicle: {
+        connect: {
+          id: Number(vehicleEntryData.vehicleId),
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+    include: {
+      sts: true,
+      vehicle: true,
+    },
+  });
+};
+
+// get all entries of a STS. anyone can get the entries of a STS.
+router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) => {
+  try {
+    const stsId = Number(req.params.id);
+    const entries = await prisma.vehicleEntry.findMany({
+      where: {
+        stsId,
+      },
+      include: {
+        sts: true,
+        vehicle: true,
+      },
+    });
+    res.status(200).json(entries);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 export default router;
