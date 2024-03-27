@@ -31,7 +31,8 @@ router.post('/users', auth.required, auth.isSystemAdmin, async (req: Request, re
 // List all users
 router.get('/users', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
-    const users = await listUsers();
+    
+    const users = await listUsers(req.query.search);
     res.status(200).json(users);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

@@ -1,33 +1,50 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import { MultipleSelect, OptionWithCheckbox } from '../common/MultipleSelect'
+import axios from 'axios'
+import { getBaseUrl } from '../../utils/url'
 const RoleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
+    setValue
   } = useForm()
 
   console.log(
-    defaultValues.permissions.map((permission) => String(permission.id)) || []
+    defaultValues.permissions
   )
 
   useEffect(() => {
     if (defaultValues) {
       setValue('type', defaultValues.type)
-
       setValue(
-        'permissions',
-        defaultValues?.permissions?.map(
-          (permission) => 'id-' + String(permission.id)
-        ) || []
+        'vehicleIds',
+        defaultValues.permissions.map((p) => (p.id)).toString  
       )
+       
     }
   }, [defaultValues, setValue])
+
+  const [permissions, setPermissions] = useState([])
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      axios
+        .get(`${getBaseUrl()}/rbac/permissions`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then((res) => {
+          setPermissions(res.data)
+        })
+    }
+  }, [])
 
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
@@ -47,38 +64,22 @@ const RoleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('type', {
             required: {
               value: true,
-              message: 'You must add the type of the user',
-            },
+              message: 'You must add the type of the user'
+            }
           })}
         />
+
         <MultipleSelect
           name="permissions"
           multiple={true}
-          label="Permissions"
-          error={errors.permissions ? errors.permissions.message : false}
-          register={register('permissions', [])}
+          label="Select Permissions"
+          register={register('permissions')}
         >
-          <OptionWithCheckbox value="id-1"> Edit STS Entry</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-2"> Edit Vehicle Entry</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-3">
-            {' '}
-            Edit Landfill Entry{' '}
-          </OptionWithCheckbox>
-          <OptionWithCheckbox value="id-4"> Edit User</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-5"> View User</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-6"> Edit Role</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-7"> View Role</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-8"> Edit Permission</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-9"> View Permission</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-10"> View STS Entry</OptionWithCheckbox>
-          <OptionWithCheckbox value="id-11">
-            {' '}
-            View Vehicle Entry
-          </OptionWithCheckbox>
-          <OptionWithCheckbox value="id-12">
-            {' '}
-            View Landfill Entry
-          </OptionWithCheckbox>
+          {permissions?.map((user) => (
+            <OptionWithCheckbox key={user.id} value={String(user.id)}>
+              {user.name}
+            </OptionWithCheckbox>
+          ))}
         </MultipleSelect>
       </div>
 

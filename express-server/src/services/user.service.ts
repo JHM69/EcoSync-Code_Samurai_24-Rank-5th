@@ -107,13 +107,18 @@ export const deleteUser = async (userId: number) => {
 };
 
 // Function to list all users
-export const listUsers = async () => {
+export const listUsers = async (name : string) => {
+  const whereCondition = name ? { name: { contains: name } } : {};
   return await prisma.user.findMany({
+    where: whereCondition,
     include: {
       role: {
         include: { permissions: true }, // Including permissions information
       },
     }, // Including role information
+  }).catch((error) => {
+    console.log(error);
+    throw new HttpException(400, error.message);
   });
 };
 
