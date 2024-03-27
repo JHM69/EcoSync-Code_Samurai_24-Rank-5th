@@ -3,32 +3,37 @@ import React, { Fragment, useState } from 'react'
 
 import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import UserForm from '../UserForm'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
-const UpdateUser = ({ user, ...props }) => {
+import RoleForm from '../UserForm/RoleForm'
+const UpdateRole = ({ role, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
-
   const onFormSubmit = async (data) => {
-    const token = localStorage.getItem('token')
-    console.log(user)
-    await axios
-      .put(getBaseUrl() + `/users/${user.id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res)
-        if (res.status === 200 || res.status === 201) {
-          alert('Successfully Added.')
-        } else {
-          alert(res.status)
+    console.log(data)
+    console.log('token')
+
+    try {
+      const token = localStorage.getItem('token')
+      await axios
+        .post(getBaseUrl() + `/rbac/roles/${data.id}/permissions`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
           console.log(res)
-        }
-      })
+          if (res.status === 200 || res.status === 201) {
+            alert('Successfully Added.')
+          } else {
+            alert(res.status)
+            console.log(res)
+          }
+        })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -66,12 +71,12 @@ const UpdateUser = ({ user, ...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Update User</h3>
+                    <h3>Update Role</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <UserForm
-                    defaultValues={user}
+                  <RoleForm
+                    defaultValues={role}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
                   />
@@ -85,4 +90,4 @@ const UpdateUser = ({ user, ...props }) => {
   )
 }
 
-export default UpdateUser
+export default UpdateRole

@@ -1,41 +1,46 @@
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
-import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import UserForm from '../UserForm'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
-const UpdateUser = ({ user, ...props }) => {
+
+import { FaEye } from 'react-icons/fa'
+import UserLayout from './UserLayout'
+const UserInfo = ({ user, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
 
-  const onFormSubmit = async (data) => {
+  const [userLive, setUserLive] = React.useState({...user})
+  const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState(null)
+
+  useEffect(() => {
+    setLoading(true)
     const token = localStorage.getItem('token')
-    console.log(user)
-    await axios
-      .put(getBaseUrl() + `/users/${user.id}`, data, {
+    axios
+      .get(getBaseUrl() + '/users/' + user.id, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        console.log(res)
-        if (res.status === 200 || res.status === 201) {
-          alert('Successfully Added.')
-        } else {
-          alert(res.status)
-          console.log(res)
-        }
+        console.log(res.data)
+        setUserLive(res.data)
+        setLoading(false)
       })
-  }
+      .catch((err) => {
+        setLoading(false)
+        console.log(err)
+      })
+  }, [user.id])
 
   return (
     <>
-      <Button onClick={handleOpen} type="button" {...props}>
-        Update
-      </Button>
+      <div  onClick={handleOpen} {...props} className="smooth-effect m-3 rounded bg-yellow-300 p-2 text-yellow-800 shadow hover:bg-yellow-400">
+        <FaEye />
+      </div>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
           <Transition.Child
@@ -66,15 +71,22 @@ const UpdateUser = ({ user, ...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Update User</h3>
+                    <h3>User Information</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <UserForm
-                    defaultValues={user}
-                    type={'Update'}
-                    onFormSubmit={onFormSubmit}
-                  />
+                  {!loading ? (
+                    <UserLayout user={userLive} />
+                  ) : (
+                    <div className="flex flex-col space-y-3">
+                      <div className="flex flex-col space-y-1">
+                        <div className="h-40 animate-pulse rounded-md bg-gray-200" />
+                        <div className="h-20 animate-pulse rounded-md bg-gray-200" />
+                      </div>
+                      <div className="h-10 animate-pulse rounded-md bg-gray-200" />
+                      <div className="h-30 animate-pulse rounded-md bg-gray-200" />
+                    </div>
+                  )}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -85,4 +97,4 @@ const UpdateUser = ({ user, ...props }) => {
   )
 }
 
-export default UpdateUser
+export default UserInfo

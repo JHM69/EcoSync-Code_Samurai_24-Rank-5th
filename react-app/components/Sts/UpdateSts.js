@@ -3,19 +3,21 @@ import React, { Fragment, useState } from 'react'
 
 import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import UserForm from '../UserForm'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
-const UpdateUser = ({ user, ...props }) => {
+import StsForm from '../StsForm'
+import { BiEdit, BiPencil } from 'react-icons/bi'
+import { FaEdit, FaUserEdit } from 'react-icons/fa'
+const UpdateSts = ({ sts, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
 
   const onFormSubmit = async (data) => {
     const token = localStorage.getItem('token')
-    console.log(user)
+    console.log(sts)
     await axios
-      .put(getBaseUrl() + `/users/${user.id}`, data, {
+      .put(getBaseUrl() + `/sts/${sts.id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,9 +35,9 @@ const UpdateUser = ({ user, ...props }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} type="button" {...props}>
-        Update
-      </Button>
+     <div  onClick={handleOpen} className='smooth-effect hover:bg-green-400 text-green-800 bg-green-300 rounded p-2 m-3 shadow'>
+         <BiPencil {...props} />
+      </div>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
           <Transition.Child
@@ -66,12 +68,12 @@ const UpdateUser = ({ user, ...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Update User</h3>
+                    <h3>Update STS</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <UserForm
-                    defaultValues={user}
+                  <StsForm
+                    defaultValues={sts}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
                   />
@@ -85,4 +87,4 @@ const UpdateUser = ({ user, ...props }) => {
   )
 }
 
-export default UpdateUser
+export default UpdateSts

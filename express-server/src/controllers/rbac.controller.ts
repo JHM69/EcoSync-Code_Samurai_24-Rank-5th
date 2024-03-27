@@ -6,8 +6,7 @@ const router = Router();
 
 import { listRoles, listPermissions } from '../services/user.service';
 import { connectRoleAndPermissions } from '../services/rbac.service';
-import HttpException from '../models/http-exception.model';
-
+ 
 // get all roles
 router.get(
   '/rbac/roles',

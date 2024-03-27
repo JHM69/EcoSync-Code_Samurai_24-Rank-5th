@@ -4,8 +4,7 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  // Roles creation
+async function main() { 
   console.log('Seeding roles and permissions');
   await prisma.role.createMany({
     data: [
@@ -63,6 +62,30 @@ async function main() {
       },
     },
   });
+   await prisma.role.update({
+    where: { id: 2 },
+    data: {
+      permissions: {
+        connect: [
+          { id: 10 },
+          { id: 11 },
+          { id: 12 },
+        ],
+      },
+    },
+  });
+    await prisma.role.update({
+      where: { id: 3 },
+      data: {
+        permissions: {
+          connect: [
+            { id: 7 },
+            { id: 8 },
+            { id: 9 },
+          ],
+        },
+      },
+    });
 
   console.log('Permissions linked to SystemAdmin Role');
 

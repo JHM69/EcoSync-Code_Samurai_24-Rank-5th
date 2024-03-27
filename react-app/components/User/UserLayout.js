@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
-import Image from 'next/image'
-import Link from 'next/link'
 import React from 'react'
+import UpdateUser from './UpdateUser'
+import DeleteSong from './DeleteUser'
 
 const Section = ({ title, children, ...props }) => (
   <section className="mb-3 rounded-md border px-3 py-4" {...props}>
@@ -13,8 +13,16 @@ const Section = ({ title, children, ...props }) => (
 const UserLayout = ({ user }) => {
   return (
     <div className="mt-6 flex flex-col md:flex-row">
+     
       <div className="w-full">
+
         <Section title={'User Information'}>
+        <div className="flex items-center space-x-2">
+            <UpdateUser user={user} />
+            <DeleteSong
+              userId={user?.id}
+            />
+          </div>
           <section className="mb-3 rounded-md border px-3 py-4">
             <div className="flex items-center space-x-4">
               <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">

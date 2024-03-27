@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 const MultipleSelect = ({ name, label, register, children, error, className, ...props }) => {
   const isMultiple = props.multiple; // Check if the select should allow multiple selections
-
+ 
   return (
     <div className="mb-2">
       <label
