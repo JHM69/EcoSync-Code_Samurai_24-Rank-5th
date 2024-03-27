@@ -224,6 +224,22 @@ const createLandfillEntry = async (
   landfillId: number,
   userID: number,
 ) => {
+   // get the vehicle
+   const vehicle = await prisma.vehicle.findUnique({
+    where: {
+      id: Number(landfillEntryData.vehicleId),
+    },
+  });
+  // update the remaining capacity of the vehicle
+  await prisma.vehicle.update({
+    where: {
+      id: Number(landfillEntryData.vehicleId),
+    },
+    data: {
+      // @ts-ignore
+      remainingCapacity: vehicle?.capacity,
+    },
+  });
   return await prisma.truckDumpEntry.create({
     data: {
       volumeOfWaste: Number(landfillEntryData.volumeOfWaste),

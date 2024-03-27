@@ -37,6 +37,7 @@
     "multer-s3": "^3.0.1",
     "node-cache": "^5.1.2",
     "nodemailer": "^6.9.1",
+    "puppeteer": "^22.6.1",
     "slugify": "^1.6.0",
     "ts-node": "^10.7.0"
   },
