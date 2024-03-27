@@ -77,6 +77,8 @@ model Vehicle {  // 147 vehicles
   isFull        Boolean @default(false)
   loaddedFuelCost Float
   unloadedFuelCost Float
+  stsId        Int?
+  sts          STS?      @relation(fields: [stsId], references: [id])
   vehicleEntries VehicleEntry[]
   truckDumpEntries TruckDumpEntry[] 
   @@index([type], name: "idx_vehicle_type")  
@@ -95,6 +97,7 @@ model STS {  // 54 STS
   address             String?
   logo                String?
   managers             User[]
+  vehicles            Vehicle[]
   vehicleEntries      VehicleEntry[]
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
@@ -141,6 +144,9 @@ model Landfill {
   id              Int      @id @default(autoincrement())
   name            String
   capacity        Int
+  currentWasteVolume Int
+  startTime      String
+  endTime        String
   gpsCoords       String
   lat             Float
   lon             Float
