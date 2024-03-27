@@ -68,7 +68,7 @@ const ApplicationBar: React.FC<{
 
                 <div className='flex flex-col mx-2 justify-center'>
                   <span className="text-[#1b1b1b] text-[14px] font-bold">{user?.name}</span>
-                  <span className="text-[#2e2e2e] text-[11px]">{user?.role.type}</span>
+                  <span className="text-[#2e2e2e] text-[11px]">{user?.role?.type}</span>
                 </div>
                 
               </div>

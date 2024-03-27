@@ -7,7 +7,7 @@ const makeTitle = (title, name) =>
  
 
 const Meta = ({
-  title = 'Shuno CMS',
+  title = 'EcoSync by Quantum Guys',
   name = '',
   description = 'Content management system for Shuno',
   url = getBaseUrl(),
