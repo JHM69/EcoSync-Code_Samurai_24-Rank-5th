@@ -6,6 +6,7 @@ import landfillController from  '../controllers/landfillmanager.controller';
 import rbacController from  '../controllers/rbac.controller';
 import authController from '../controllers/auth.controller';
 import vehicleController from '../controllers/vehicle.controller';
+import billController from '../controllers/bill.controller';
 
 const api = Router() 
   .use(usersController) 
@@ -13,7 +14,8 @@ const api = Router()
   .use(stsManagerController)
   .use(landfillController)
   .use(rbacController)
-  .use(vehicleController);
+  .use(vehicleController)
+  .use(billController);
 
 
 export default Router().use('/', api);
