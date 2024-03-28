@@ -137,3 +137,35 @@ textarea {
   position: sticky;
   top: 0;
 }
+
+
+.marker-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.marker-icon {
+  height: 24px; /* Adjust based on your preference */
+  width: 24px;
+  background-color: #76C75E;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Adds a little shadow for depth */
+}
+
+.info-box {
+  position: absolute;
+  bottom: 30px; /* Adjust based on your marker size */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap; /* Keeps the text on one line */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

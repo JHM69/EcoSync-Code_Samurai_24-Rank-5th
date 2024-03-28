@@ -1,12 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 
-import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import { getBaseUrl } from '../../utils/url'
-import axios from 'axios'
-import StsForm from '../StsForm' 
 import { FaEye } from 'react-icons/fa' 
+import MapView from '../common/MapView'
 function ProgressBar({ currentWasteVolume, capacity }) {
   // Calculate the percentage of waste volume relative to the capacity
   const percentage = (currentWasteVolume / capacity) * 100
@@ -114,10 +111,16 @@ const STSInfo = ({ sts, ...props }) => {
                         </section>
                       </Section>
 
-                      <Section title={'Geo Location'}>
-                        <h3 className="font-bond text-xl text-gray-500">
-                          {sts?.lat} {sts?.lon}
-                        </h3>
+                      <Section title={'Location'}>
+                        <MapView
+                          lat={sts.lat}
+                          lon={sts.lon}
+                          name={sts.wardNumber}
+                          address = {sts.address}
+                        />
+                        
+
+
                       </Section>
 
                       <Section title={'Waste Information'}>
