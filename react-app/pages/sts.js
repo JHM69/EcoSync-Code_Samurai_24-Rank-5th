@@ -2,17 +2,13 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/react-in-jsx-scope */
 import Layout from '../components/layout'
-import UserItems from '../components/Users/UserItems'
 import { useEffect, useState } from 'react'
 import UserItemsSkeleton from '../components/Users/UserItemsSkeleton'
 import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
-import AddUser from '../components/User/AddUser'
-import RoleItemsSkeletonItem from '../components/Users/RoleItemsSkeleton'
-import UpdateRole from '../components/User/UpdateRole'
 import AddSts from '../components/Sts/AddSts'
 import StsItems from '../components/Stss/StsItems'
-function Users() {
+function Stss() {
   const [loading, setLoading] = useState(true)
   const [stss, setSts] = useState([])
   useEffect(() => {
@@ -54,8 +50,8 @@ function Users() {
   )
 }
 
-export default Users
+export default Stss
 
-Users.getLayout = function getLayout(page) {
-  return <Layout meta={{ name: 'User and Access Control' }}>{page}</Layout>
+Stss.getLayout = function getLayout(page) {
+  return <Layout meta={{ name: 'STS' }}>{page}</Layout>
 }
