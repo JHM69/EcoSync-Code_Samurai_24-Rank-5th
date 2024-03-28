@@ -13,7 +13,7 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
+    setValue
   } = useForm()
 
   useEffect(() => {
@@ -26,7 +26,6 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     }
   }, [defaultValues, setValue])
 
-
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
     reset()
@@ -34,7 +33,7 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
 
   return (
     <div {...props} className="flex flex-col space-y-6">
-      <div>
+      <form>
         <Input
           name="registrationNumber"
           label="Registration Number"
@@ -48,8 +47,8 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('registrationNumber', {
             required: {
               value: true,
-              message: 'Registration Number is required',
-            },
+              message: 'Registration Number is required'
+            }
           })}
         />
 
@@ -60,8 +59,8 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('type', {
             required: {
               value: true,
-              message: 'Type is required',
-            },
+              message: 'Type is required'
+            }
           })}
         >
           <option value="Compactor">Compactor</option>
@@ -79,8 +78,8 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('capacity', {
             required: {
               value: true,
-              message: 'Capacity is required',
-            },
+              message: 'Capacity is required'
+            }
           })}
         />
 
@@ -95,8 +94,8 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('loaddedFuelCost', {
             required: {
               value: true,
-              message: 'Loadded Fuel Cost is required',
-            },
+              message: 'Loadded Fuel Cost is required'
+            }
           })}
         />
 
@@ -111,15 +110,15 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('unloadedFuelCost', {
             required: {
               value: true,
-              message: 'Unloadded Fuel Cost is required',
-            },
+              message: 'Unloadded Fuel Cost is required'
+            }
           })}
         />
-      </div>
 
       <Button type="button" onClick={onSubmit} className="w-full">
         {type ? `${type} Vehicle` : 'Submit'}
       </Button>
+      </form>
     </div>
   )
 }

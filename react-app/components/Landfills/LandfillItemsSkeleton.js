@@ -11,7 +11,7 @@ const ItemSkeleton = () => {
   )
 }
 
-const ArtistItemsSkeleton = () => (
+const LandfillItemsSkeleton = () => (
   <>
     {new Array(5).fill(0).map((_, idx) => (
       <ItemSkeleton key={idx} />
@@ -19,4 +19,4 @@ const ArtistItemsSkeleton = () => (
   </>
 )
 
-export default ArtistItemsSkeleton
+export default LandfillItemsSkeleton

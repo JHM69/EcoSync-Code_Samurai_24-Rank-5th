@@ -34,10 +34,7 @@ const StsItem = ({
           capacity={capacity}
         />
       </div>
-
-      <p className="flex-1 truncate px-2 font-medium">
-        {lat} - {lon}
-      </p>
+ 
 
       <p className="flex-1 truncate px-2 font-medium">
         {managers && managers[0]?.name}
@@ -87,7 +84,7 @@ const StsItem = ({
   }
 
   return (
-    <div className="relative h-6 w-[200px] overflow-hidden rounded-full border-[1px] border-[#76C75E] bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
+    <div className="relative h-6 w-[169px] overflow-hidden rounded-full border-[1px] border-[#76C75E] bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
       {/* Filled part */}
       <div
         className="h-full rounded-l-full bg-[#76C75E]"

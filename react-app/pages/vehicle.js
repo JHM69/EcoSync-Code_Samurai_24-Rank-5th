@@ -35,7 +35,7 @@ function Vehicles() {
 
   return (
     <div>
-      <div className="flex flex-row gap-3">
+      <div className="flex md:px-6 flex-row gap-3">
         <div className="flex w-full flex-col">
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">Vehicle</h1>

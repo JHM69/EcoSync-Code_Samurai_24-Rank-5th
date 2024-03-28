@@ -36,7 +36,7 @@ const Layout = ({ meta, children, ...props }) => {
               toggleSidebar={toggleSidebar}
             />
 
-        <main className="flex-1 px-2 py-2 md:px-6" {...props}>
+        <main className="flex-1 px-2 py-2" {...props}>
           {children}
         </main>
         {router.pathname === '/' && <Footer />}

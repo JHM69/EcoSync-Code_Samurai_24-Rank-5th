@@ -1,42 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 
-import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import { getBaseUrl } from '../../utils/url'
-import axios from 'axios'
-import VehicleForm from '../VehicleForm' 
 import { FaEye } from 'react-icons/fa' 
 import MapView from '../common/MapView'
-function ProgressBar({ currentWasteVolume, capacity }) {
-  // Calculate the percentage of waste volume relative to the capacity
-  const percentage = (currentWasteVolume / capacity) * 100
-
-  // Style for the progress bar's filled portion
-  const barStyle = {
-    width: `${Math.max(percentage, 0)}%`, // Ensure width is not negative
-  }
-
-  return (
-    <div className="relative h-6 w-[200px] overflow-hidden rounded-full border-[1px] border-[#76C75E] bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
-      {/* Filled part */}
-      <div
-        className="h-full rounded-l-full bg-[#76C75E]"
-        style={barStyle}
-      ></div>
-      {/* Text part: Centered using flex container */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xs font-medium  ">
-          {currentWasteVolume >= 0
-            ? `${currentWasteVolume}/${capacity} Ton (${percentage.toFixed(
-                2
-              )}%)`
-            : `0/${capacity} Ton (0%)`}
-        </span>
-      </div>
-    </div>
-  )
-}
+ 
 const Section = ({ title, children, ...props }) => (
   <section className="mb-3 rounded-md border px-3 py-4" {...props}>
     <h3 className="mb-3 text-xl font-semibold text-gray-500">{title}</h3>
@@ -45,7 +13,7 @@ const Section = ({ title, children, ...props }) => (
 )
 
 
-const VehicleInfo = ({ vehicle, ...props }) => {
+const LandfillInfo = ({ landfill, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -88,54 +56,59 @@ const VehicleInfo = ({ vehicle, ...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Vehicle Information</h3>
+                    <h3>Landfill Information</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
                   <div className="mt-6 flex flex-col md:flex-row">
                     <div className="w-full">
-                      <Section title={'Vehicle Information'}>
+                      <Section title={'Landfill Information'}>
                         <section className="mb-3 rounded-md border px-3 py-4">
                           <div className="flex items-center space-x-4">
                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
-                              <img
-                                src={vehicle.icon}
-                                alt={vehicle.registrationNumber}
-                                width={64}
-                                height={64}
-                              />
+                               
                             </div>
                             <div className="flex flex-col">
                               <h3 className="text-xl font-semibold text-gray-500">
-                                {vehicle.registrationNumber}
+                                {landfill.name}
                               </h3>
-                              <p className="text-gray-600">{vehicle.address}</p>
+                              <p className="text-gray-600">{landfill.address}</p>
                             </div>
                           </div>
                         </section>
                       </Section>
 
-                       
                       <Section title={'Location'}>
                         <MapView
-                          lat={vehicle.lat}
-                          lon={vehicle.lon}
-                          name={vehicle.registrationNumber}
-                          address = {vehicle.address}
+                          lat={landfill.lat}
+                          lon={landfill.lon}
+                          name={landfill.name}
+                          address = {landfill.address}
                         />
-                        </Section>
+                        
+
+
+                      </Section>
 
                       <Section title={'Waste Information'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Capacity : {vehicle?.capacity}
+                          capacity : {landfill?.capacity}
                         </h3>
-                        <h3 className="font-bond text-xl text-gray-500">
-                          Current Waste Volume : {vehicle?.currentWasteVolume}
-                        </h3>
-                        <ProgressBar
-                          currentWasteVolume={vehicle.currentWasteVolume}
-                          capacity={vehicle.capacity}
-                        />
+                        
+                         
+                      </Section>
+
+                      <Section title={'Landfill Managers'}>
+                        {landfill.managers.map((manager) => (
+                          <div
+                            key={landfill.id}
+                            className="mb-3 rounded-md border px-3 py-4"
+                          >
+                            <p className="text-xl font-semibold text-gray-500">
+                              {manager.name}
+                            </p>
+                          </div>
+                        ))}
                       </Section>
                     </div>
                   </div>
@@ -149,4 +122,4 @@ const VehicleInfo = ({ vehicle, ...props }) => {
   )
 }
 
-export default VehicleInfo
+export default LandfillInfo

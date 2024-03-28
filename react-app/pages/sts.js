@@ -8,6 +8,7 @@ import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
 import AddSts from '../components/Sts/AddSts'
 import StsItems from '../components/Stss/StsItems'
+ 
 function Stss() {
   const [loading, setLoading] = useState(true)
   const [stss, setSts] = useState([])
@@ -35,7 +36,7 @@ function Stss() {
 
   return (
     <div>
-      <div className="flex flex-row gap-3">
+      <div className="flex md:px-6 flex-row gap-3">
         <div className="flex w-full flex-col">
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">STS</h1>

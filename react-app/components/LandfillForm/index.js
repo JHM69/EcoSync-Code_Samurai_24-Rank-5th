@@ -2,50 +2,38 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../common/Button'
-import Input from '../common/Input'
-import Select from '../common/Select'
+import Input from '../common/Input' 
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
 import { MultipleSelect, OptionWithCheckbox } from '../common/MultipleSelect'
-const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
+const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
+    setValue
   } = useForm()
 
   const [search, setSearch] = useState('')
-  const [stsManagers, setStsMans] = useState([])
-
-  const [search2, setSearch2] = useState('')
-  const [vehicles, setVehicles] = useState([])
-
+  const [landfillManagers, setlandfillManagers] = useState([])
+ 
   useEffect(() => {
     if (defaultValues) {
-      setValue('wardNumber', defaultValues.wardNumber)
+      setValue('name', defaultValues.name)
       setValue('capacity', defaultValues.capacity)
       setValue('lat', defaultValues.lat)
       setValue('lon', defaultValues.lon)
-
-      setValue('address', defaultValues.address)
-      setValue('logo', defaultValues.logo)
-      if (vehicles) {
-        setValue(
-          'vehicleIds',
-          defaultValues.vehicles.map((vehicle) => vehicle.id.toString()) || []
-        )
-      }
-
-      if (stsManagers) {
+      setValue('address', defaultValues.address) 
+      
+      if (landfillManagers) {
         setValue(
           'managerIds',
           defaultValues.managers.map((manager) => manager.id.toString()) || []
         )
       }
     }
-  }, [defaultValues, setValue, stsManagers, vehicles])
+  }, [defaultValues, setValue, landfillManagers])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -53,30 +41,15 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
       axios
         .get(`${getBaseUrl()}/users?search=${search}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`
           }
         })
         .then((res) => {
-          setStsMans(res.data)
+          setlandfillManagers(res.data)
         })
     }
   }, [search])
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      axios
-        .get(`${getBaseUrl()}/vehicle?search=${search2}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setVehicles(res.data)
-        })
-    }
-  }, [search2])
-
+ 
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
     reset()
@@ -86,18 +59,20 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     <div {...props} className="flex flex-col space-y-6">
       <div>
         <Input
-          name="wardNumber"
-          label="Ward Number"
-          placeholder="Ward Number..."
+          name="name"
+          label="Landfill Name"
+          placeholder="Landfill Number..."
           type="text"
-          error={errors.wardNumber ? errors.wardNumber.message : false}
-          register={register('wardNumber', {
+          error={errors.name ? errors.name.message : false}
+          register={register('name', {
             required: {
               value: true,
-              message: 'Ward Number is required',
-            },
+              message: 'Landfill Name is required'
+            }
           })}
         />
+
+
         <Input
           name="capacity"
           label="Capacity"
@@ -107,8 +82,8 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('capacity', {
             required: {
               value: true,
-              message: 'Capacity is required',
-            },
+              message: 'Capacity is required'
+            }
           })}
         />
 
@@ -121,8 +96,8 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('lat', {
             required: {
               value: true,
-              message: 'Latitude is required',
-            },
+              message: 'Latitude is required'
+            }
           })}
         />
 
@@ -135,7 +110,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('lon', {
             required: {
               value: true,
-              message: 'Longitude is required',
+              message: 'Longitude is required'
             }
           })}
         />
@@ -149,15 +124,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('address')} // No need for full validation object if optional
         />
 
-        <Input
-          name="logo"
-          label="Logo"
-          placeholder="Logo URL..."
-          type="text"
-          error={errors.logo ? errors.logo.message : false}
-          register={register('logo')}
-        />
-
+ 
         <div className="flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
           <div className="flex">
             <input
@@ -181,62 +148,26 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           </div>
 
           <MultipleSelect
-            name="vehicles"
+            name="managerIds"
             multiple={true}
             label="Select Vehicles..."
-            register={register('vehicles')}
+            register={register('managerIds')}
           >
-            {stsManagers?.map((user) => (
-              <OptionWithCheckbox key={user.id} value={user.id.toString()}>
-                
+            {landfillManagers?.map((user) => (
+              <OptionWithCheckbox key={user.id.toString()} value={(user.id.toString())}>
                 {user.name}
               </OptionWithCheckbox>
             ))}
           </MultipleSelect>
         </div>
-
-        <div className="mt-3 flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
-          <div className="flex">
-            <input
-              className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
-              name="search"
-              label="Search Vehicles..."
-              placeholder="Search Vehicle by Registration Number.."
-              type="textarea"
-              value={search2}
-              onChange={(e) => setSearch2(e.target.value)}
-            />
-            <button
-              onClick={() => {
-                setSearch('')
-              }}
-              type="button"
-              className="w-1/5"
-            >
-              Clear
-            </button>
-          </div>
-
-          <MultipleSelect
-            name="vehicleIds"
-            multiple={true}
-            label="Select Vehicles..."
-            register={register('vehicleIds')}
-          >
-            {vehicles?.map((v) => (
-              <OptionWithCheckbox key={v.id} value={v.id.toString() }>
-                {v.registrationNumber}
-              </OptionWithCheckbox>
-            ))}
-          </MultipleSelect>
-        </div>
+ 
       </div>
 
       <Button type="button" onClick={onSubmit} className="w-full">
-        {type ? `${type} STS` : 'Submit'}
+        {type ? `${type} Landfill` : 'Submit'}
       </Button>
     </div>
   )
 }
 
-export default StsForm
+export default LandfillForm

@@ -3,36 +3,30 @@ import React, { Fragment, useState } from 'react'
 
 import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
-import ArtistForm from '../ArtistForm'
-import { getBaseUrl } from '../../utils/url'
+import LandfillForm from '../LandfillForm'
 
-const AddArtist = ({ props }) => {
+import { getBaseUrl } from '../../utils/url'
+import axios from 'axios'
+import toast, { Toaster } from 'react-hot-toast'
+const AddLandfill = ({ props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
   const onFormSubmit = async (data) => {
-    console.log(data)
     try {
-      const user = JSON.parse(localStorage.getItem('user'))
-
-      await fetch(getBaseUrl() + `/artists`, {
-        method: 'POST',
+      console.log(data)
+      const token = localStorage.getItem('token')
+      await axios.post(getBaseUrl() + '/landfills', data, {
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
-      }).then((res) => {
-        console.log(res)
-        if (res.status === 200 || res.status === 201) {
-          // handleClose()
-          // window.location.reload()
-          alert('Successfully Added.')
-        } else {
-          alert(res.status)
-          console.log(res)
-        }
-      })
+      }).then(response => {
+        console.log(response)
+        toast.success('landfill added successfully')
+
+    }).catch(error =>
+        console.log(error)
+      )
     } catch (error) {
       console.log(error)
     }
@@ -40,8 +34,9 @@ const AddArtist = ({ props }) => {
 
   return (
     <>
+    <Toaster />
       <Button onClick={handleOpen} type="button" {...props}>
-        Add Artist
+        Add landfill
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
@@ -68,16 +63,16 @@ const AddArtist = ({ props }) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-xl transform overflow-y-auto rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-2xl transform overflow-y-auto rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Add Artist</h3>
+                    <h3>Add landfill</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <ArtistForm type={'Add'} onFormSubmit={onFormSubmit} />
+                  <LandfillForm type={'Add'} onFormSubmit={onFormSubmit} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -88,4 +83,4 @@ const AddArtist = ({ props }) => {
   )
 }
 
-export default AddArtist
+export default AddLandfill

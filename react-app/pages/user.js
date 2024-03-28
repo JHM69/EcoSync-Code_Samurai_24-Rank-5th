@@ -52,7 +52,7 @@ function Users() {
 
   return (
     <div>
-      <div className="flex flex-row gap-3">
+      <div className="flex md:px-6 flex-row gap-3">
         <div className="flex w-2/3 flex-col">
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">Users</h1>
@@ -74,7 +74,7 @@ function Users() {
               {roles?.length ? (
                 roles?.map((role) => {
                   return (
-                    <div className="smooth-effect my-1 flex cursor-pointer items-center rounded-md border px-3 py-2 shadow-sm hover:bg-green-200 hover:shadow lg:px-2">
+                    <div className="smooth-effect my-1 flex cursor-pointer items-center rounded-md border px-3 py-2 shadow-sm hover:bg-green-100 hover:shadow lg:px-2">
                       <p className="flex-1 truncate font-bold">{role.type}</p>
                       <p className="flex-1 truncate px-2 font-medium">
                         <UpdateRole role={role} />

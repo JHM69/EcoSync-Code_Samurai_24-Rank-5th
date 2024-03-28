@@ -26,7 +26,7 @@ const VehicleItem = ({
         </div>
       </td> */}
 
-      <td className="w-1/5 py-4 text-center">
+      <td className="pl-4 w-1/5 py-4 text-start">
         <p className="flex-1 truncate font-bold">
           {registrationNumber} - {type}{' '}
         </p>
@@ -41,11 +41,7 @@ const VehicleItem = ({
         </div>
       </td>
 
-      <td className="w-1/5 py-4 text-center">
-        <p className="flex-1 truncate px-2 font-medium">
-          {lat} - {lon}
-        </p>
-      </td>
+     
 
       <td className="w-1/5 py-4 text-center">
         <div className="flex-1">
@@ -103,7 +99,7 @@ function ProgressBar({ currentWasteVolume, capacity }) {
   }
 
   return (
-    <div className="relative h-8 w-full overflow-hidden rounded-full border-[1px] border-[#76C75E] bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
+    <div className="relative h-6 w-[160px] overflow-hidden rounded-full border-[1px] border-[#76C75E] bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
       <div
         className="h-full rounded-l-full bg-[#76C75E]"
         style={barStyle}

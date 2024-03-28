@@ -14,20 +14,19 @@ const RoleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     setValue
   } = useForm()
 
-  console.log(
-    defaultValues.permissions
-  )
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    if (defaultValues) {
+    if (defaultValues && loaded) {
       setValue('type', defaultValues.type)
-      setValue(
-        'vehicleIds',
-        defaultValues.permissions.map((p) => (p.id)).toString  
-      )
-       
+      setValue('permissionIds', defaultValues.permissions.map((p) => p.name))
     }
-  }, [defaultValues, setValue])
+  }, [defaultValues, setValue, loaded])
+
+  // print permissionIds
+  console.log(register('permissionIds'))
+
+  console.log(register('type'))
 
   const [permissions, setPermissions] = useState([])
 
@@ -42,18 +41,21 @@ const RoleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
         })
         .then((res) => {
           setPermissions(res.data)
+          setLoaded(true)
         })
     }
   }, [])
 
   const onSubmit = handleSubmit(async (data) => {
-    await onFormSubmit(data)
+    console.log(data)
+
+    // await onFormSubmit(data)
     reset()
   })
 
   return (
     <div {...props} className="flex flex-col space-y-6">
-      <div>
+      <form>
         <Input
           name="type"
           disabled
@@ -70,18 +72,18 @@ const RoleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
         />
 
         <MultipleSelect
-          name="permissions"
+          name="permissionIds"
           multiple={true}
           label="Select Permissions"
-          register={register('permissions')}
+          register={register('permissionIds')}
         >
-          {permissions?.map((user) => (
-            <OptionWithCheckbox key={user.id} value={String(user.id)}>
-              {user.name}
+          {permissions?.map((p) => (
+            <OptionWithCheckbox key={p.name} value={p.name}>
+              {p.name}
             </OptionWithCheckbox>
           ))}
         </MultipleSelect>
-      </div>
+      </form>
 
       <Button type="button" onClick={onSubmit} className="w-full">
         {type ? `${type} Role` : 'Submit'}

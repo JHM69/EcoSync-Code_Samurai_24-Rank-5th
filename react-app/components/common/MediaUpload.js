@@ -66,7 +66,7 @@ const MediaUpload = ({ defaultValues = [], setValue }) => {
         type="file"
         multiple
         onChange={handleOnChange}
-        className="mb-3 w-full rounded-md border p-3 focus:border-sky-300 focus:ring-sky-300"
+        className="mb-3 w-full rounded-md border p-3 focus:border-green-300 focus:ring-green-300"
       />
       <div>
         <div className="mb-2 grid max-w-full grid-cols-2 gap-2 overflow-hidden">

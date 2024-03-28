@@ -1,8 +1,9 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { Disclosure } from '@headlessui/react'
 import clsx from 'clsx'
 import ChevronRight from './icons/ChevronRight'
 
-export default function FormSection({ title, children, ...props }) {
+export default function FormSection ({ title, children, ...props }) {
   return (
     <Disclosure as="div" {...props}>
       {({ open }) => (
@@ -10,7 +11,7 @@ export default function FormSection({ title, children, ...props }) {
           <Disclosure.Button
             as="div"
             className={clsx(
-              'bg-blue-100 flex items-center justify-between rounded-md border p-3 font-medium',
+              'bg-blue-100 smooth-effect flex items-center justify-between rounded-md border p-3 font-medium',
               !open && 'shadow-sm hover:shadow-md'
             )}
           >
@@ -18,7 +19,7 @@ export default function FormSection({ title, children, ...props }) {
             <ChevronRight
               className={clsx(
                 'text-gray-600',
-                open && 'rotate-90 transform duration-100'
+                open && 'rotate-90 smooth-effect transform duration-400'
               )}
             />
           </Disclosure.Button>
