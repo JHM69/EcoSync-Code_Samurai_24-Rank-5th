@@ -72,7 +72,7 @@ export default function MapView ({ lat, lon, name, address }) {
   return (
     <div style={{ height: '400px', width: '100%', borderRadius: '10px' }}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: 'YOUR_API_KEY' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
+        bootstrapURLKeys={{ key: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
         defaultCenter={defaultProps.center}
         defaultZoom={defaultProps.zoom}
         yesIWantToUseGoogleMapApiInternals

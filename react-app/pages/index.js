@@ -1,9 +1,5 @@
 import Layout from '../components/layout'
-import {GoogleApiWrapper} from 'google-maps-react';
 
-export default GoogleApiWrapper({
-  apiKey: (YOUR_GOOGLE_API_KEY_GOES_HERE)
-})(MapContainer)
 function Index () {
   return (
     <>

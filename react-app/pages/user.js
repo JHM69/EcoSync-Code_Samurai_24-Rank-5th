@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import UserItemsSkeleton from '../components/Users/UserItemsSkeleton'
 import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
-import AddUser from '../components/User/AddUser' 
+import AddUser from '../components/User/AddUser'
 import RoleItemsSkeletonItem from '../components/Users/RoleItemsSkeleton'
 import UpdateRole from '../components/User/UpdateRole'
 function Users() {
@@ -57,7 +57,7 @@ function Users() {
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">Users</h1>
             <div className="flex items-center space-x-2">
-              <AddUser />
+              <AddUser props={{users ,setUsers, setLoading}}/>
             </div>
           </div>
           {loading ? <UserItemsSkeleton /> : <UserItems users={users} />}
@@ -65,7 +65,7 @@ function Users() {
 
         <div className="flex w-1/3 flex-col">
           <div className="mt-3 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-700 my-3 ">Roles</h1>
+            <h1 className="my-3 text-2xl font-bold text-gray-700 ">Roles</h1>
           </div>
           {loading ? (
             <RoleItemsSkeletonItem />
@@ -98,5 +98,11 @@ function Users() {
 export default Users
 
 Users.getLayout = function getLayout(page) {
-  return <Layout meta={{ name: 'User and Access Control' }}>{page}</Layout>
+  return (
+    <Layout
+      meta={{ name: 'User and Access Control' }}
+    >
+      {page}
+    </Layout>
+  )
 }

@@ -6,6 +6,9 @@ import BellNotification from './notifications/BellNotification'
 import SearchBox from './search/SearchBox'
 import { SettingsModal } from './sidebar/profile/SettingsModal'
 import SwitchLanguage from './common/SwitchLanguage'
+
+import axios from 'axios'
+import { getBaseUrl } from '../utils/url'
 /**
  * The top bar of the application, with the model and purpose selection, and menu/settings icons
  */
@@ -79,6 +82,7 @@ const ApplicationBar: React.FC<{
             open={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             user={user}
+            setUser={setUser}
           />
           {isModalOpen && (
             <div
