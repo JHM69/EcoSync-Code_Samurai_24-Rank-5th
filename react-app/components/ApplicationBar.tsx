@@ -1,46 +1,44 @@
-import * as React from 'react';
+import * as React from 'react'
 
-import { IoIosMenu } from 'react-icons/io';
-import { useEffect } from 'react';
-import BellNotification from './notifications/BellNotification';
-import SearchBox from './search/SearchBox';
-import { SettingsModal } from './sidebar/profile/SettingsModal';
-import SwitchLanguage from './common/SwitchLanguage';
+import { IoIosMenu } from 'react-icons/io'
+import { useEffect } from 'react'
+import BellNotification from './notifications/BellNotification'
+import SearchBox from './search/SearchBox'
+import { SettingsModal } from './sidebar/profile/SettingsModal'
+import SwitchLanguage from './common/SwitchLanguage'
 /**
  * The top bar of the application, with the model and purpose selection, and menu/settings icons
  */
 
 const ApplicationBar: React.FC<{
-  activeTabPageId: string;
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
+  activeTabPageId: string
+  isSidebarOpen: boolean
+  toggleSidebar: () => void
 }> = ({ isSidebarOpen, toggleSidebar, activeTabPageId }) => {
- 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
 
   const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
- 
-  const [user, setUser] = React.useState(null);
+    setIsModalOpen(!isModalOpen)
+  }
+
+  const [user, setUser] = React.useState(null)
 
   useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem('user')));
-  }, []);
+    setUser(JSON.parse(localStorage.getItem('user')))
+  }, [])
 
- 
   return (
     <>
       {/* Top Bar with 2 icons and Model/Purpose selectors */}
-      <div className="sticky top-0 z-10 md:z-10 w-full ">
-        <div className="flex flex-row items-center justify-between w-full border-b border-[#1e1e1e] border-opacity-10 h-16 bg-[#DFDFDF]">
+      <div className="sticky top-0 z-10 w-full md:z-10 ">
+        <div className="flex h-16 w-full flex-row items-center justify-between border-b border-green-500 border-opacity-100 bg-white">
           <button
             onClick={toggleSidebar}
-            className={`hover:opacity-75 transition absolute text-white z-30 h-14 w-14 ${
+            className={`absolute z-30 h-14 w-14 text-white transition hover:opacity-75 ${
               !isSidebarOpen ? 'block' : 'md:hidden'
             }`}
           >
-            <IoIosMenu className="h-6 w-6 mx-auto my-auto" />
+            <IoIosMenu className="mx-auto my-auto h-6 w-6" />
           </button>
 
           {/* search box  */}
@@ -51,49 +49,46 @@ const ApplicationBar: React.FC<{
           {/* user photo showing  */}
 
           <div className="flex items-center justify-between">
-           
-              <>
-              <BellNotification/>
-              <div  onClick={toggleModal} className="flex mr-10 flex-row items-center smooth-effect rounded-xl px-3 py-1 bg-green-100 hover:bg-green-300">
-               
+            <>
+              <BellNotification />
+              <SwitchLanguage />
+              <a
+                onClick={toggleModal}
+                className="smooth-effect mr-5 flex flex-row items-center px-3 py-1 text-black hover:text-green-500"
+              >
                 <img
-                  className="inline-block h-[27px] w-[27px] rounded-full cursor-pointer"
+                  className="inline-block h-[50px] w-[50px] cursor-pointer rounded-full"
                   src={user?.image || '/logo.png'}
                   alt="avatar"
-                  width={36}
-                  height={36}
-                 
+                  width={40}
+                  height={40}
                 />
-              
 
-                <div className='flex flex-col mx-2 justify-center'>
-                  <span className="text-[#1b1b1b] text-[14px] font-bold">{user?.name}</span>
-                  <span className="text-[#2e2e2e] text-[11px]">{user?.role?.type}</span>
+                <div className="mx-2 flex flex-col justify-center">
+                  <span className="text-[14px] font-bold">{user?.name}</span>
+                  <span className="rounded-xl bg-red-500 text-center text-[11px] font-bold text-white">
+                    {user?.role?.type}
+                  </span>
                 </div>
-                
-              </div>
-              <SwitchLanguage />
-              </> 
+              </a>
+            </>
           </div>
 
           {/* bg for close modal  */}
           <SettingsModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        user={user}
-      />
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            user={user}
+          />
           {isModalOpen && (
             <div
               onClick={() => setIsModalOpen(false)}
-              className="z-40 fixed h-screen w-screen"
+              className="fixed z-40 h-screen w-screen"
             ></div>
           )}
         </div>
-
-        
       </div>
     </>
-  );
-};
-export default ApplicationBar;
- 
+  )
+}
+export default ApplicationBar

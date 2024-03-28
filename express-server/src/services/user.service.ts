@@ -172,6 +172,8 @@ export const getProfile = async (userId: string) => {
       role: {
         include: { permissions: true }, // Including permissions information
       },
+      sts: true,
+      landfills: true,
     }, // Including role information
   });
 };
@@ -198,6 +200,13 @@ export const updateProfile = async (userId: number, name: string, image: string)
     data: {
       name: name || undefined,
       image: image || undefined,
+    },
+    include: {
+      role: {
+        include: { permissions: true }, // Including permissions information
+      },
+      sts: true,
+      landfills: true,
     },
   });
 };
