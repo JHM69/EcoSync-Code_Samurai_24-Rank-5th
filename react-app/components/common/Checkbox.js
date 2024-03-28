@@ -15,7 +15,7 @@ const Checkbox = ({ name, label, register, error, className, ...props }) => {
         className={clsx([
           'form-checkbox',
           error ? 'border-red-300 text-red-500' : 'border-gray-300',
-          'm-0 rounded-md transition ease-in-out focus:border-green-300 focus:outline-none focus:ring-green-300',
+          'm-0 rounded-md transition ease-in-out focus:border-sky-300 focus:outline-none focus:ring-sky-300',
           className,
         ])}
         name={name}

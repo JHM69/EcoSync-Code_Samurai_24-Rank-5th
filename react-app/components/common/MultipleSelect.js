@@ -1,42 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 
-const MultipleSelect = ({ name, label, register, children, error, className, ...props }) => {
-  const isMultiple = props.multiple; // Check if the select should allow multiple selections
+// Custom Dropdown Component
+const MultipleSelect = ({ name, label, children, error, className, ...props }) => {
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleOptionToggle = value => {
+    if (selectedOptions.includes(value)) {
+      setSelectedOptions(selectedOptions.filter(option => option !== value));
+    } else {
+      setSelectedOptions([...selectedOptions, value]);
+    }
+  };
 
   return (
-    <div className="mb-2">
-      <label
-        htmlFor={name}
-        className="mb-1 block text-sm font-medium text-gray-600"
-      >
+    <div className={clsx("mb-2", className)}>
+      <label htmlFor={name} className="mb-1 block text-sm font-medium text-gray-600">
         {label}
       </label>
-      <select
+      <div
         className={clsx([
-          'form-control block w-full border border-solid bg-white bg-clip-padding px-4 py-2 font-normal text-gray-700 focus:ring-2',
-          error ? 'border-red-300 ring ring-red-300' : 'border-gray-300',
-          'm-0 rounded-md transition ease-in-out focus:border-green-300 focus:bg-white focus:text-gray-700 focus:outline-none focus:ring-green-300',
-          className,
+          'relative border border-solid bg-white bg-clip-padding px-4 py-2 font-normal text-gray-700',
+          error ? 'border-red-300' : 'border-gray-300',
+          'rounded-md transition ease-in-out focus-within:border-green-300 focus-within:ring focus-within:ring-green-300',
         ])}
-        name={name}
-        multiple={isMultiple} // Enable multiple selections
-        {...props}
-        {...register}
       >
-        {children}
-      </select>
-      {error ? <p className="mt-2 text-xs text-red-500">{error}</p> : null}
+        {React.Children.map(children, child => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, {
+              onToggle: handleOptionToggle,
+              isSelected: selectedOptions.includes(child.props.value),
+            });
+          }
+          return child;
+        })}
+      </div>
+      {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
     </div>
   );
 };
 
-// Customized option component with checkbox
-const OptionWithCheckbox = ({ value, children, register, multiple }) => (
-  <option value={value} {...register} className="flex items-center">
-    {multiple && <input type="checkbox" value={value} />}
+// Custom Option Component with Checkbox
+const OptionWithCheckbox = ({ value, children, onToggle, isSelected }) => (
+  <div
+    className={clsx([
+      "flex items-center p-2 cursor-pointer",
+      isSelected ? 'bg-green-100' : 'hover:bg-gray-100'
+    ])}
+    onClick={() => onToggle(value)}
+  >
+    <input
+      type="checkbox"
+      checked={isSelected}
+      onChange={() => {}}
+      className="mr-2"
+      // Prevent the checkbox from directly toggling which causes a double toggle effect
+      onClick={e => e.stopPropagation()}
+    />
     {children}
-  </option>
+  </div>
 );
 
 export { MultipleSelect, OptionWithCheckbox };

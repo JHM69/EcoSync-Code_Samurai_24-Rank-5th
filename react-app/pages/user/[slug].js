@@ -11,13 +11,14 @@ import { getBaseUrl } from '../../utils/url'
 
 function Song () {
   const [user, setUser] = React.useState({})
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState(null)
 
   const router = useRouter()
 
   useEffect(() => {
     console.log(router.query.slug)
+    setLoading(true)
     const token = localStorage.getItem('token')
     axios.get(getBaseUrl() + '/users/' + router.query.slug, {
       headers: {
@@ -26,8 +27,10 @@ function Song () {
     }).then((res) => {
       console.log(res.data)
       setUser(res.data)
+      setLoading(false)
     }
     ).catch((err) => {
+      setLoading(false)
       console.log(err)
     })
   }, [router.query.slug])
@@ -42,17 +45,22 @@ function Song () {
           <div className="flex items-center space-x-2">
             <UpdateSong user={user} />
             <DeleteSong
-              slug={user?.slug}
+              userId={user?.id}
             />
           </div>
         </header>
-        {user
+        {!loading
           ? (
           <UserLayout user={user} />
             )
           : (
-          <div className="w-full text-center text-2xl font-bold text-gray-300">
-            No details
+          <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-1">
+              <div className="bg-gray-200 h-40 rounded-md animate-pulse" />
+              <div className="bg-gray-200 h-20 rounded-md animate-pulse" />
+            </div>
+            <div className="bg-gray-200 h-10 rounded-md animate-pulse" />
+            <div className="bg-gray-200 h-30 rounded-md animate-pulse" />
           </div>
             )}
       </div>

@@ -6,26 +6,32 @@ import { Close } from '../common/icons/Close'
 import UserForm from '../UserForm'
 
 import { getBaseUrl } from '../../utils/url'
+import axios from 'axios'
 const AddUser = ({ props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
   const onFormSubmit = async (data) => {
+    console.log(data)
+    console.log('token')
+
     try {
-      console.log(data)
-      const user = JSON.parse(localStorage.getItem('user'))
-      await fetch(getBaseUrl() + '/auth/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authoization: `Bearer ${user.token}`
-        },
-        body: JSON.stringify(data)
-      }).then(() => {
-        // handleClose()
-        // window.location.reload()
-        alert('Successfully Added.')
-      })
+      const token = localStorage.getItem('token')
+      await axios
+        .post(getBaseUrl() + `/auth/create`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          if (res.status === 200 || res.status === 201) {
+            alert('Successfully Added.')
+          } else {
+            alert(res.status)
+            console.log(res)
+          }
+        })
     } catch (error) {
       console.log(error)
     }

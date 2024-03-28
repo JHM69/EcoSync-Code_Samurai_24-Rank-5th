@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import prisma from '../../prisma/prisma-client';
 import HttpException from '../models/http-exception.model';
 
@@ -14,13 +15,13 @@ export const connectRoleAndPermissions = async function connectRoleAndPermission
   if (!role) {
     throw new HttpException(404, `Role with ID ${roleId} not found.`);
   }
-//   check if permissions exist
-    const permissions = await prisma.permission.findMany({
-        where: { id: { in: permissionIds } },
-    });
-    if (permissions.length !== permissionIds.length) {
-        throw new HttpException(404, 'One or more permissions not found.');
-    }
+  //   check if permissions exist
+  const permissions = await prisma.permission.findMany({
+    where: { id: { in: permissionIds } },
+  });
+  if (permissions.length !== permissionIds.length) {
+    throw new HttpException(404, 'One or more permissions not found.');
+  }
 
   // Disconnect all existing permissions from the role
   await prisma.role.update({

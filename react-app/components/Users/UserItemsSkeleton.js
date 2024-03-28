@@ -11,7 +11,7 @@ const ItemSkeleton = () => {
   )
 }
 
-const SongItemsSkeleton = () => (
+const UserItemsSkeleton = () => (
   <>
     {new Array(5).fill(0).map((_, idx) => (
       <ItemSkeleton key={idx} />
@@ -19,4 +19,4 @@ const SongItemsSkeleton = () => (
   </>
 )
 
-export default SongItemsSkeleton
+export default UserItemsSkeleton

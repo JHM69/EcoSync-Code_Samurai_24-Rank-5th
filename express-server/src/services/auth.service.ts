@@ -26,6 +26,7 @@ const sendResetPasswordEmail = async (email: string, token: string) => {
 
 const createUser = async (userData: any) => {
   const { email, password, name } = userData;
+  
   // check if data is not null
   if (!email || !password) {
     throw new HttpException(400, 'Missing required fields: email, password');

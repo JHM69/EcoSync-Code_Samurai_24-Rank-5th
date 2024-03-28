@@ -12,25 +12,25 @@ const AddArtist = ({ props }) => {
   const handleOpen = () => setIsOpen(true)
   const onFormSubmit = async (data) => {
     console.log(data)
-    try { 
-      const user = JSON.parse(localStorage.getItem('user'));
-      
-      await fetch(getBaseUrl()+`/artists`, {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'))
+
+      await fetch(getBaseUrl() + `/artists`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(data),
       }).then((res) => {
-        console.log(res);
-        if(res.status === 200 || res.status === 201){
+        console.log(res)
+        if (res.status === 200 || res.status === 201) {
           // handleClose()
           // window.location.reload()
-          alert("Successfully Added.")
-        }else{
+          alert('Successfully Added.')
+        } else {
           alert(res.status)
-          console.log(res);
+          console.log(res)
         }
       })
     } catch (error) {

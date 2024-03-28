@@ -27,7 +27,7 @@ const Layout = ({ meta, children, ...props }) => {
   return (
     <div className="max-w-screen min-h-screen lg:flex">
       <Meta {...meta} />
-      <Sidebar />
+      <Sidebar/>
       <div className="mx-auto flex w-full flex-col">
 
       <ApplicationBar

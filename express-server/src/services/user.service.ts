@@ -52,7 +52,7 @@ export const createUser = async (userId: number, name: string, image: string) =>
 };
 
 // Function to update user
-export const updateUser = async (req: Request, userId: number, name: string, image: string) => {
+export const updateUser = async (req: Request, userId: number, name: string, image: string, roleId) => {
   if (userId) {
     if (!req.user) throw new HttpException(400, 'Invalid token');
     if (req.user.role.type !== 'SystemAdmin' && req.user.id !== userId)
@@ -78,6 +78,7 @@ export const updateUser = async (req: Request, userId: number, name: string, ima
       where: { id: Number(userId) },
       data: {
         name: name || 'Unknown',
+        role : roleId ? { connect: { id: Number(roleId) } } : undefined,
         image:
           image ||
           'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
@@ -106,19 +107,25 @@ export const deleteUser = async (userId: number) => {
 };
 
 // Function to list all users
-export const listUsers = async () => {
+export const listUsers = async (name : string) => {
+  const whereCondition = name ? { name: { contains: name } } : {};
   return await prisma.user.findMany({
+    where: whereCondition,
     include: {
       role: {
         include: { permissions: true }, // Including permissions information
       },
     }, // Including role information
+  }).catch((error) => {
+    console.log(error);
+    throw new HttpException(400, error.message);
   });
 };
 
 // Function to get specific user
 export const getUser = async (userId: string) => {
   if (!userId) throw new HttpException(400, 'Missing required fields: userId');
+  console.log(userId);
   return await prisma.user.findUnique({
     where: { id: Number(userId) },
     select: {

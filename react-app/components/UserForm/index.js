@@ -26,6 +26,29 @@ const UserForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     reset()
   })
 
+  // const onSubmitPermissions = handleSubmit(async (data) => {
+  //   console.log(data.permissions)
+     
+  //   await axios.put(getBaseUrl + `/users/${defaultValues.id}/permissions`, data.permissions, {
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //     },
+  //   }
+  //   ).then((res) => {
+  //     console.log(res)
+  //     if (res.status === 200 || res.status === 201) {
+  //       alert('Successfully Added.')
+  //     } else {
+  //       alert(res.status)
+  //       console.log(res)
+  //     }
+  //   })
+
+  //   reset()
+  // })
+
+
+
   return (
     <div {...props} className="flex flex-col space-y-6">
       <div>
@@ -91,6 +114,31 @@ const UserForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
             <option value="3">Landfill Manager</option>
           </Select>
         )}
+
+        {/* <FormSection defaultOpen={false} title={'Manage Permissions'}>
+          <MultipleSelect
+            name="permissions"
+            multiple={true}
+            label="Select Genre of the album..."
+            error={errors.permissions ? errors.permissions.message : false}
+            register={register('permissions', {})}
+          >
+            <option selected={true} value="pop">
+              Pop
+            </option>
+            <option value="rock">Rock</option>
+            <option value="hiphop">Hip Hop</option>
+            <option value="rnb">RnB</option>
+            <option value="jazz">Jazz</option>
+            <option value="country">Country</option>
+            <option value="classical">Classical</option>
+            <option value="metal">Metal</option>
+          </MultipleSelect>
+
+          <Button type="button" onClick={onSubmitPermissions} className="w-full">
+            Update Permissions
+          </Button>
+        </FormSection> */}
       </div>
 
       <Button type="button" onClick={onSubmit} className="w-full">

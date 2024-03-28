@@ -8,7 +8,14 @@ const router = Router();
 // Get all vehicles
 router.get('/vehicle', auth.required, async (req: Request, res: Response) => {
   try {
-    const vehicles = await prisma.vehicle.findMany();
+    const {search} = req.query;
+    const whereQuery = search ? { registrationNumber: { contains: search.toString() } } : {};
+    const vehicles = await prisma.vehicle.findMany(
+      {
+        where: whereQuery,
+      },
+    );
+      
     return res.json(vehicles);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

@@ -31,7 +31,8 @@ router.post('/users', auth.required, auth.isSystemAdmin, async (req: Request, re
 // List all users
 router.get('/users', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
-    const users = await listUsers();
+    
+    const users = await listUsers(req.query.search);
     res.status(200).json(users);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -58,10 +59,10 @@ router.get('/users/:userId', auth.required, async (req: Request, res: Response) 
   }
 });
 
-// update user
-router.put('/users/:userId', auth.required, async (req: Request, res: Response) => {
+// update user 
+router.put('/users/:userId', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
-    const user = await updateUser(req, Number(req.params.userId), req.body.name, req.body.image);
+    const user = await updateUser(req, Number(req.params.userId), req.body.name, req.body.image, req.body.roleId);
     res.status(200).json(user);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
