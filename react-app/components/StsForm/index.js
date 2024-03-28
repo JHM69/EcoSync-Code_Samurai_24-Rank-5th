@@ -152,7 +152,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           register={register('logo')}
         />
 
-        <div className="flex flex-col p-3 rounded-[4px] border-[1px] border-gray-300">
+        <div className="flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
           <div className="flex">
             <input
               className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
@@ -188,7 +188,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           </MultipleSelect>
         </div>
 
-        <div className="flex flex-col p-3 mt-3 rounded-[4px] border-[1px] border-gray-300">
+        <div className="mt-3 flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
           <div className="flex">
             <input
               className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
