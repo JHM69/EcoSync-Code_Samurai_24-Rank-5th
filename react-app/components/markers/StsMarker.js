@@ -9,7 +9,7 @@ const StsMarker = ({ text, address }) => {
       onMouseEnter={() => setShowInfo(true)}
       onMouseLeave={() => setShowInfo(false)}
     >
-      <img className="marker-icon" src="https://www.svgrepo.com/show/182697/garbage-trash.svgg" alt="marker" />
+      <img className="marker-icon" src="https://www.svgrepo.com/show/182697/garbage-trash.svg" alt="marker" />
       {showInfo && (
         <div className="info-box">
           <p>{text}</p>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 import StsVehiclesLandfillsMapView from './DashboardMapView'
-
+import {NoSSR} from '../common/NoSSR'
 function Dashboard() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -21,6 +21,7 @@ function Dashboard() {
         })
         .then((res) => {
           setData(res.data)
+          console.log(res.data)
           setLoading(false)
         })
         .catch((err) => {
@@ -30,6 +31,7 @@ function Dashboard() {
     }
   }, [])
   return (
+    <NoSSR>
     <div className="flex flex-col gap-3 w-1/2">
       {loading ? (
         <div className='h-1/2 w-fill'>
@@ -46,6 +48,7 @@ function Dashboard() {
         />
       )}
     </div>
+    </NoSSR>
   )
 }
 

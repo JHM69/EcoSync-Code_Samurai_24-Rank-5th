@@ -2,7 +2,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState } from 'react'
 import Layout from '../components/layout'
-import StsVehiclesLandfillsMapView from '../components/Dashboard/DashboardMapView'
 import Dashboard from '../components/Dashboard/Admin'
 
 function Index () {

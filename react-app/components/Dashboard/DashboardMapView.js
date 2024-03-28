@@ -3,6 +3,7 @@ import GoogleMapReact from 'google-map-react'
 import StsMarker from '../markers/StsMarker'
 import VehicleMarker from '../markers/VehicleMarker'
 import LandfillMarker from '../markers/LandfillMarker'
+import { NoSSR } from '../common/NoSSR'
 
 export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills }) {
   const [geoJsonData, setGeoJsonData] = useState(null)
@@ -72,43 +73,51 @@ export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills
     }
   }
   return (
+    <NoSSR>
     <div style={{ height: '500px', width: '100%', borderRadius: '10px' }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{ key: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
-        defaultCenter={defaultProps.center}
-        defaultZoom={defaultProps.zoom}
-        yesIWantToUseGoogleMapApiInternals
-         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-      >
-        {/* load all stss, vehicles, landfills */}
-        {stss && stss.map((sts, id) => (
-          <StsMarker
-            key={sts.id + id}
-            lat={sts.lat}
-            lng={sts.lon}
-            text={sts.wardNumber}
-            icon={sts.icon}
-          />
-        ))}
-        {vehicles && vehicles.map((vehicle, id) => (
-          <VehicleMarker
-            key={vehicle.id + id}
-            lat={vehicle.lat}
-            lng={vehicle.lon}
-            text={vehicle.registrationNumber}
-            icon={vehicle.icon}
-          />
-        ))}
-        {landfills && landfills.map((landfill, id) => (
-          <LandfillMarker
-            key={landfill.id + id}
-            lat={landfill.lat}
-            lng={landfill.lon}
-            text={landfill.name}
-            icon={landfill.icon}
-          />
-        ))}
-      </GoogleMapReact>
+       {
+        (stss || vehicles || landfills) && (
+          <GoogleMapReact
+          bootstrapURLKeys={{ key: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
+          defaultCenter={defaultProps.center}
+          defaultZoom={defaultProps.zoom}
+          yesIWantToUseGoogleMapApiInternals
+           onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+        >
+          {/* load all stss, vehicles, landfills */}
+          {landfills && landfills.map((landfill) => (
+            <LandfillMarker
+              key={landfill.lat + landfill.name}
+              lat={landfill.lat}
+              lng={landfill.lon}
+              text={landfill.name}
+              icon={landfill.icon}
+            />
+          ))}
+
+          {stss && stss.map((sts, id) => (
+            <StsMarker
+              key={sts.lon + sts.wardNumber}
+              lat={sts.lat}
+              lng={sts.lon}
+              text={sts.wardNumber}
+              icon={sts.icon}
+            />
+          ))}
+          {vehicles && vehicles.map((vehicle, id) => (
+            <VehicleMarker
+              key={vehicle.lat + vehicle.registrationNumber}
+              lat={vehicle.lat}
+              lng={vehicle.lon}
+              text={vehicle.registrationNumber}
+              icon={vehicle.icon}
+            />
+          ))}
+
+        </GoogleMapReact>
+        )
+       }
     </div>
+    </NoSSR>
   )
 }

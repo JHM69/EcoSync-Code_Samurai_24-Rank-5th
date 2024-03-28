@@ -1,3 +1,4 @@
+/* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
