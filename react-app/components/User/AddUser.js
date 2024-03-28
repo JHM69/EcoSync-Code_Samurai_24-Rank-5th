@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useState } from 'react'
-
+import React, { Fragment, useEffect, useState } from 'react'
+import { Bars } from 'react-loader-spinner'
 import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
 import UserForm from '../UserForm'
@@ -11,10 +11,16 @@ const AddUser = ({ props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    props.setLoading(loading)
+  }, [loading])
+
   const onFormSubmit = async (data) => {
     console.log(data)
     console.log('token')
-
+    setLoading(true)
     try {
       const token = localStorage.getItem('token')
       await axios
@@ -26,17 +32,42 @@ const AddUser = ({ props }) => {
         .then((res) => {
           console.log(res)
           if (res.status === 200 || res.status === 201) {
-            alert('Successfully Added.')
+            setLoading(false)
+            handleClose()
+            props.setUsers([...props.users, res.data.user])
           } else {
             alert(res.status)
+            setLoading(false)
+            handleClose()
             console.log(res)
           }
         })
     } catch (error) {
+      setLoading(false)
+      handleClose()
       console.log(error)
     }
   }
-
+  if (loading) {
+    return (
+      <>
+        <div className="justify-center bg-white">
+          <Bars
+            height="100"
+            width="100"
+            color="#4fa94d"
+            outerCircleColor="#4fa94d"
+            innerCircleColor="#4fa94d"
+            barColor="#4fa94d"
+            ariaLabel="circles-with-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      </>
+    )
+  }
   return (
     <>
       <Button onClick={handleOpen} type="button" {...props}>
