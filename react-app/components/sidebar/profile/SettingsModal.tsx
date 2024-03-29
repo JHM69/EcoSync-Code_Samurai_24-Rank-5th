@@ -61,8 +61,7 @@ export const SettingsModal: React.FC<{
   }
 
   const signOut = async() => {
-    localStorage.removeItem('user')
-    onClose()
+   
     try {
       const token = localStorage.getItem('token')
       await axios.get(
@@ -73,6 +72,10 @@ export const SettingsModal: React.FC<{
           },
         }
         )
+
+        localStorage.removeItem('user')
+        onClose()
+        
         window.location.reload()
     } catch (error) {
       console.error('Failed to logout', error)

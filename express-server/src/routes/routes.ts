@@ -19,5 +19,4 @@ const api = Router()
   .use(billController)
   .use(dashboardController);
 
-
 export default Router().use('/', api);

@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
@@ -195,6 +196,24 @@ router.delete('/sts/:id', auth.required, auth.isSystemAdmin, async (req: Request
       },
     });
     res.status(200).json({ message: 'STS deleted' });
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
+router.get('/mysts', auth.required, async (req: Request, res: Response) => {
+  try {
+    const sts = await prisma.sTS.findMany({
+      where: {
+        managers: {
+          some: {
+            id: req.user.id,
+          },
+        },
+      }, 
+    });
+    res.status(200).json(sts);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }

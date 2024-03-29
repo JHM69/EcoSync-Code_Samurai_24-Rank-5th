@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import axios from 'axios'
+import { getBaseUrl } from '../../utils/url'
 
-function Item({ text, subtitle, icon, href, isActive }) {
+function Item ({ text, subtitle, icon, href, isActive }) {
   return (
     <Link href={href || '/'}>
       <a
@@ -38,18 +40,35 @@ const Sidebar = () => {
 
   const [activePath, setActivePath] = useState('')
 
+  const [managedSts, setManagedSts] = useState([])
+
   useEffect(() => {
     setActivePath(router.pathname)
   }, [router.pathname])
 
   const [type, setType] = useState('')
-  useEffect(() => {
+  useEffect(async () => {
     if (typeof window !== 'undefined') {
       const user = JSON.parse(localStorage.getItem('user'))
       if (!user || !user.token) {
         router.push('/login')
       }
       setType(user?.role?.type)
+
+      if (user?.role?.type === 'STSManager') {
+        if (router.pathname !== '/vehicle-entry') {
+          router.push('/vehicle-entry')
+        }
+        await axios.get(getBaseUrl() + '/mysts', {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }).then(response => {
+          setManagedSts(response.data)
+        }).catch(error => {
+          console.log(error)
+        })
+      }
     }
   }, [])
 
@@ -107,41 +126,18 @@ const Sidebar = () => {
             )}
             {type === 'STSManager' && (
               <>
-                <Item
-                  text="Dashboard"
-                  subtitle="Track & Monitor everything"
-                  icon="dashboard"
-                  href="/"
-                  isActive={router.pathname === '/'}
-                />
-                <Item
-                  text="Users"
-                  subtitle="Manage Users & Roles"
-                  icon="user"
-                  href="/user"
-                  isActive={router.pathname === '/user'}
-                />
-                <Item
-                  text="STS"
-                  subtitle="Add STS & STS Managers"
-                  icon="sts"
-                  href="/sts"
-                  isActive={router.pathname === '/sts'}
-                />
-                <Item
-                  text="Vehicle"
-                  subtitle="Manage Vehicles and Billing"
-                  icon="vehicle"
-                  href="/vehicle"
-                  isActive={router.pathname === '/vehicle'}
-                />
-                <Item
-                  text="Landfill"
-                  subtitle="Landfill and its Managers"
-                  icon="landfill"
-                  href="/landfill"
-                  isActive={router.pathname === '/landfill'}
-                />
+                {
+                 managedSts && managedSts.map((sts, index) => (
+                    <Item
+                      key={index}
+                      text={sts.wardNumber}
+                      subtitle={sts.address}
+                      icon="sts"
+                      href={`/vehicle-entry?stsId=${sts.id}`}
+                      isActive={router.pathname === '/vehicle-entry' && router.query.stsId === sts.id }
+                    />
+                 ))
+                }
               </>
             )}
           </div>
@@ -151,7 +147,8 @@ const Sidebar = () => {
         className="fixed top-0 left-0 z-10 rounded-full bg-white p-3"
         onClick={handleToggle}
       >
-        {isOpen ? (
+        {isOpen
+          ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-gray-600"
@@ -166,7 +163,8 @@ const Sidebar = () => {
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        ) : (
+            )
+          : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-gray-600"
@@ -181,7 +179,7 @@ const Sidebar = () => {
               d="M4 6h16M4 12h16m-7 6h7"
             />
           </svg>
-        )}
+            )}
       </button>
     </>
   )
