@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Layout from '../components/layout'
 import Dashboard from '../components/Dashboard/Admin'
 
-function Index () {
+function DashboardPage () {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState({})
   useState(() => {
@@ -40,9 +40,9 @@ function Index () {
   )
 }
 
-export default Index
+export default Dashboard
 
-Index.getLayout = function getLayout (page) {
+DashboardPage.getLayout = function getLayout (page) {
   // eslint-disable-next-line react/react-in-jsx-scope
   return <Layout>{page}</Layout>
 }

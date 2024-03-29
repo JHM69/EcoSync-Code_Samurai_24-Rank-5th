@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
 
@@ -5,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
+import { set } from 'react-hook-form'
 
 function Item ({ text, subtitle, icon, href, isActive }) {
   return (
@@ -38,6 +40,8 @@ const Sidebar = () => {
   const handleToggle = () => setIsOpen((prev) => !prev)
   const router = useRouter()
 
+  const [loading, setLoading] = useState(true)
+
   const [activePath, setActivePath] = useState('')
 
   const [managedSts, setManagedSts] = useState([])
@@ -47,27 +51,34 @@ const Sidebar = () => {
   }, [router.pathname])
 
   const [type, setType] = useState('')
-  useEffect(async () => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const user = JSON.parse(localStorage.getItem('user'))
       if (!user || !user.token) {
         router.push('/login')
       }
       setType(user?.role?.type)
-
+      if (user?.role?.type === 'SystemAdmin') {
+        router.push('/dashboard')
+      }
       if (user?.role?.type === 'STSManager') {
-        if (router.pathname !== '/vehicle-entry') {
-          router.push('/vehicle-entry')
-        }
-        await axios.get(getBaseUrl() + '/mysts', {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        console.log({ token })
+        const res = axios.get(getBaseUrl() + '/mysts', {
           headers: {
-            Authorization: `Bearer ${user.token}`
+            Authorization: `Bearer ${token}`
           }
         }).then(response => {
           setManagedSts(response.data)
+          setLoading(false)
+          console.log(response)
+          router.push('/vehicle-entry/' + response.data[0].id)
         }).catch(error => {
+          setLoading(false)
           console.log(error)
         })
+        console.log({ res })
       }
     }
   }, [])
@@ -91,8 +102,8 @@ const Sidebar = () => {
                   text="Dashboard"
                   subtitle="Track & Monitor everything"
                   icon="dashboard"
-                  href="/"
-                  isActive={router.pathname === '/'}
+                  href="/dashboard"
+                  isActive={router.pathname === '/dashboard' || router.pathname === '/'}
                 />
                 <Item
                   text="Users"
@@ -126,17 +137,22 @@ const Sidebar = () => {
             )}
             {type === 'STSManager' && (
               <>
+
                 {
-                 managedSts && managedSts.map((sts, index) => (
+                 loading
+                   ? <>
+                       loading...
+                   </>
+                   : managedSts && managedSts.map((sts, index) => (
                     <Item
                       key={index}
-                      text={sts.wardNumber}
+                      text={'Wd: ' + sts.wardNumber}
                       subtitle={sts.address}
                       icon="sts"
-                      href={`/vehicle-entry?stsId=${sts.id}`}
-                      isActive={router.pathname === '/vehicle-entry' && router.query.stsId === sts.id }
+                      href={`/vehicle-entry/${sts.id}`}
+                      isActive={router.query.stsId === sts.id.toString() }
                     />
-                 ))
+                   ))
                 }
               </>
             )}

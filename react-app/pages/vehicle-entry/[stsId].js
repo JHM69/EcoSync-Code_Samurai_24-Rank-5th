@@ -1,15 +1,13 @@
-/* eslint-disable multiline-ternary */
-/* eslint-disable react/jsx-key */
 /* eslint-disable react/react-in-jsx-scope */
-import Layout from '../components/layout'
-import { useEffect, useState } from 'react'
-import UserItemsSkeleton from '../components/Users/UserItemsSkeleton'
+import { useEffect, useState } from 'react' 
 import axios from 'axios'
-import { getBaseUrl } from '../utils/url' 
 import { useRouter } from 'next/router'
+import { getBaseUrl } from '../../utils/url'
 import AddStsEntry from '../../components/StsEntry/AddStsEntry'
+import StsItemsSkeleton from '../../components/Stss/StsItemsSkeleton'
 import StsEntryItems from '../../components/StsEntrys/StsEntryItems'
-
+import Layout from '../../components/layout'
+ 
 function VehicleEntry () {
   const [loading, setLoading] = useState(true)
   const [vehicleEntries, setVehicleEntries] = useState([])
@@ -53,7 +51,7 @@ function VehicleEntry () {
               }
             </div>
           </div>
-          {loading ? <UserItemsSkeleton /> : <StsEntryItems vehicleEntries={vehicleEntries} />}
+          {loading ? <StsItemsSkeleton /> : <StsEntryItems vehicleEntries={vehicleEntries} />}
         </div>
       </div>
     </div>
