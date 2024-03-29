@@ -177,7 +177,7 @@ export const SettingsModal: React.FC<{
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 placeholder="Enter your image link"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
               />
 
               <label htmlFor="email" className="mb-1 block text-sm font-medium">
@@ -190,7 +190,7 @@ export const SettingsModal: React.FC<{
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
               />
 
               <label htmlFor="name" className="mb-1 block text-sm font-medium">
@@ -202,7 +202,7 @@ export const SettingsModal: React.FC<{
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your name"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
 

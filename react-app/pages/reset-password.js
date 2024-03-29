@@ -92,7 +92,7 @@ function PasswordRecovery () {
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             placeholder="Enter your new password"
-            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-green-500"
           />
         </div>
 
@@ -106,7 +106,7 @@ function PasswordRecovery () {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your new password"
-            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-green-500"
           />
         </div>
 
@@ -120,7 +120,7 @@ function PasswordRecovery () {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your new password"
-            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-green-500"
           />
         </div>
 
@@ -128,7 +128,7 @@ function PasswordRecovery () {
           type="submit"
           onClick={onSubmit}
           disabled={loading}
-          className="w-full py-2 rounded-md bg-[#76C75E] text-white font-medium hover:bg-[#375f2b] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#76C75E] disabled:bg-gray-400"
+          className="w-full py-2 rounded-md bg-green-500 text-white font-medium hover:bg-[#375f2b] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400"
         >
           {loading ? 'Resetting...' : 'Update Password'}
         </button>

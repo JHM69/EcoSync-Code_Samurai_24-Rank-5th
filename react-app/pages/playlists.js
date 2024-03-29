@@ -34,11 +34,11 @@ function Playlists () {
       </header>
       <div>
       <div className="cursor-loading mt-6 mb-3 flex rounded-md border px-5 py-3 shadow-sm lg:px-8">
-      <div className="flex-1 font-semibold text-[#76C75E]">Name</div>
-      <div className="flex-1 text-right font-semibold text-[#76C75E] lg:text-left">
+      <div className="flex-1 font-semibold text-green-500">Name</div>
+      <div className="flex-1 text-right font-semibold text-green-500 lg:text-left">
         Playlist
       </div>
-      <div className="flex-1 text-right font-semibold text-[#76C75E] lg:text-left">
+      <div className="flex-1 text-right font-semibold text-green-500 lg:text-left">
         Album
       </div>
       <div className="flex-1"></div>

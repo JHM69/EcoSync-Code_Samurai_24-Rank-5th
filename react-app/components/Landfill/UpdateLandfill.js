@@ -1,13 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 
-import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 import LandfillForm from '../LandfillForm'
-import { BiEdit, BiPencil } from 'react-icons/bi'
-import { FaEdit, FaUserEdit } from 'react-icons/fa'
+import { BiPencil } from 'react-icons/bi'
 const UpdateLandfill = ({ landfill, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
@@ -49,7 +47,7 @@ const UpdateLandfill = ({ landfill, ...props }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="z-100 fixed inset-0 bg-black bg-opacity-25" />
+            <div className="z-100 fixed inset-0 bg-green-600 bg-opacity-25" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">

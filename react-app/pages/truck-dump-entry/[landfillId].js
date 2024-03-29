@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { getBaseUrl } from '../../utils/url'
-import AddTruckDumpEntry from '../../components/TruckDumpEntry/AddTruckDumpEntry' 
-import Layout from '../../components/layout' 
+import AddTruckDumpEntry from '../../components/TruckDumpEntry/AddTruckDumpEntry'
+import Layout from '../../components/layout'
 import MapView from '../../components/common/MapView'
 import TruckDumpEntryItems from '../../components/TruckDumpEntrys/TruckDumpEntryItems'
 import TruckDumpEntryItemsSkeleton from '../../components/TruckDumpEntrys/TruckDumpEntryItemsSkeleton'
 import { ProgressBar } from '../../components/Sts/ViewSts'
- 
-function TruckDumpEntry () {
+
+function TruckDumpEntry() {
   const [loading, setLoading] = useState(true)
   const [loadingInfo, setLoadingInfo] = useState(true)
   const [truckDumpEntries, setTruckDumpEntries] = useState([])
@@ -32,14 +32,14 @@ function TruckDumpEntry () {
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(getBaseUrl() + '/landfills', {
+        .get(getBaseUrl() + '/landfills/' + landfillId, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
         .then((res) => {
           setLoadingInfo(false)
-          setLandfill(res.data[0])
+          setLandfill(res.data)
           console.log(res.data)
         })
         .catch((err) => {
@@ -57,7 +57,7 @@ function TruckDumpEntry () {
       axios
         .get(getBaseUrl() + `/landfills/${landfillId}/entry`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           }
         })
         .then((res) => {
@@ -76,18 +76,20 @@ function TruckDumpEntry () {
     <div>
       <div className="flex w-full flex-col">
         <div className="mx-6 mt-3 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-700">STS Info </h1>
+          <h1 className="text-2xl font-bold text-gray-700">Landfill Info </h1>
         </div>
         {loadingInfo ? (
           <div className="cursor-loading mx-6 my-2 flex animate-pulse space-x-16 rounded-md border px-6 py-4 shadow-sm">
-            <div className="h-10 m-3 mt-3 flex-1 rounded bg-gray-200"></div>
+            <div className="m-3 mt-3 h-10 flex-1 rounded bg-gray-200"></div>
             <div className="h-[200px] flex-1 rounded bg-gray-200"></div>
           </div>
         ) : (
           <div className="mx-6 block  max-h-[75vh] overflow-y-auto rounded-lg border p-2 desktop:max-h-[80vh]">
             <div className="flex  flex-row ">
-              <div className="w-1/2 px-4 gap-4">
-                <p className="text-md my-2 font-semibold">Ward: {landfill.wardNumber}</p>
+              <div className="w-1/2 gap-4 px-4">
+                <p className="text-md my-2 font-semibold">
+                  Name: {landfill.name}
+                </p>
                 <p className="text-md  my-2">Address: {landfill.address}</p>
                 <ProgressBar
                   currentWasteVolume={landfill?.currentWasteVolume}
@@ -96,12 +98,12 @@ function TruckDumpEntry () {
               </div>
               <div className="w-1/2">
                 <MapView
-                    lat={landfill.lat}
-                    lon={landfill.lon}
-                    name={landfill.wardNumber}
-                    address={landfill.address}
-                    height = '200px'
-                    vehicles = {landfill.vehicles}
+                  lat={landfill.lat}
+                  lon={landfill.lon}
+                  name={landfill.wardNumber}
+                  address={landfill.address}
+                  height="200px"
+                  vehicles={landfill.vehicles}
                 />
               </div>
             </div>
@@ -125,7 +127,6 @@ function TruckDumpEntry () {
             <TruckDumpEntryItems truckDumpEntries={truckDumpEntries} />
           )}
         </div>
-
       </div>
     </div>
   )
@@ -133,6 +134,6 @@ function TruckDumpEntry () {
 
 export default TruckDumpEntry
 
-TruckDumpEntry.getLayout = function getLayout (page) {
+TruckDumpEntry.getLayout = function getLayout(page) {
   return <Layout meta={{ name: 'Truck Dump Entries' }}>{page}</Layout>
 }

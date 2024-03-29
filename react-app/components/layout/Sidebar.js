@@ -13,7 +13,7 @@ function Item({ text, subtitle, icon, href, isActive }) {
   return (
     <Link href={href || '/'}>
       <a
-        className={`smooth-effect my-1 mb-2 flex flex-row items-center justify-start rounded p-2 shadow hover:bg-[#daffce] ${
+        className={`smooth-effect my-1 mb-2 flex flex-row items-center justify-start rounded p-2 shadow hover:bg-green-100 ${
           isActive
             ? 'bg-green-500 text-white hover:bg-green-700 hover:text-white'
             : 'bg-white text-gray-900'

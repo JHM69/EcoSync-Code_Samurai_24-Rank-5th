@@ -147,7 +147,7 @@ textarea {
 .marker-icon {
   height: 24px; /* Adjust based on your preference */
   width: 24px;
-  background-color: #76C75E;
+  background-color: green; /* Adjust based on your preference */
   border-radius: 50%;
   padding: 5px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Adds a little shadow for depth */

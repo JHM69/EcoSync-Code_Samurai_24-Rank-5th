@@ -100,7 +100,7 @@ function ForgotPasswordConfirm() {
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             placeholder="Enter your new password"
-            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-green-500"
           />
         </div> */}
 
@@ -114,7 +114,7 @@ function ForgotPasswordConfirm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your new password"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
           />
         </div>
 
@@ -131,7 +131,7 @@ function ForgotPasswordConfirm() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your new password"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
           />
         </div>
 
@@ -139,7 +139,7 @@ function ForgotPasswordConfirm() {
           type="submit"
           onClick={onSubmit}
           disabled={loading}
-          className="w-full rounded-md bg-[#76C75E] py-2 font-medium text-white hover:bg-[#375f2b] focus:outline-none focus:ring-2 focus:ring-[#76C75E] focus:ring-offset-2 disabled:bg-gray-400"
+          className="w-full rounded-md bg-green-500 py-2 font-medium text-white hover:bg-[#375f2b] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:bg-gray-400"
         >
           {loading ? 'Resetting...' : 'Update Password'}
         </button>

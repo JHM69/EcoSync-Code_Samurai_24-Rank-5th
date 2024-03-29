@@ -99,9 +99,9 @@ function ProgressBar({ currentWasteVolume, capacity }) {
   }
 
   return (
-    <div className="relative h-6 w-[160px] overflow-hidden rounded-full border-[1px] border-[#76C75E] bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
+    <div className="relative h-6 w-[160px] overflow-hidden rounded-full border-[1px] border-green-500 bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
       <div
-        className="h-full rounded-l-full bg-[#76C75E]"
+        className="h-full rounded-l-full bg-green-500"
         style={barStyle}
       ></div>
       <div className="absolute inset-0 flex items-center justify-center">

@@ -121,7 +121,7 @@ function login () {
                 value={email}
                 onChange={(e) => setEmail(e.target.value.toLowerCase())}
                 placeholder="Enter your email"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
             <div className="mb-6">
@@ -138,7 +138,7 @@ function login () {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
                 <button
                   type="button"
@@ -201,7 +201,7 @@ function login () {
               type="submit"
               onClick={onSubmit}
               disabled={loading}
-              className="w-full rounded-md bg-green-500 py-2 font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-[#76C75E] focus:ring-offset-2 disabled:bg-gray-400"
+              className="w-full rounded-md bg-green-500 py-2 font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:bg-gray-400"
             >
               {loading ? 'Loading...' : 'Login'}
             </button>

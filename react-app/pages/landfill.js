@@ -16,7 +16,7 @@ function Landfills() {
     const token = localStorage.getItem('token')
     if (token.length > 0) {
       axios
-        .get(getBaseUrl() + '/landfills', {
+        .get(getBaseUrl() + '/mylanfills', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
