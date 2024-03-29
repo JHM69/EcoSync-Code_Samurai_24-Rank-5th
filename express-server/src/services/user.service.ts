@@ -52,7 +52,13 @@ export const createUser = async (userId: number, name: string, image: string) =>
 };
 
 // Function to update user
-export const updateUser = async (req: Request, userId: number, name: string, image: string, roleId) => {
+export const updateUser = async (
+  req: Request,
+  userId: number,
+  name: string,
+  image: string,
+  roleId,
+) => {
   if (userId) {
     if (!req.user) throw new HttpException(400, 'Invalid token');
     if (req.user.role.type !== 'SystemAdmin' && req.user.id !== userId)
@@ -78,7 +84,7 @@ export const updateUser = async (req: Request, userId: number, name: string, ima
       where: { id: Number(userId) },
       data: {
         name: name || 'Unknown',
-        role : roleId ? { connect: { id: Number(roleId) } } : undefined,
+        role: roleId ? { connect: { id: Number(roleId) } } : undefined,
         image:
           image ||
           'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
@@ -107,19 +113,21 @@ export const deleteUser = async (userId: number) => {
 };
 
 // Function to list all users
-export const listUsers = async (name : string) => {
+export const listUsers = async (name: string) => {
   const whereCondition = name ? { name: { contains: name } } : {};
-  return await prisma.user.findMany({
-    where: whereCondition,
-    include: {
-      role: {
-        include: { permissions: true }, // Including permissions information
-      },
-    }, // Including role information
-  }).catch((error) => {
-    console.log(error);
-    throw new HttpException(400, error.message);
-  });
+  return await prisma.user
+    .findMany({
+      where: whereCondition,
+      include: {
+        role: {
+          include: { permissions: true }, // Including permissions information
+        },
+      }, // Including role information
+    })
+    .catch(error => {
+      console.log(error);
+      throw new HttpException(400, error.message);
+    });
 };
 
 // Function to get specific user
@@ -218,13 +226,12 @@ export const updateProfile = async (userId: number, name: string, image: string)
   });
 };
 
-
 // Function to create a new permission
 export const createPermission = async (permissionData: { name: string; roleId: number }) => {
   return await prisma.permission.create({
     data: {
       name: permissionData.name,
-      role: {
+      roles: {
         connect: { id: permissionData.roleId },
       },
     },

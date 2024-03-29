@@ -196,6 +196,12 @@ function login() {
             >
               {loading ? 'Loading...' : 'Login'}
             </button>
+            {/* forgot password */}
+            <div className="mt-4 text-center">
+              <a href="/forgot-password" className="text-sm text-blue-500">
+                Forgot Password?
+              </a>
+            </div>
           </div>
         </div>
       </div>

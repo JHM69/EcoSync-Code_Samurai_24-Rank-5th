@@ -219,6 +219,14 @@ export const SettingsModal: React.FC<{
             >
               Log out
             </button>
+            <button
+              className="smooth-effect  mb-6 w-full rounded-md bg-[#3e50db] px-4 py-2 text-white duration-200 hover:bg-[#502895]"
+              onClick={() => {
+                window.location.href = '/reset-password'
+              }}
+            >
+              Change Password
+            </button>
           </div>
         )}
       </div>

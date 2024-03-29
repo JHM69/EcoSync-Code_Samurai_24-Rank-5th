@@ -46,7 +46,9 @@ const secureMiddleware = async (req: Request, res: Response, next: NextFunction)
 
       next();
     } catch (error) {
-      next(error);
+      // next(error);
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   });
 };
@@ -60,27 +62,42 @@ const auth = {
     algorithms: ['HS256'],
   }),
   isSystemAdmin: async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.user);
+    try {
+      console.log(req.user);
     if (req.user && req.user.role.type === 'SystemAdmin') {
       next();
     } else {
       res.status(403).json({ message: 'Forbidden: System Admin access required.' });
     }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   },
   isSTSManager: async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.user);
+    try {
+      console.log(req.user);
     if (req.user && req.user.role.type === 'STSManager') {
       next();
     } else {
       res.status(403).json({ message: 'Forbidden: STS Manager access required.' });
     }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   },
   isLandfillManager: async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.user);
+    try {
+      console.log(req.user);
     if (req.user && req.user.role.type === 'LandfillManager') {
       next();
     } else {
+      console.log(req.user);
       res.status(403).json({ message: 'Forbidden: Landfill Manager access required.' });
+    }
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
     }
   },
 };
