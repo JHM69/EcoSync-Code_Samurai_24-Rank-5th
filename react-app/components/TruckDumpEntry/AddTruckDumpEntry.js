@@ -1,42 +1,42 @@
-/* eslint-disable no-unused-vars */
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 
+import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
+
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
-
-import { BiPencil } from 'react-icons/bi'
-import StsEntryForm from '../StsEntryForm'
-const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
+import toast, { Toaster } from 'react-hot-toast'
+import TruckDumpEntryForm from '../TruckDumpEntryForm'
+const AddTruckDumpEntry = ({ props, landfillId }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
-
   const onFormSubmit = async (data) => {
-    const token = localStorage.getItem('token')
-    await axios
-      .put(getBaseUrl() + `/sts/${stsId}/entry`, data, {
+    try {
+      console.log(data)
+      const token = localStorage.getItem('token')
+      await axios.post(getBaseUrl() + `/landfills/${landfillId}/entry`, data, {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      })
-      .then((res) => {
-        console.log(res)
-        if (res.status === 200 || res.status === 201) {
-          alert('Successfully Added.')
-        } else {
-          alert(res.status)
-          console.log(res)
-        }
-      })
+      }).then(response => {
+        console.log(response)
+        toast.success('Vehicle Entry added successfully')
+      }).catch(error =>
+        console.log(error)
+      )
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <>
-     <div onClick={handleOpen} className='smooth-effect hover:bg-green-400 text-green-800 bg-green-300 rounded p-2 m-3 shadow'>
-         <BiPencil {...props} />
-      </div>
+    <Toaster />
+      <Button onClick={handleOpen} type="button" {...props}>
+        Add Truck Dump Entry
+      </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
           <Transition.Child
@@ -67,15 +67,11 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Update Vehicle Entry</h3>
+                    <h3>Add Truck Dump Entry</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <StsEntryForm
-                    defaultValues={vehicleEntry}
-                    type={'Update'}
-                    onFormSubmit={onFormSubmit}
-                  />
+                  <TruckDumpEntryForm type={'Add'} onFormSubmit={onFormSubmit} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -86,4 +82,4 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
   )
 }
 
-export default UpdateStsEntry
+export default AddTruckDumpEntry

@@ -12,7 +12,7 @@ const NotificationModal = ({ onClose, children, title }) => {
 
   return (
     <div
-      className={`fixed top-10 right-10  bg-[#d9d9d9] rounded-xl border-[2px] w-[230px] lg:w-[360px] z-50 m-2 transition-opacity duration-300 ${
+      className={`fixed top-10 right-100  bg-[#ffffff] rounded-xl border-[2px] w-[230px] lg:w-[360px] z-50 m-2 transition-opacity duration-300 ${
         isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
        

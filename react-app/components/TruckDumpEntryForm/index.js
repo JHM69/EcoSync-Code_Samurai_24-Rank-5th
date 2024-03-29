@@ -6,7 +6,7 @@ import Input from '../common/Input'
 import Select from '../common/Select'
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
-const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
+const TruckDumpEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   const {
     register,
     handleSubmit,
@@ -159,4 +159,4 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   )
 }
 
-export default StsEntryForm
+export default TruckDumpEntryForm

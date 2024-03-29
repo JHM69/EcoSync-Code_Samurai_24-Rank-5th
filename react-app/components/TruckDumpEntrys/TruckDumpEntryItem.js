@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
-import UpdateStsEntry from '../StsEntry/UpdateStsEntry'
-import STSInfoEntry from '../StsEntry/ViewStsEntry'
+import UpdateTruckDumpEntry from '../TruckDumpEntry/UpdateTruckDumpEntry'
+import TruckDumpInfoEntry from '../TruckDumpEntry/ViewTruckDumpEntry'
 
-const StsEntryItem = ({
+const TruckDumpEntryItem = ({
   id,
   vehicleId,
   volumeOfWaste,
@@ -36,8 +36,8 @@ const StsEntryItem = ({
         </h3>
       </div>
 
-      <STSInfoEntry
-        vehicleEntry={{
+      <TruckDumpInfoEntry
+        truckDumpEntry={{
           id,
           vehicleId,
           volumeOfWaste,
@@ -48,8 +48,8 @@ const StsEntryItem = ({
         }}
       />
 
-      <UpdateStsEntry
-        vehicleEntry={{
+      <UpdateTruckDumpEntry
+        truckDumpEntry={{
           id,
           vehicleId,
           volumeOfWaste,
@@ -63,4 +63,4 @@ const StsEntryItem = ({
   )
 }
 
-export default StsEntryItem
+export default TruckDumpEntryItem

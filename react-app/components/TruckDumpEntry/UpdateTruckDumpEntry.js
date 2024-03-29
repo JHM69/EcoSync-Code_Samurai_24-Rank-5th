@@ -7,8 +7,8 @@ import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 
 import { BiPencil } from 'react-icons/bi'
-import StsEntryForm from '../StsEntryForm'
-const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
+import TruckDumpEntryForm from '../TruckDumpEntryForm'
+const UpdateTruckDumpEntry = ({ truckDumpEntry, landfillId,...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -16,7 +16,7 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
   const onFormSubmit = async (data) => {
     const token = localStorage.getItem('token')
     await axios
-      .put(getBaseUrl() + `/sts/${stsId}/entry`, data, {
+      .put(getBaseUrl() + `/landfills/${landfillId}/entry`, data, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -67,12 +67,12 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Update Vehicle Entry</h3>
+                    <h3>Update Truck Dump Entry</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <StsEntryForm
-                    defaultValues={vehicleEntry}
+                  <TruckDumpEntryForm
+                    defaultValues={truckDumpEntry}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
                   />
@@ -86,4 +86,4 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
   )
 }
 
-export default UpdateStsEntry
+export default UpdateTruckDumpEntry

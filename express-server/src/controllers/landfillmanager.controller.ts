@@ -1,3 +1,4 @@
+/* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
@@ -121,9 +122,35 @@ const updateLandfill = async (
 };
 
 // get all Landfills
-router.get('/landfills', auth.required, async (req: Request, res: Response) => {
+router.get('/landfills', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     const landfills = await prisma.landfill.findMany({
+      include: {
+        managers: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    res.status(200).json(landfills);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
+router.get('/mylandfills', auth.required, auth.isLandfillManager, async (req: Request, res: Response) => {
+  try {
+    const landfills = await prisma.landfill.findMany({
+      where: {
+        managers: {
+          some: {
+            id: req.user.id,
+          },
+        },
+      },
       include: {
         managers: {
           select: {

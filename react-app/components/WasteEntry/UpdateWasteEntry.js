@@ -7,8 +7,8 @@ import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 
 import { BiPencil } from 'react-icons/bi'
-import StsEntryForm from '../StsEntryForm'
-const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
+import WasteEntryForm from '../WasteEntryForm'
+const UpdateWasteEntry = ({ wasteEntry, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -16,7 +16,7 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
   const onFormSubmit = async (data) => {
     const token = localStorage.getItem('token')
     await axios
-      .put(getBaseUrl() + `/sts/${stsId}/entry`, data, {
+      .put(getBaseUrl() + `/sts/${wasteEntry.sts.id}/add`, data, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -71,8 +71,8 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <StsEntryForm
-                    defaultValues={vehicleEntry}
+                  <WasteEntryForm
+                    defaultValues={wasteEntry}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
                   />
@@ -86,4 +86,4 @@ const UpdateStsEntry = ({ vehicleEntry, stsId,...props }) => {
   )
 }
 
-export default UpdateStsEntry
+export default UpdateWasteEntry

@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 /* eslint-disable eqeqeq */
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
@@ -8,13 +9,13 @@ import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
 import { set } from 'react-hook-form'
 
-function Item ({ text, subtitle, icon, href, isActive }) {
+function Item({ text, subtitle, icon, href, isActive }) {
   return (
     <Link href={href || '/'}>
       <a
-        className={`my-1 mb-2 flex flex-row items-center justify-start rounded-xl p-3 shadow hover:bg-[#daffce] ${
+        className={`smooth-effect my-1 mb-2 flex flex-row items-center justify-start rounded p-2 shadow hover:bg-[#daffce] ${
           isActive
-            ? 'bg-green-500 text-white hover:bg-green-400 hover:text-black'
+            ? 'bg-green-500 text-white hover:bg-green-700 hover:text-white'
             : 'bg-white text-gray-900'
         }`}
       >
@@ -45,6 +46,7 @@ const Sidebar = () => {
   const [activePath, setActivePath] = useState('')
 
   const [managedSts, setManagedSts] = useState([])
+  const [managedLandfills, setManagedLandfills] = useState([])
 
   useEffect(() => {
     setActivePath(router.pathname)
@@ -58,27 +60,52 @@ const Sidebar = () => {
         router.push('/login')
       }
       setType(user?.role?.type)
-      if (user?.role?.type === 'SystemAdmin') {
-        router.push('/dashboard')
-      }
       if (user?.role?.type === 'STSManager') {
         setLoading(true)
         const token = localStorage.getItem('token')
         console.log({ token })
-        const res = axios.get(getBaseUrl() + '/mysts', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }).then(response => {
-          setManagedSts(response.data)
-          setLoading(false)
-          console.log(response)
-          router.push('/vehicle-entry/' + response.data[0].id)
-        }).catch(error => {
-          setLoading(false)
-          console.log(error)
-        })
+        const res = axios
+          .get(getBaseUrl() + '/mysts', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setManagedSts(response.data)
+            setLoading(false)
+            console.log(response)
+            router.push('/vehicle-entry/' + response.data[0].id)
+          })
+          .catch((error) => {
+            setLoading(false)
+            console.log(error)
+          })
         console.log({ res })
+      } else if (user?.role?.type === 'LandfillManager') {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        console.log({ token })
+        const res = axios
+          .get(getBaseUrl() + '/mylandfills', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setManagedLandfills(response.data)
+            setLoading(false)
+            console.log(response)
+            router.push('/truck-dump-entry/' + response.data[0].id)
+          })
+          .catch((error) => {
+            setLoading(false)
+            console.log(error)
+          })
+        console.log({ res })
+      } else if (user?.role?.type === 'SystemAdmin') {
+        // do nothing
+      } else {
+        router.push('/login')
       }
     }
   }, [])
@@ -88,7 +115,7 @@ const Sidebar = () => {
       <div
         className={clsx(
           'h-max-content border-r-1 smooth-effect  absolute w-screen border-[1px] bg-gradient-to-bl from-white to-white shadow outline-1 transition-all duration-300 ease-in-out lg:relative lg:block lg:max-w-[20vw] lg:bg-slate-500',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? 'translate-x-0 ' : '-translate-x-full '
         )}
       >
         <nav className={clsx('flex h-full flex-col')}>
@@ -102,8 +129,8 @@ const Sidebar = () => {
                   text="Dashboard"
                   subtitle="Track & Monitor everything"
                   icon="dashboard"
-                  href="/dashboard"
-                  isActive={router.pathname === '/dashboard' || router.pathname === '/'}
+                  href="/"
+                  isActive={router.pathname === '/'}
                 />
                 <Item
                   text="Users"
@@ -137,23 +164,52 @@ const Sidebar = () => {
             )}
             {type === 'STSManager' && (
               <>
-
-                {
-                 loading
-                   ? <>
-                       loading...
-                   </>
-                   : managedSts && managedSts.map((sts, index) => (
+                {loading ? (
+                  <p className=" w-full text-center font-bold text-red-600   ">
+                    Loading STS...
+                  </p>
+                ) : managedSts.length > 0 ? (
+                  managedSts.map((sts, index) => (
                     <Item
                       key={index}
-                      text={'Wd: ' + sts.wardNumber}
+                      text={'Ward: ' + sts.wardNumber}
                       subtitle={sts.address}
                       icon="sts"
                       href={`/vehicle-entry/${sts.id}`}
-                      isActive={router.query.stsId === sts.id.toString() }
+                      isActive={router.query.stsId === sts.id.toString()}
                     />
-                   ))
-                }
+                  ))
+                ) : (
+                  <p className=" w-full text-center font-bold text-red-600   ">
+                    No STS Assigned Yet
+                  </p>
+                )}
+              </>
+            )}
+            {type === 'LandfillManager' && (
+              <>
+                {loading ? (
+                  <p className=" w-full text-center font-bold text-red-600   ">
+                    Loading Landfills...
+                  </p>
+                ) : managedLandfills.length > 0 ? (
+                  managedLandfills.map((landfill, index) => (
+                    <Item
+                      key={index}
+                      text={landfill.name}
+                      subtitle={landfill.address}
+                      icon="landfill"
+                      href={`/truck-dump-entry/${landfill.id}`}
+                      isActive={
+                        router.query.landfillId === landfill.id.toString()
+                      }
+                    />
+                  ))
+                ) : (
+                  <p className=" w-full text-center font-bold text-red-600   ">
+                    No Landfill Assigned Yet
+                  </p>
+                )}
               </>
             )}
           </div>
@@ -163,8 +219,7 @@ const Sidebar = () => {
         className="fixed top-0 left-0 z-10 rounded-full bg-white p-3"
         onClick={handleToggle}
       >
-        {isOpen
-          ? (
+        {isOpen ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-gray-600"
@@ -179,8 +234,7 @@ const Sidebar = () => {
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-            )
-          : (
+        ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-gray-600"
@@ -195,7 +249,7 @@ const Sidebar = () => {
               d="M4 6h16M4 12h16m-7 6h7"
             />
           </svg>
-            )}
+        )}
       </button>
     </>
   )

@@ -34,14 +34,14 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
       if (vehicles) {
         setValue(
           'vehicleIds',
-          defaultValues.vehicles.map((vehicle) => vehicle.id.toString()) || []
+          defaultValues?.vehicles?.map((vehicle) => vehicle.id.toString()) || []
         )
       }
 
       if (stsManagers) {
         setValue(
           'managerIds',
-          defaultValues.managers.map((manager) => manager.id.toString()) || []
+          defaultValues?.managers?.map((manager) => manager.id.toString()) || []
         )
       }
     }

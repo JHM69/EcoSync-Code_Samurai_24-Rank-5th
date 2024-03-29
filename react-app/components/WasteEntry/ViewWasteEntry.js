@@ -65,9 +65,9 @@ const STSEntryInfo = ({ vehicleEntry, ...props }) => {
                     <Section title={'STS Information'}>
                         <section className="mb-3 rounded-md border px-3 py-4"> 
                               <h3 className="text-xl font-semibold text-gray-500">
-                                 Ward No: {vehicleEntry?.sts?.wardNumber}
+                                 Ward No: {vehicleEntry?.waste?.wardNumber}
                               </h3>
-                              <p className="text-gray-600"> {vehicleEntry?.sts?.address}</p>
+                              <p className="text-gray-600"> {vehicleEntry?.waste?.address}</p>
                        </section>
                       </Section>
 

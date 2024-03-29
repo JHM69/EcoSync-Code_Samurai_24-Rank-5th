@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import GoogleMapReact from 'google-map-react'
 import Marker from '../markers/DefaultMarker'
+import VehicleMarker from '../markers/VehicleMarker'
 
-export default function MapView ({ lat, lon, name, address }) {
+export default function MapView ({ lat, lon, name, address, height = '400px', width = '100%', borderRadius = '10px', vehicles = [] }) {
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [infoWindow, setInfoWindow] = useState(null)
 
@@ -44,7 +45,7 @@ export default function MapView ({ lat, lon, name, address }) {
         // Extract the properties from the GeoJSON feature
         const ward = event.feature.getProperty('THA_UPA_NA')
         const wardName = event.feature.getProperty('UNI_WAR_NA')
- 
+
         // Create content for the InfoWindow
         const contentString = `
           <div>
@@ -69,8 +70,10 @@ export default function MapView ({ lat, lon, name, address }) {
       })
     }
   }
+
+  console.log(vehicles)
   return (
-    <div style={{ height: '400px', width: '100%', borderRadius: '10px' }}>
+    <div style={{ height, width, borderRadius }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
         defaultCenter={defaultProps.center}
@@ -79,6 +82,18 @@ export default function MapView ({ lat, lon, name, address }) {
          onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
       >
         <Marker lat={lat} lng={lon} text={name} address={address} />
+
+        {
+           vehicles && vehicles.map((vehicle) => (
+            <VehicleMarker
+              key={vehicle.id}
+              lat={vehicle.lat}
+              lng={vehicle.lon}
+              text={vehicle.name}
+              address={vehicle.address}
+            />
+           ))
+        }
       </GoogleMapReact>
     </div>
   )

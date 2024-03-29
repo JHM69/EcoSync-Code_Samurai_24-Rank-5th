@@ -34,6 +34,7 @@ model User {
   roleId     Int       @default(4)
   role       Role      @relation(fields: [roleId], references: [id])
   vehicleEntries       VehicleEntry[] //STSManagers can have multiple vehicle entries 
+  wasteEntries         WasteEntry[]   //STSManagers can have multiple waste entries
   truckDumpEntries     TruckDumpEntry[] //Landfill Managers can have multiple truck dump entries
   sts                  STS[]
   landfills            Landfill[]
@@ -99,6 +100,7 @@ model STS {  // 54 STS
   managers             User[]
   vehicles            Vehicle[]
   vehicleEntries      VehicleEntry[]
+  wasteEntries        WasteEntry[]
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
 }
@@ -119,6 +121,20 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   @@index([userId], name: "idx_vehicle_entry_user")
   @@index([timeOfArrival], name: "idx_vehicle_entry_time_of_arrival")
   @@index([timeOfDeparture], name: "idx_vehicle_entry_time_of_departure")
+}
+
+
+model WasteEntry {  //StsManager can entry multiple vehicles enties 
+  id              Int      @id @default(autoincrement())
+  stsId           Int
+  sts             STS      @relation(fields: [stsId], references: [id])
+  volumeOfWaste   Float
+  timeOfArrival   DateTime 
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  @@index([stsId], name: "idx_waste_entry_sts")
+  @@index([userId], name: "idx_waste_entry_user")
+  @@index([timeOfArrival], name: "idx_waste_entry_time_of_arrival")
 }
 
 model TruckDumpEntry {

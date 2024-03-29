@@ -29,7 +29,7 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
       if (landfillManagers) {
         setValue(
           'managerIds',
-          defaultValues.managers.map((manager) => manager.id.toString()) || []
+          defaultValues?.managers?.map((manager) => manager.id.toString()) || []
         )
       }
     }

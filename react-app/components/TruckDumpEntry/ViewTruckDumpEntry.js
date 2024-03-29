@@ -3,7 +3,6 @@ import React, { Fragment, useState } from 'react'
 
 import { Close } from '../common/icons/Close'
 import { FaEye } from 'react-icons/fa'
-import MapView from '../common/MapView'
 
 const Section = ({ title, children, ...props }) => (
   <section className="mb-3 rounded-md border px-3 py-4" {...props}>
@@ -12,7 +11,7 @@ const Section = ({ title, children, ...props }) => (
   </section>
 )
 
-const STSEntryInfo = ({ vehicleEntry, ...props }) => {
+const STSEntryInfo = ({ truckDumpEntry, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -55,44 +54,35 @@ const STSEntryInfo = ({ vehicleEntry, ...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Vehicle Entry Information</h3>
+                    <h3>Truck Dump Entry Information</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
                   <div className="mt-6 flex flex-col md:flex-row">
                     <div className="w-full">
 
-                    <Section title={'STS Information'}>
-                        <section className="mb-3 rounded-md border px-3 py-4"> 
-                              <h3 className="text-xl font-semibold text-gray-500">
-                                 Ward No: {vehicleEntry?.sts?.wardNumber}
-                              </h3>
-                              <p className="text-gray-600"> {vehicleEntry?.sts?.address}</p>
-                       </section>
-                      </Section>
-
                       <Section title={'Vehicle Information'}>
-                        <section className="mb-3 rounded-md border px-3 py-4"> 
+                        <section className="mb-3 rounded-md border px-3 py-4">
                               <h3 className="text-xl font-semibold text-gray-500">
-                                Reg No: {vehicleEntry?.vehicle?.registrationNumber}
+                                Reg No: {truckDumpEntry?.vehicle?.registrationNumber}
                               </h3>
-                              <p className="text-gray-600"> Capacity No: {vehicleEntry?.vehicle?.capacity}</p>
-                              <p className="text-gray-600"> Truck Type: {vehicleEntry?.vehicle?.type}</p>
+                              <p className="text-gray-600"> Capacity No: {truckDumpEntry?.vehicle?.capacity}</p>
+                              <p className="text-gray-600"> Truck Type: {truckDumpEntry?.vehicle?.type}</p>
                        </section>
                       </Section>
 
                       <Section title={'Waste Information'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Waste Volume Carried : {vehicleEntry?.volumeOfWaste} Ton
+                          Waste Volume Carried : {truckDumpEntry?.volumeOfWaste} Ton
                         </h3>
                       </Section>
 
                       <Section title={'Time'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Arrival Time : { new Date(vehicleEntry?.timeOfArrival).toLocaleString() }
+                          Arrival Time : { new Date(truckDumpEntry?.timeOfArrival).toLocaleString() }
                         </h3>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Departure Time :  { new Date(vehicleEntry?.timeOfDeparture).toLocaleString() }
+                          Departure Time :  { new Date(truckDumpEntry?.timeOfDeparture).toLocaleString() }
                         </h3>
                       </Section>
 

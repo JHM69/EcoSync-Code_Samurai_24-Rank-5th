@@ -1,9 +1,9 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
+import ts from 'typescript';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
-import ts from 'typescript';
 
 const router = Router();
 
@@ -338,6 +338,25 @@ router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) 
   }
 });
 
+
+router.get('/sts/:id/add', auth.required, async (req: Request, res: Response) => {
+  try {
+    const stsId = Number(req.params.id);
+    const entries = await prisma.wasteEntry.findMany({
+      where: {
+        stsId,
+      },
+      include: {
+        sts: true,
+        vehicle: true,
+      },
+    });
+    res.status(200).json(entries);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 // add waste in sts
 router.post('/sts/:id/add', auth.required, auth.isSTSManager, async (req: Request, res: Response) => {
   try {
@@ -363,8 +382,9 @@ router.post('/sts/:id/add', auth.required, auth.isSTSManager, async (req: Reques
     if (!isManager) {
       return res.status(403).json({ message: 'You are not a manager of this STS' });
     }
+   
     // update the sts current waste volume
-    const updatedSts= await prisma.sTS.update({
+     await prisma.sTS.update({
       where: {
         id: stsId,
       },
@@ -372,7 +392,29 @@ router.post('/sts/:id/add', auth.required, auth.isSTSManager, async (req: Reques
         currentWasteVolume: sts.currentWasteVolume + Number(req.body.weight),
       },
     });
-    res.status(200).json(updatedSts);
+
+    const wasteEntry = await prisma.wasteEntry.create({
+      data: {
+        volumeOfWaste: Number(req.body.volumeOfWaste),
+        timeOfArrival: new Date(req.body.timeOfArrival),
+        sts: {
+          connect: {
+            id: stsId,
+          },
+        },
+        user: {
+          connect: {
+            id: req.user.id,
+          },
+        },
+      },
+      include: {
+        sts: true,
+        vehicle: true,
+      },
+    });
+
+    res.status(201).json(wasteEntry);
   }
   catch (error: any) {
     res.status(400).json({ message: error.message });

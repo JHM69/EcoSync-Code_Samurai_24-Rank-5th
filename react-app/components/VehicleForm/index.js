@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-expressions */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import Select from '../common/Select'
-import axios from 'axios'
-import { getBaseUrl } from '../../utils/url'
-import { MultipleSelect, OptionWithCheckbox } from '../common/MultipleSelect'
 const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   const {
     register,

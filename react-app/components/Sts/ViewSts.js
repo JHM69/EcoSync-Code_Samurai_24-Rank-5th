@@ -2,9 +2,9 @@ import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 
 import { Close } from '../common/icons/Close'
-import { FaEye } from 'react-icons/fa' 
+import { FaEye } from 'react-icons/fa'
 import MapView from '../common/MapView'
-function ProgressBar({ currentWasteVolume, capacity }) {
+export function ProgressBar({ currentWasteVolume, capacity }) {
   // Calculate the percentage of waste volume relative to the capacity
   const percentage = (currentWasteVolume / capacity) * 100
 
@@ -39,7 +39,6 @@ const Section = ({ title, children, ...props }) => (
     {children}
   </section>
 )
-
 
 const STSInfo = ({ sts, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -116,11 +115,8 @@ const STSInfo = ({ sts, ...props }) => {
                           lat={sts.lat}
                           lon={sts.lon}
                           name={sts.wardNumber}
-                          address = {sts.address}
+                          address={sts.address}
                         />
-                        
-
-
                       </Section>
 
                       <Section title={'Waste Information'}>
