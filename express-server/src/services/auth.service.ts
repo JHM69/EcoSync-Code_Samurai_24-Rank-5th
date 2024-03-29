@@ -16,9 +16,10 @@ const sendResetPasswordEmail = async (email: string, token: string) => {
 
   const data = await sendEmail({
     to: email as string,
-    subject: 'DNCC Verification Token',
+    subject: 'Someone requested a password reset for your DNCC EcoSync account',
     html: `
-      <h1>Your DNCC EcoSync verification token is: ${token}</h1>
+      <h1>Click this url if you want to reset your password. If you don't want to reset, you can ignore this email.</h1>
+      <a href="http://localhost:3000/forgot-password-confirm?token=${token}">http://localhost:3000/forgot-password-confirm?token=${token}</a>
     `,
   });
   console.log(data);
@@ -207,14 +208,19 @@ const changePassword = async (userId: number, oldPassword: string, newPassword: 
     throw new HttpException(400, 'Incorrect old password');
   }
   const hashedPassword = await bcrypt.hash(newPassword, 10);
-  await prisma.user.update({
+  const newUser= await prisma.user.update({
     where: { id: Number(userId) },
     data: { password: hashedPassword, changedAdminPassword : true},
+    include: {
+      role: {
+        include: { permissions: true }, // Including permissions information
+      },
+    },
   });
 
   // generate a new token after changing password
-  const token = generateToken(user);
-  return { ...user, token };
+  const token = generateToken(newUser);
+  return { ...newUser, token };
  
 };
 

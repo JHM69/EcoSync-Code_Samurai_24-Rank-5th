@@ -3,7 +3,7 @@ import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
 import { useRouter } from 'next/router'
 
-function PasswordRecovery () {
+function ForgotPasswordConfirm() {
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [oldPassword, setOldPassword] = useState('')
@@ -38,31 +38,33 @@ function PasswordRecovery () {
     if (!validatePasswords()) {
       return
     }
-
+    const searchParams = new URLSearchParams(location.search)
+    const token = searchParams.get('token')
+    if (!token) {
+      setError('Missing token')
+      return
+    }
     setLoading(true)
     console.log(token)
     try {
-      await axios.post(getBaseUrl() + '/auth/change-password', {
-        oldPassword,
-        newPassword: password
-        // You might need other data here, like a token
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }).then((res) => {
-        console.log(res.data)
-        setError('')
-        const user = res.data.newUser
-        localStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('token', user.token)
-        setSuccess('Password reset successfully. Please log in with your new password.')
-        window.location.href = '/'
-      }).catch((error) => {
-        console.log(error)
-        setError(error.response.data.message || 'Failed to reset password')
-      })
+      await axios
+        .post(getBaseUrl() + '/auth/reset-password/confirm', {
+          token,
+          newPassword: password,
+          // You might need other data here, like a token
+        })
+        .then((res) => {
+          console.log(res.data)
+          setError('')
+          setSuccess(
+            'Password reset successfully. Please log in with your new password.'
+          )
+          window.location.href = '/'
+        })
+        .catch((error) => {
+          console.log(error)
+          setError(error.response.data.message || 'Failed to reset password')
+        })
     } catch (error) {
       console.log(error)
       setError('Failed to reset password')
@@ -72,17 +74,23 @@ function PasswordRecovery () {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-md shadow-md">
-        <h1 className="text-2xl font-medium mb-6 text-center">Password Recovery</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md rounded-md bg-white p-8 shadow-md">
+        <h1 className="mb-6 text-center text-2xl font-medium">
+          Password Recovery
+        </h1>
 
-        <div className="w-full flex-col gap-3 justify-center items-center flex">
-          <img src="/logo.png" alt="logo" className="mx-auto justify-center h-36 w-36 mb-6" />
+        <div className="flex w-full flex-col items-center justify-center gap-3">
+          <img
+            src="/logo.png"
+            alt="logo"
+            className="mx-auto mb-6 h-36 w-36 justify-center"
+          />
           {error && <span className="text-sm text-red-500">{error}</span>}
           {success && <span className="text-sm text-green-500">{success}</span>}
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="old" className="block text-sm font-medium mb-1">
             Old Password
           </label>
@@ -94,10 +102,10 @@ function PasswordRecovery () {
             placeholder="Enter your new password"
             className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
           />
-        </div>
+        </div> */}
 
         <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
+          <label htmlFor="password" className="mb-1 block text-sm font-medium">
             New Password
           </label>
           <input
@@ -106,12 +114,15 @@ function PasswordRecovery () {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your new password"
-            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
           />
         </div>
 
         <div className="mb-6">
-          <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
+          <label
+            htmlFor="confirmPassword"
+            className="mb-1 block text-sm font-medium"
+          >
             Confirm New Password
           </label>
           <input
@@ -120,7 +131,7 @@ function PasswordRecovery () {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm your new password"
-            className="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#76C75E]"
           />
         </div>
 
@@ -128,7 +139,7 @@ function PasswordRecovery () {
           type="submit"
           onClick={onSubmit}
           disabled={loading}
-          className="w-full py-2 rounded-md bg-[#76C75E] text-white font-medium hover:bg-[#375f2b] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#76C75E] disabled:bg-gray-400"
+          className="w-full rounded-md bg-[#76C75E] py-2 font-medium text-white hover:bg-[#375f2b] focus:outline-none focus:ring-2 focus:ring-[#76C75E] focus:ring-offset-2 disabled:bg-gray-400"
         >
           {loading ? 'Resetting...' : 'Update Password'}
         </button>
@@ -137,4 +148,4 @@ function PasswordRecovery () {
   )
 }
 
-export default PasswordRecovery
+export default ForgotPasswordConfirm
