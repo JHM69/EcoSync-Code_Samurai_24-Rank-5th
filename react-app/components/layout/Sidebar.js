@@ -27,7 +27,7 @@ function Item({ text, subtitle, icon, href, isActive }) {
           />
         </div>
 
-        <div className="flex flex-col">
+        <div className=" flex-col hidden md:hidden lg:flex">
           <span className="text-md font-semibold">{text}</span>
           <span className="text-xs font-light">{subtitle}</span>
         </div>
@@ -114,7 +114,7 @@ const Sidebar = () => {
     <>
       <div
         className={clsx(
-          'h-max-content border-r-1 smooth-effect  absolute w-screen border-[1px] bg-gradient-to-bl from-white to-white shadow outline-1 transition-all duration-300 ease-in-out lg:relative lg:block lg:max-w-[20vw] lg:bg-slate-500',
+          'h-max-content border-r-1 smooth-effect  absolute w-screen border-[1px] bg-gradient-to-bl from-white to-white shadow outline-1 transition-all duration-300 ease-in-out lg:relative lg:block lg:max-w-[20vw] md:max-w-[10vw] lg:bg-slate-500',
           isOpen ? 'translate-x-0 ' : '-translate-x-full '
         )}
       >

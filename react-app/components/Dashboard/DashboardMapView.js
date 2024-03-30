@@ -3,11 +3,18 @@ import GoogleMapReact from 'google-map-react'
 import StsMarker from '../markers/StsMarker'
 import VehicleMarker from '../markers/VehicleMarker'
 import LandfillMarker from '../markers/LandfillMarker'
-import { NoSSR } from '../common/NoSSR'
 
-export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills }) {
+export default function StsVehiclesLandfillsMapView({
+  stss,
+  vehicles,
+  landfills,
+}) {
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [infoWindow, setInfoWindow] = useState(null)
+
+  console.log('stss', stss)
+  console.log('vehicles', vehicles)
+  console.log('landfills', landfills)
 
   // Dynamically load the GeoJSON file on component mount
   useEffect(() => {
@@ -21,10 +28,9 @@ export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills
   const defaultProps = {
     center: {
       lat: 23.8103,
-      lng: 90.4125
+      lng: 90.4125,
     },
-    zoom: 12
-
+    zoom: 12,
   }
   const handleApiLoaded = (map, maps) => {
     if (geoJsonData) {
@@ -32,7 +38,7 @@ export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills
       // Optional: Style your GeoJSON features
       map.data.setStyle({
         fillColor: 'yellow',
-        strokeWeight: 1
+        strokeWeight: 1,
       })
 
       // Close any existing info window when clicking on the map
@@ -60,7 +66,7 @@ export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills
         if (!infoWindow) {
           const tempInfoWindow = new maps.InfoWindow({
             content: contentString,
-            position: event.latLng
+            position: event.latLng,
           })
           setInfoWindow(tempInfoWindow)
           tempInfoWindow.open(map)
@@ -73,51 +79,49 @@ export default function StsVehiclesLandfillsMapView ({ stss, vehicles, landfills
     }
   }
   return (
-    <NoSSR>
     <div style={{ height: '500px', width: '100%', borderRadius: '10px' }}>
-       {
-        (stss || vehicles || landfills) && (
-          <GoogleMapReact
+      {(stss || vehicles || landfills) && (
+        <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
           defaultCenter={defaultProps.center}
           defaultZoom={defaultProps.zoom}
           yesIWantToUseGoogleMapApiInternals
-           onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+          onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         >
           {/* load all stss, vehicles, landfills */}
-          {landfills && landfills.map((landfill) => (
-            <LandfillMarker
-              key={landfill.lat + landfill.name}
-              lat={landfill.lat}
-              lng={landfill.lon}
-              text={landfill.name}
-              icon={landfill.icon}
-            />
-          ))}
+          {landfills &&
+            landfills.map((landfill) => (
+              <LandfillMarker
+                key={landfill.lon + landfill.name}
+                lat={landfill.lat}
+                lng={landfill.lon}
+                text={landfill.name}
+                icon={landfill.icon}
+              />
+            ))}
 
-          {stss && stss.map((sts, id) => (
-            <StsMarker
-              key={sts.lon + sts.wardNumber}
-              lat={sts.lat}
-              lng={sts.lon}
-              text={sts.wardNumber}
-              icon={sts.icon}
-            />
-          ))}
-          {vehicles && vehicles.map((vehicle, id) => (
-            <VehicleMarker
-              key={vehicle.lat + vehicle.registrationNumber}
-              lat={vehicle.lat}
-              lng={vehicle.lon}
-              text={vehicle.registrationNumber}
-              icon={vehicle.icon}
-            />
-          ))}
-
+          {stss &&
+            stss.map((sts, id) => (
+              <StsMarker
+                key={sts.lon + sts.wardNumber}
+                lat={sts.lat}
+                lng={sts.lon}
+                text={sts.wardNumber}
+                icon={sts.icon}
+              />
+            ))}
+          {vehicles &&
+            vehicles.map((vehicle, id) => (
+              <VehicleMarker
+                key={vehicle.lat + vehicle.registrationNumber+id}
+                lat={vehicle.lat}
+                lng={vehicle.lon}
+                text={vehicle.registrationNumber}
+                icon={vehicle.icon}
+              />
+            ))}
         </GoogleMapReact>
-        )
-       }
+      )}
     </div>
-    </NoSSR>
   )
 }

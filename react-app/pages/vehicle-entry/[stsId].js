@@ -13,6 +13,7 @@ import MapView from '../../components/common/MapView'
 import AddWasteEntry from '../../components/WasteEntry/AddWasteEntry'
 import WasteItemsSkeleton from '../../components/WasteEntrys/WasteEntryItemsSkeleton'
 import WasteEntryItems from '../../components/WasteEntrys/WasteEntryItems'
+import { NoSSR } from '../../components/common/NoSSR'
 
 function VehicleEntry () {
   const [loading, setLoading] = useState(true)
@@ -100,6 +101,7 @@ function VehicleEntry () {
   }, [stsId])
 
   return (
+    <NoSSR>
     <div>
       <div className="flex w-full flex-col">
         <div className="mx-6 mt-3 flex items-center justify-between">
@@ -170,6 +172,7 @@ function VehicleEntry () {
         </div>
       </div>
     </div>
+    </NoSSR>
   )
 }
 

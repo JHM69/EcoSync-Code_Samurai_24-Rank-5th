@@ -10,6 +10,7 @@ import MapView from '../../components/common/MapView'
 import TruckDumpEntryItems from '../../components/TruckDumpEntrys/TruckDumpEntryItems'
 import TruckDumpEntryItemsSkeleton from '../../components/TruckDumpEntrys/TruckDumpEntryItemsSkeleton'
 import { ProgressBar } from '../../components/Sts/ViewSts'
+import { NoSSR } from '../../components/common/NoSSR'
 
 function TruckDumpEntry() {
   const [loading, setLoading] = useState(true)
@@ -73,6 +74,7 @@ function TruckDumpEntry() {
   }, [landfillId])
 
   return (
+    <NoSSR>
     <div>
       <div className="flex w-full flex-col">
         <div className="mx-6 mt-3 flex items-center justify-between">
@@ -129,6 +131,7 @@ function TruckDumpEntry() {
         </div>
       </div>
     </div>
+    </NoSSR>
   )
 }
 
