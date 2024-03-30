@@ -22,7 +22,7 @@ const AddWasteEntry = ({ props, stsId }) => {
         }
       }).then(response => {
         console.log(response)
-        toast.success('Vehicle Entry added successfully')
+        toast.success('Waste Entry added successfully')
       }).catch(error =>
         console.log(error)
       )
@@ -35,7 +35,7 @@ const AddWasteEntry = ({ props, stsId }) => {
     <>
     <Toaster />
       <Button onClick={handleOpen} type="button" {...props}>
-        Add Vehicle Entry
+        Add Waste Entry
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
