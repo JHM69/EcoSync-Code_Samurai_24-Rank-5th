@@ -8,22 +8,22 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
   const [showDetails, setShowDetails] = useState(false) // State to track visibility of details
 
   const colors = [
-    '#009e61', // Deep Green
-    '#299708', // Green
-    '#67ab00', // Yellow-Green
-    '#8f8f00', // Yellow
-    '#b77700', // Orange
-    '#ae2e00', // Orange Red
-    '#cb0000', // Red
-    '#a00000' // Dark Red
-  ]
+    'rgba(0, 158, 97, 0.9)', // Deep Green with 80% opacity
+    'rgba(41, 151, 8, 0.9)', // Green with 80% opacity
+    'rgba(103, 171, 0, 0.9)', // Yellow-Green with 80% opacity
+    'rgba(143, 143, 0, 0.9)', // Yellow with 80% opacity
+    'rgba(183, 119, 0, 0.9)', // Orange with 80% opacity
+    'rgba(174, 46, 0, 0.9)', // Orange Red with 80% opacity
+    'rgba(203, 0, 0, 0.9)', // Red with 80% opacity
+    'rgba(160, 0, 0, 0.9)', // Dark Red with 80% opacity
+  ];
 
   const size =
     baseSize +
     ((sts.currentWasteVolume - minimumWasteVolume) /
       (maximumWasteVolume - minimumWasteVolume)) *
       24
-  const percentage = (sts.currentWasteVolume / sts.capacity) * 100;
+  const percentage = (sts.currentWasteVolume / sts.capacity) * 100
   const index = Math.min(
     Math.floor((percentage / 100) * colors.length),
     colors.length - 1
@@ -35,12 +35,13 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
     backgroundColor: colors[index],
     borderRadius: '50%',
     padding: '2px',
+    alpha: 0.5,
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    transition: 'transform 0.3s ease' // Smooth transformation
+    transition: 'opacity 0.5s ease'
   }
 
   const infoBoxStyle = {
@@ -65,14 +66,28 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
       onMouseEnter={() => setShowDetails(true)}
       onMouseLeave={() => setShowDetails(false)}
     >
-      <p className="p-1 text-[8px] font-bold text-white">{sts.currentWasteVolume} T</p>
-      <div className='flex flex-col gap-1 p-3' style={infoBoxStyle}>
-        <p className='text-bold text-xl text-green-700'>Ward: {sts.wardNumber}</p>
-        {sts.address && <div className='flex  text-md flex-row'> <FaAddressBook/> {sts.address}</div> }
-        { sts?.managers.length > 0 && <div className='flex flex-row items-center'> <BsPerson/> {sts?.managers[0]?.name}</div> }
+      <p className="text-[8px] p-1 font-bold text-white">
+        {sts.currentWasteVolume} T
+      </p>
+      <div className="flex flex-col gap-1 p-3" style={infoBoxStyle}>
+        <p className="text-bold text-xl text-green-700">
+          Ward: {sts.wardNumber}
+        </p>
+        {sts.address && (
+          <div className="text-md  flex flex-row">
+            {' '}
+            <FaAddressBook /> {sts.address}
+          </div>
+        )}
+        {sts?.managers.length > 0 && (
+          <div className="flex flex-row items-center">
+            {' '}
+            <BsPerson /> {sts?.managers[0]?.name}
+          </div>
+        )}
         <ProgressBar
-          height = '160px'
-          textSize = '42px'
+          height="160px"
+          textSize="42px"
           currentWasteVolume={sts.currentWasteVolume}
           capacity={sts.capacity}
         />

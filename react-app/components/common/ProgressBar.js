@@ -1,8 +1,8 @@
-function ProgressBar({
+export default function ProgressBar ({
   currentWasteVolume,
   capacity,
   height = '200px',
-  textSize = '20px',
+  textSize = '20px'
 }) {
   // Calculate the percentage of waste volume relative to the capacity
   const percentage = (currentWasteVolume / capacity) * 100
@@ -17,7 +17,7 @@ function ProgressBar({
       '#b77700', // Orange
       '#ae2e00', // Orange Red
       '#cb0000', // Red
-      '#a00000', // Dark Red
+      '#a00000' // Dark Red
     ]
 
     // Map percentage to color index
@@ -31,7 +31,7 @@ function ProgressBar({
   // Style for the progress bar's filled portion
   const barStyle = {
     width: `${Math.max(percentage, 0)}%`, // Ensure width is not negative
-    backgroundColor: getColorForPercentage(percentage), // Set color based on percentage
+    backgroundColor: getColorForPercentage(percentage) // Set color based on percentage
   }
 
   return (
@@ -53,5 +53,3 @@ function ProgressBar({
     </div>
   )
 }
-
-export default ProgressBar

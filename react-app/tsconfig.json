@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/common/SwitchTheme.js"  ],
+, "components/common/SwitchTheme.js", "pages/middleware.js"  ],
   "exclude": [
     "node_modules"
   ]

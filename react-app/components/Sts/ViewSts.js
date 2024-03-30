@@ -3,9 +3,9 @@ import React, { Fragment, useState } from 'react'
 
 import { Close } from '../common/icons/Close'
 import { FaEye } from 'react-icons/fa'
+import ProgressBar from '../common/ProgressBar'
 import MapView from '../common/MapView'
-import { ProgressBar } from '../common/ProgressBar'
-
+ 
 const Section = ({ title, children, ...props }) => (
   <section className="mb-3 rounded-md border px-3 py-4" {...props}>
     <h3 className="mb-3 text-xl font-semibold text-gray-500">{title}</h3>
