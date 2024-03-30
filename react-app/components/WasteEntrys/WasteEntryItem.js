@@ -13,7 +13,7 @@ const WasteEntryItem = ({
   return (
     <div className="smooth-effect my-2 flex cursor-pointer items-center rounded-md border px-3 py-4 shadow-sm hover:bg-green-200 hover:shadow lg:px-6">
       <div className="flex-1">
-        <h3 className="text-xl text-gray-800">{volumeOfWaste} KG</h3>
+        <h3 className="text-xl text-gray-800">{volumeOfWaste} Ton</h3>
       </div>
 
       <div className="flex-1">

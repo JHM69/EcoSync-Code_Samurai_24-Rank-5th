@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 
 import { getBaseUrl } from '../../utils/url'
 
-function Vehicle () {
+export default function Vehicle() {
   const [user, setUser] = React.useState({})
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(null)
@@ -59,5 +59,3 @@ function Vehicle () {
     </Layout>
   )
 }
-
-export default Vehicle
