@@ -26,8 +26,29 @@ const ApplicationBar: React.FC<{
 
   const [user, setUser] = React.useState(null)
 
+  async function checkTokenValidity() {
+    try {
+      const token = localStorage.getItem('token')
+      console.log(token)
+      const res = await axios.get(`${getBaseUrl()}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.log(res)
+      if (res.status != 200) {
+        alert('Session Expired. Please login again.')
+        console.log('Session Expired. Please login again.')
+      }
+    } catch (error) {
+      console.log(error)
+      alert('Session Expired. Please login again.')
+    }
+  }
+
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('user')))
+    checkTokenValidity()
   }, [])
 
   return (
