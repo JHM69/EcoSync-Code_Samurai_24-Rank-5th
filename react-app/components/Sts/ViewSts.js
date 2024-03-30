@@ -67,7 +67,7 @@ const STSInfo = ({ sts, ...props }) => {
                           <div className="flex items-center space-x-4">
                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
                               <img
-                                src={sts.icon}
+                                src={sts.logo || '/logo.png'}
                                 alt={sts.wardNumber}
                                 width={64}
                                 height={64}
@@ -75,7 +75,7 @@ const STSInfo = ({ sts, ...props }) => {
                             </div>
                             <div className="flex flex-col">
                               <h3 className="text-xl font-semibold text-gray-500">
-                                {sts.wardNumber}
+                                {sts.name || sts.wardNumber}
                               </h3>
                               <p className="text-gray-600">{sts.address}</p>
                             </div>

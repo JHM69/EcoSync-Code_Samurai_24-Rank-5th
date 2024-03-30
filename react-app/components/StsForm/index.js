@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-expressions */
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import Select from '../common/Select'
 import axios from 'axios'
+import toast, { Toaster } from 'react-hot-toast'
 import { getBaseUrl } from '../../utils/url'
 import { MultipleSelect, OptionWithCheckbox } from '../common/MultipleSelect'
-const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
+const StsForm = ({ type, defaultValues, onFormSubmit,handleClose, ...props }) => {
   const {
     register,
     handleSubmit,
@@ -21,6 +22,8 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
 
   const [search2, setSearch2] = useState('')
   const [vehicles, setVehicles] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [loading2, setLoading2] = useState(false)
 
   useEffect(() => {
     if (defaultValues) {
@@ -28,6 +31,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
       setValue('capacity', defaultValues.capacity)
       setValue('lat', defaultValues.lat)
       setValue('lon', defaultValues.lon)
+      setValue('name', defaultValues.name)
 
       setValue('address', defaultValues.address)
       setValue('logo', defaultValues.logo)
@@ -78,13 +82,42 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   }, [search2])
 
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true)
     await onFormSubmit(data)
+    setLoading(false)
     reset()
   })
+
+  const onSubmit2 =async () => {
+    try {
+      setLoading2(true)
+      const token = localStorage.getItem('token')
+      await axios.delete(getBaseUrl() + `/sts/${defaultValues.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      toast.success('STS Deleted Successfully')
+    } catch (error) {
+      // alert('Error Deleting STS')
+      toast.success('Error Deleting STS')
+    } finally { 
+      setLoading2(false)
+      handleClose()
+    }
+  }
 
   return (
     <div {...props} className="flex flex-col space-y-6">
       <div>
+      <Input
+          name="name"
+          label="Name"
+          placeholder="sts name"
+          type="text"
+          error={errors.name ? errors.name.message : false}
+          register={register('name')} // No need for full validation object if optional
+        />
         <Input
           name="wardNumber"
           label="Ward Number"
@@ -232,9 +265,14 @@ const StsForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
         </div>
       </div>
 
-      <Button type="button" onClick={onSubmit} className="w-full">
-        {type ? `${type} STS` : 'Submit'}
+      <Button type="button" onClick={onSubmit} className="w-full" disabled={loading}>
+        {/* {type ? `${type} STS` : 'Submit'} */}
+        {type === 'Update' ? (loading ? 'Updating STS...' : 'Update STS') : (loading ? 'Adding STS...' : 'Add STS')}
       </Button>
+      
+      {type === 'Update' &&(<Button type="button" onClick={onSubmit2} className="w-full" disabled={loading}>
+        {loading2 ? 'Deleting STS...' : 'Delete STS'}
+      </Button>)}
     </div>
   )
 }

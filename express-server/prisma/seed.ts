@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-async function main() { 
+async function main() {
   console.log('Seeding roles and permissions');
   await prisma.role.createMany({
     data: [
@@ -19,20 +19,20 @@ async function main() {
   console.log('Roles created');
 
   // Permissions creation
-   await prisma.permission.createMany({
+  await prisma.permission.createMany({
     data: [
       { name: 'edit_sts_entry' },
       { name: 'edit_vehicle_entry' },
       { name: 'edit_landfill_entry' },
-      { name: 'edit_user'},
-      { name: 'view_user'},
-      { name: 'edit_role'},
-      { name: 'view_role'},
-      { name: 'edit_permission'},
-      { name: 'view_permission'},
-      { name: 'view_sts_entry'},
-      { name: 'view_vehicle_entry'},
-      { name: 'view_landfill_entry'}, 
+      { name: 'edit_user' },
+      { name: 'view_user' },
+      { name: 'edit_role' },
+      { name: 'view_role' },
+      { name: 'edit_permission' },
+      { name: 'view_permission' },
+      { name: 'view_sts_entry' },
+      { name: 'view_vehicle_entry' },
+      { name: 'view_landfill_entry' },
     ],
     skipDuplicates: true,
   });
@@ -41,7 +41,7 @@ async function main() {
 
   // Link permissions to SystemAdmin Role
   // Assuming the SystemAdmin role is the first to be inserted and has id=1
-    await prisma.role.update({
+  await prisma.role.update({
     where: { id: 1 },
     data: {
       permissions: {
@@ -62,52 +62,123 @@ async function main() {
       },
     },
   });
-   await prisma.role.update({
+  await prisma.role.update({
     where: { id: 2 },
     data: {
       permissions: {
-        connect: [
-          { id: 10 },
-          { id: 11 },
-          { id: 12 },
-        ],
+        connect: [{ id: 10 }, { id: 11 }, { id: 12 }],
       },
     },
   });
-    await prisma.role.update({
-      where: { id: 3 },
-      data: {
-        permissions: {
-          connect: [
-            { id: 7 },
-            { id: 8 },
-            { id: 9 },
-          ],
-        },
+  await prisma.role.update({
+    where: { id: 3 },
+    data: {
+      permissions: {
+        connect: [{ id: 7 }, { id: 8 }, { id: 9 }],
       },
-    });
+    },
+  });
 
   console.log('Permissions linked to SystemAdmin Role');
 
   // Creating a default SystemAdmin user
   const password = '12345678';
   const hashedPassword = await bcrypt.hash(password, 10);
-  await prisma.user.create({
-    data: {
-      email: 'jahangirhossainm69@gmail.com',
-      name: 'Jahangir Hossain',
-      password: hashedPassword, // Encrypted password
-      role: {
-        connect: { id: 1 }, // Connecting to SystemAdmin role
-      },
-    },
+  const existingUser = await prisma.user.findUnique({
+    where: { email: 'jahangirhossainm69@gmail.com' },
   });
 
+  if (!existingUser) {
+    await prisma.user.create({
+      data: {
+        email: 'jahangirhossainm69@gmail.com',
+        name: 'Jahangir Hossain',
+        password: hashedPassword, // Encrypted password
+        role: {
+          connect: { id: 1 }, // Connecting to SystemAdmin role
+        },
+      },
+    });
+  } else {
+    await prisma.user.update({
+      where: { email: 'jahangirhossainm69@gmail.com' },
+      data: {
+        password: hashedPassword,
+        role: {
+          connect: { id: 1 },
+        },
+      },
+    });
+  }
   console.log('Default SystemAdmin user created');
+
+  const stsData = [
+    {
+      name: 'Secondary Waste Transfer Station',
+      lat: 23.77295889,
+      lon: 90.41515368,
+      wardNumber: '1',
+      address: 'Niketon area, near bir uttam shakwat road',
+      capacity: 1000,
+      currentWasteVolume: 0,
+    },
+    {
+      name: 'Rampura Secondary Transfer Station',
+      lat: 23.76760376,
+      lon: 90.42342778,
+      wardNumber: '23',
+      address: 'Rampura, near banasree main rd',
+      currentWasteVolume: 0,
+      capacity: 1000,
+    },
+    {
+      name: 'Pallabi Secondary Transfer Station',
+      lat: 23.82748171604551,
+      lon: 90.36451602161833,
+      wardNumber: '52',
+      address: 'near pallabi police station',
+      currentWasteVolume: 0,
+      capacity: 1000,
+    },
+    {
+      name: 'Khilkhet Secondary Transfer Station',
+      lat: 23.830295942821408,
+      lon: 90.42214421783969,
+      wardNumber: '17',
+      address: 'near khilkhet high school',
+      currentWasteVolume: 0,
+      capacity: 1000,
+    },
+    {
+      name: 'Rupnagar Secondary Transfer Station',
+      lat: 23.820207280517298,
+      lon: 90.35480434604217,
+      wardNumber: '6',
+      address: 'near rupnagar abashik area',
+      currentWasteVolume: 0,
+      capacity: 1000,
+    },
+    {
+      name: 'Mirpur Secondary Transfer Station',
+      lat: 23.813600544288484,
+      lon: 90.3663055954331,
+      wardNumber: '13',
+      address: 'near mirpur 10 no. bridge',
+      currentWasteVolume: 0,
+      capacity: 1000,
+    },
+  ];
+
+  // create STS form the array
+  await prisma.sTS.createMany({
+    data: stsData,
+    skipDuplicates: true,
+  });
+  console.log('Default STSs created');
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error(e);
     process.exit(1);
   })

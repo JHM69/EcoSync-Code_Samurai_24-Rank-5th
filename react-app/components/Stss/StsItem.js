@@ -6,6 +6,7 @@ import STSInfo from '../Sts/ViewSts'
 const StsItem = ({
   logo,
   wardNumber,
+  name,
   currentWasteVolume,
   lat,
   lon,
@@ -25,7 +26,7 @@ const StsItem = ({
       />
 
       <p className="flex-1 truncate font-bold">
-        {wardNumber} - {address}{' '}
+        {name || wardNumber} - {address}{' '}
       </p>
 
       <div className="flex-1 truncate px-2 font-medium">
@@ -43,6 +44,7 @@ const StsItem = ({
       <STSInfo
         sts={{
           logo,
+          name,
           wardNumber,
           currentWasteVolume,
           lat,
@@ -58,6 +60,7 @@ const StsItem = ({
       <UpdateSts
         sts={{
           logo,
+          name,
           wardNumber,
           currentWasteVolume,
           lat,

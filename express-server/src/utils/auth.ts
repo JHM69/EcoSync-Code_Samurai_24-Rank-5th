@@ -45,10 +45,10 @@ const secureMiddleware = async (req: Request, res: Response, next: NextFunction)
         throw new HttpException(403, 'Forbidden: Password mismatch. Login again.');
 
       next();
-    } catch (error) {
+    } catch (error:any) {
       // next(error);
       console.log(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(error.status || 500).json({ message: error.message || 'Internal Server Error'});
     }
   });
 };
