@@ -120,7 +120,7 @@ async function main() {
       wardNumber: '1',
       address: 'Niketon area, near bir uttam shakwat road',
       capacity: 1000,
-      currentWasteVolume: 0,
+      currentWasteVolume: 244,
     },
     {
       name: 'Rampura Secondary Transfer Station',
@@ -128,7 +128,7 @@ async function main() {
       lon: 90.42342778,
       wardNumber: '23',
       address: 'Rampura, near banasree main rd',
-      currentWasteVolume: 0,
+      currentWasteVolume: 55,
       capacity: 1000,
     },
     {
@@ -146,7 +146,7 @@ async function main() {
       lon: 90.42214421783969,
       wardNumber: '17',
       address: 'near khilkhet high school',
-      currentWasteVolume: 0,
+      currentWasteVolume: 132,
       capacity: 1000,
     },
     {

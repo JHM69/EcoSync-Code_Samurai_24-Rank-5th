@@ -7,6 +7,7 @@ export const dashboardData = async () => {
     select: {
       id: true,
       wardNumber: true,
+      name: true,
       lat: true,
       lon: true,
       capacity: true,
@@ -64,11 +65,12 @@ export const dashboardData = async () => {
       id: true,
       lat: true,
       lon: true,
+      name: true,
       capacity: true,
       currentWasteVolume: true,
       truckDumpEntries: {
         select: {
-          id: true,
+          id: true, 
           timeOfArrival: true,
           timeOfDeparture: true,
           volumeOfWaste: true,

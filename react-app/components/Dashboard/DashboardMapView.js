@@ -8,8 +8,7 @@ export default function StsVehiclesLandfillsMapView({
   data
 }) {
   const [geoJsonData, setGeoJsonData] = useState(null)
-  const [infoWindow, setInfoWindow] = useState(null)
- 
+  const [infoWindow, setInfoWindow] = useState(null) 
   // Dynamically load the GeoJSON file on component mount
   useEffect(() => {
     import('../common/dncc.json')
@@ -89,8 +88,7 @@ export default function StsVehiclesLandfillsMapView({
                 key={landfill.lon + landfill.name}
                 lat={landfill.lat}
                 lng={landfill.lon}
-                text={landfill.name}
-                icon={landfill.icon}
+                landfill={landfill}
               />
             ))}
 
@@ -111,8 +109,7 @@ export default function StsVehiclesLandfillsMapView({
                 key={vehicle.lat + vehicle.registrationNumber+id}
                 lat={vehicle.lat}
                 lng={vehicle.lon}
-                text={vehicle.registrationNumber}
-                icon={vehicle.icon}
+                vehicle={vehicle}
               />
             ))}
         </GoogleMapReact>

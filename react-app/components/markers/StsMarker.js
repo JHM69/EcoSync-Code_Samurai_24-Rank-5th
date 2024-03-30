@@ -50,7 +50,7 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
     position: 'absolute',
     width: '200px',
     zIndex: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     backdropFilter: 'blur(4px)',
     padding: '10px',
     borderRadius: '10px',
