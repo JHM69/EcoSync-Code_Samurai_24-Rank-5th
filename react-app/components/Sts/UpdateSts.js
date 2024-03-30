@@ -9,7 +9,7 @@ import StsForm from '../StsForm'
 import toast, { Toaster } from 'react-hot-toast'
 import { BiEdit, BiPencil } from 'react-icons/bi'
 import { FaEdit, FaUserEdit } from 'react-icons/fa'
-const UpdateSts = ({ sts, ...props }) => {
+const UpdateSts = ({ sts,reload,setReload, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -91,6 +91,8 @@ const UpdateSts = ({ sts, ...props }) => {
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
                     handleClose={handleClose}
+                    reload={reload}
+                    setReload={setReload}
                   />
                 </Dialog.Panel>
               </Transition.Child>

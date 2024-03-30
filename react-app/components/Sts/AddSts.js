@@ -8,7 +8,7 @@ import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast'
 import StsForm from '../StsForm'
-const AddSts = ({ props }) => {
+const AddSts = ({ reload,setReload,props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -24,7 +24,7 @@ const AddSts = ({ props }) => {
         console.log(response)
         toast.success('STS added successfully')
         handleClose()
-
+        setReload(!reload)
     }).catch(error =>
         console.log(error)
       )
@@ -73,7 +73,7 @@ const AddSts = ({ props }) => {
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <StsForm type={'Add'} onFormSubmit={onFormSubmit} />
+                  <StsForm type={'Add'} onFormSubmit={onFormSubmit} reload={reload} setReload={setReload}/>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

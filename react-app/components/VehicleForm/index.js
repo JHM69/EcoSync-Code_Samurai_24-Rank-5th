@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
+import { set, useForm } from 'react-hook-form'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import Select from '../common/Select'
-const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
+import axios from 'axios'
+import { getBaseUrl } from '../../utils/url'
+import toast from 'react-hot-toast'
+const VehicleForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReload, ...props }) => {
   const {
     register,
     handleSubmit,
@@ -23,10 +26,32 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     }
   }, [defaultValues, setValue])
 
+  const [loading, setLoading] = useState(false)
+
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true)
     await onFormSubmit(data)
     reset()
+    setLoading(false)
+    // window.location.reload()
   })
+  const onSubmit2 = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      await axios.delete(getBaseUrl()+'/vehicle/'+defaultValues.id, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      toast.success('Vehicle deleted successfully')
+      handleClose()
+      setReload(!reload)
+      // window.location.reload()
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to delete vehicle')
+    }
+  }
 
   return (
     <div {...props} className="flex flex-col space-y-6">
@@ -66,7 +91,7 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           <option value="ContainerCarrier">Container Carrier</option>
         </Select>
 
-        <Input
+        {/* <Input
           name="capacity"
           label="Capacity"
           placeholder="Capacity..."
@@ -78,7 +103,7 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
               message: 'Capacity is required'
             }
           })}
-        />
+        /> */}
 
         <Input
           name="loaddedFuelCost"
@@ -112,9 +137,12 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           })}
         />
 
-      <Button type="button" onClick={onSubmit} className="w-full">
+      <Button type="button" onClick={onSubmit} className="w-full" disable={loading}>
         {type ? `${type} Vehicle` : 'Submit'}
       </Button>
+      {type!="Add" && (<Button type="button" onClick={onSubmit2} className="w-full bg-red-500">
+        Delete Vehicle
+      </Button>)}
       </form>
     </div>
   )

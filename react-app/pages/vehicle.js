@@ -11,6 +11,7 @@ import VehicleItems from '../components/Vehicles/VehicleItems'
 function Vehicles() {
   const [loading, setLoading] = useState(true)
   const [vehicles, setVehicles] = useState([])
+  const [reload, setReload] = useState(false)
   useEffect(() => {
     setLoading(true)
     const token = localStorage.getItem('token')
@@ -31,7 +32,7 @@ function Vehicles() {
           console.log(err)
         })
     }
-  }, [])
+  }, [reload])
 
   return (
     <div>
@@ -40,10 +41,10 @@ function Vehicles() {
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">Vehicle</h1>
             <div className="flex items-center space-x-2">
-              <AddVehicle />
+              <AddVehicle reload={reload} setReload={setReload}/>
             </div>
           </div>
-          {loading ? <VehicleItemSkeleton /> : <VehicleItems vehicles={vehicles} />}
+          {loading ? <VehicleItemSkeleton /> : <VehicleItems vehicles={vehicles}  reload={reload} setReload={setReload}/>}
         </div>
       </div>
     </div>

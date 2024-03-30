@@ -12,6 +12,7 @@ import StsItems from '../components/Stss/StsItems'
 function Stss() {
   const [loading, setLoading] = useState(true)
   const [stss, setSts] = useState([])
+  const [reload, setReload] = useState(false)
   useEffect(() => {
     setLoading(true)
     const token = localStorage.getItem('token')
@@ -32,7 +33,7 @@ function Stss() {
           console.log(err)
         })
     }
-  }, [])
+  }, [reload])
 
   return (
     <div>
@@ -41,10 +42,10 @@ function Stss() {
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">STS</h1>
             <div className="flex items-center space-x-2">
-              <AddSts />
+              <AddSts  reload={reload} setReload={setReload} />
             </div>
           </div>
-          {loading ? <UserItemsSkeleton /> : <StsItems stss={stss} />}
+          {loading ? <UserItemsSkeleton /> : <StsItems stss={stss}  reload={reload} setReload={setReload}/>}
         </div>
       </div>
     </div>

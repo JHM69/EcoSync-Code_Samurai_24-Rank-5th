@@ -15,6 +15,7 @@ const StsItem = ({
   managers,
   id,
   vehicles,
+  reload, setReload
 }) => {
 
 
@@ -70,7 +71,10 @@ const StsItem = ({
           managers,
           id,
           vehicles,
-        }}
+        }
+      }
+      reload={reload}
+      setReload={setReload}
       />
      
     </div>
