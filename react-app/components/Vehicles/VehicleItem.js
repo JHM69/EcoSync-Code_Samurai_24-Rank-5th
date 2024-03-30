@@ -4,6 +4,7 @@ import UpdateVehicle from '../Vehicle/UpdateVehicle'
 import VehicleInfo from '../Vehicle/ViewVehicle'
 
 const VehicleItem = ({
+  id,
   logo,
   registrationNumber,
   type,
@@ -13,6 +14,8 @@ const VehicleItem = ({
   unloadedFuelCost,
   lat,
   lon,
+  reload,
+  setReload,
 }) => {
   return (
     <>
@@ -26,7 +29,7 @@ const VehicleItem = ({
         </div>
       </td> */}
 
-      <td className="pl-4 w-1/5 py-4 text-start">
+      <td className="w-1/5 py-4 pl-4 text-start">
         <p className="flex-1 truncate font-bold">
           {registrationNumber} - {type}{' '}
         </p>
@@ -40,8 +43,6 @@ const VehicleItem = ({
           />
         </div>
       </td>
-
-     
 
       <td className="w-1/5 py-4 text-center">
         <div className="flex-1">
@@ -75,6 +76,7 @@ const VehicleItem = ({
           />
           <UpdateVehicle
             vehicle={{
+              id,
               logo,
               type,
               registrationNumber,
@@ -85,6 +87,8 @@ const VehicleItem = ({
               lon,
               capacity,
             }}
+            reload={reload}
+            setReload={setReload}
           />
         </div>
       </td>
@@ -99,7 +103,7 @@ function ProgressBar({ currentWasteVolume, capacity }) {
   }
 
   return (
-    <div className="relative h-6 w-[160px] overflow-hidden rounded-full border-[1px] border-green-500 bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
+    <div className="w-[160px] border-[1px] dark:bg-[#e3ffda] relative h-6 overflow-hidden rounded-full border-green-500 bg-gray-200 text-gray-900">
       <div
         className="h-full rounded-l-full bg-green-500"
         style={barStyle}

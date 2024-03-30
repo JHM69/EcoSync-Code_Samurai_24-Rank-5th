@@ -47,7 +47,6 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
     const {
       registrationNumber,
       type,
-      capacity,
       lat,
       lon,
       isFull,
@@ -55,8 +54,8 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
       unloadedFuelCost,
     } = req.body;
 
-    if (capacity !== 3 && capacity !== 5 && capacity !== 7)
-      return res.status(400).json({ message: 'Capacity must be 3, 5 or 7' });
+    // if (capacity !== 3 && capacity !== 5 && capacity !== 7)
+    //   return res.status(400).json({ message: 'Capacity must be 3, 5 or 7' });
     if (
       type !== 'OpenTruck' &&
       type !== 'DumpTruck' &&
@@ -67,6 +66,18 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
         .status(400)
         .json({ message: 'Type must be OpenTruck, DumpTruck, Compactor or ContainerCarrier' });
 
+        let capacity = 3;
+        if (type === 'OpenTruck') {
+          capacity = 3;
+        } else if (type === 'DumpTruck') {
+          capacity = 5;
+        }
+        else if (type === 'Compactor') {
+          capacity = 7;
+        }
+        else if (type === 'ContainerCarrier') {
+          capacity = 15;
+        }
     // Create the vehicle in the database
     const vehicle = await prisma.vehicle.create({
       data: {
@@ -77,12 +88,94 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
         lat: lat || 0, // Default to 0 if lat is not provided
         lon: lon || 0, // Default to 0 if lon is not provided
         isFull: isFull || false, // Default to false if isFull is not provided
-        loaddedFuelCost,
-        unloadedFuelCost,
+        loaddedFuelCost: Number(loaddedFuelCost) || 23.815485092033324, // Default to 0 if loaddedFuelCost is not provided
+        unloadedFuelCost: Number(unloadedFuelCost) || 90.36613393405976, // Default to 0 if unloadedFuelCost is not provided
       },
     });
 
     return res.status(201).json(vehicle);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+});
+
+// Update vehicle by id
+router.put('/vehicle/:id', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const {
+      registrationNumber,
+      type,
+      lat,
+      lon,
+      isFull,
+      loaddedFuelCost,
+      unloadedFuelCost,
+    } = req.body;
+
+    // if (capacity !== 3 && capacity !== 5 && capacity !== 7)
+    //   return res.status(400).json({ message: 'Capacity must be 3, 5 or 7' });
+    if (
+      type !== 'OpenTruck' &&
+      type !== 'DumpTruck' &&
+      type !== 'Compactor' &&
+      type !== 'ContainerCarrier'
+    )
+      return res
+        .status(400)
+        .json({ message: 'Type must be OpenTruck, DumpTruck, Compactor or ContainerCarrier' });
+
+    let capacity = 3;
+    if (type === 'OpenTruck') {
+      capacity = 3;
+    } else if (type === 'DumpTruck') {
+      capacity = 5;
+    }
+    else if (type === 'Compactor') {
+      capacity = 7;
+    }
+    else if (type === 'ContainerCarrier') {
+      capacity = 15;
+    }
+    let loaddedFuelCostNumber, unloadedFuelCostNumber;
+    if (loaddedFuelCost) {
+      loaddedFuelCostNumber = Number(loaddedFuelCost);
+    }
+    if (unloadedFuelCost) {
+      unloadedFuelCostNumber = Number(unloadedFuelCost);
+    }
+    const vehicle = await prisma.vehicle.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        registrationNumber,
+        type,
+        capacity,
+        lat, // Default to 0 if lat is not provided
+        lon,// Default to 0 if lon is not provided
+        isFull, // Default to false if isFull is not provided
+        loaddedFuelCost: loaddedFuelCostNumber, // Default to 0 if loaddedFuelCost is not provided
+        unloadedFuelCost: unloadedFuelCostNumber, // Default to 0 if unloadedFuelCost is not provided
+      },
+    });
+
+    return res.json(vehicle);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+});
+
+// Delete vehicle by id
+router.delete('/vehicle/:id', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await prisma.vehicle.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    return res.json({ message: 'Vehicle deleted' });
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }

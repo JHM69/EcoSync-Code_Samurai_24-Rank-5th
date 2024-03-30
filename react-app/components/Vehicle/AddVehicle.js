@@ -8,7 +8,7 @@ import VehicleForm from '../VehicleForm'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast'
-const AddVehicle = ({ props }) => {
+const AddVehicle = ({ reload, setReload }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -16,26 +16,33 @@ const AddVehicle = ({ props }) => {
     try {
       console.log(data)
       const token = localStorage.getItem('token')
-      await axios.post(getBaseUrl() + '/vehicle', data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(response => {
-        console.log(response)
-        toast.success('Vehicle added successfully')
-
-    }).catch(error =>
-        console.log(error)
-      )
+      await axios
+        .post(getBaseUrl() + '/vehicle', data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response)
+          toast.success('Vehicle added successfully')
+          handleClose()
+          setReload(!reload)
+          // window.location.reload()
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('Failed to add vehicle')
+        })
     } catch (error) {
       console.log(error)
+      toast.error('Failed to add vehicle')
     }
   }
 
   return (
     <>
-    <Toaster />
-      <Button onClick={handleOpen} type="button" {...props}>
+      <Toaster />
+      <Button onClick={handleOpen} type="button">
         Add Vehicle
       </Button>
       <Transition appear show={isOpen} as={Fragment}>

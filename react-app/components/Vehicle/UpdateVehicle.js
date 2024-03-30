@@ -8,35 +8,55 @@ import axios from 'axios'
 import { BiEdit, BiPencil } from 'react-icons/bi'
 import { FaEdit, FaUserEdit } from 'react-icons/fa'
 import VehicleForm from '../VehicleForm'
-const UpdateVehicle = ({ vehicle, ...props }) => {
+import toast from 'react-hot-toast'
+const UpdateVehicle = ({ vehicle, reload, setReload, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
+  const [loading, setLoading] = useState(false)
 
   const onFormSubmit = async (data) => {
-    const token = localStorage.getItem('token')
-    console.log(vehicle)
-    await axios
-      .put(getBaseUrl() + `/vehicle/${vehicle.id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res)
-        if (res.status === 200 || res.status === 201) {
-          alert('Successfully Updated.')
-        } else {
-          alert(res.status)
+    try {
+      setLoading(true)
+      const token = localStorage.getItem('token')
+      console.log(vehicle)
+      await axios
+        .put(getBaseUrl() + `/vehicle/${vehicle.id}`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
           console.log(res)
-        }
-      })
+          if (res.status === 201) {
+            // alert('Successfully Updated.')
+            toast.success('Successfully Created.')
+            setReload(!reload)
+          } else if (res.status === 200) {
+            toast.success('Successfully Updated.')
+            setReload(!reload)
+          } else {
+            // alert(res.status)
+            toast.error('Failed to update')
+            console.log(res)
+          }
+        })
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to update')
+    } finally {
+      setLoading(false)
+      handleClose()
+    }
   }
 
   return (
     <>
-     <div  onClick={handleOpen} className='smooth-effect hover:bg-green-400 text-green-800 bg-green-300 rounded p-2 m-3 shadow'>
-         <BiPencil {...props} />
+      <div
+        onClick={handleOpen}
+        className="smooth-effect m-3 rounded bg-green-300 p-2 text-green-800 shadow hover:bg-green-400"
+      >
+        <BiPencil {...props} />
       </div>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
@@ -76,6 +96,9 @@ const UpdateVehicle = ({ vehicle, ...props }) => {
                     defaultValues={vehicle}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
+                    handleClose={handleClose}
+                    reload={reload}
+                    setReload={setReload}
                   />
                 </Dialog.Panel>
               </Transition.Child>

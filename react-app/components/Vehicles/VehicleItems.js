@@ -2,7 +2,7 @@
 import React from 'react'
 import VehicleItem from './VehicleItem'
 
-const VehicleItems = ({ vehicles }) => {
+const VehicleItems = ({ vehicles, reload, setReload }) => {
   return (
     <div className="block  rounded max-h-[75vh] overflow-y-auto  border p-2 desktop:max-h-[80vh]">
       {vehicles && vehicles.length > 0 ? (
@@ -21,7 +21,7 @@ const VehicleItems = ({ vehicles }) => {
                 key={vehicle.id}
                 className="smooth-effect my-2 cursor-pointer  border px-6 py-6 shadow-sm rounded-md hover:bg-green-100  smooth-effect "
               >
-                <VehicleItem {...vehicle} />
+                <VehicleItem {...vehicle}  reload={reload} setReload={setReload}/>
               </tr>
             ))}
           </tbody>

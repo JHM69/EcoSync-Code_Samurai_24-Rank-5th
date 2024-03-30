@@ -8,7 +8,7 @@ import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast'
 import { getBaseUrl } from '../../utils/url'
 import { MultipleSelect, OptionWithCheckbox } from '../common/MultipleSelect'
-const StsForm = ({ type, defaultValues, onFormSubmit,handleClose, ...props }) => {
+const StsForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReload, ...props }) => {
   const {
     register,
     handleSubmit,
@@ -85,6 +85,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose, ...props }) =>
     setLoading(true)
     await onFormSubmit(data)
     setLoading(false)
+    setReload(!reload)
     reset()
   })
 
@@ -98,6 +99,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose, ...props }) =>
         },
       })
       toast.success('STS Deleted Successfully')
+      setReload(!reload)
     } catch (error) {
       // alert('Error Deleting STS')
       toast.success('Error Deleting STS')
@@ -270,7 +272,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose, ...props }) =>
         {type === 'Update' ? (loading ? 'Updating STS...' : 'Update STS') : (loading ? 'Adding STS...' : 'Add STS')}
       </Button>
       
-      {type === 'Update' &&(<Button type="button" onClick={onSubmit2} className="w-full" disabled={loading}>
+      {type === 'Update' &&(<Button type="button" onClick={onSubmit2} className="w-full bg-red-500" disabled={loading}>
         {loading2 ? 'Deleting STS...' : 'Delete STS'}
       </Button>)}
     </div>
