@@ -58,7 +58,7 @@ function TruckDumpEntry() {
       axios
         .get(getBaseUrl() + `/landfills/${landfillId}/entry`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`
           }
         })
         .then((res) => {

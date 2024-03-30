@@ -5,22 +5,16 @@ import VehicleMarker from '../markers/VehicleMarker'
 import LandfillMarker from '../markers/LandfillMarker'
 
 export default function StsVehiclesLandfillsMapView({
-  stss,
-  vehicles,
-  landfills,
+  data
 }) {
   const [geoJsonData, setGeoJsonData] = useState(null)
   const [infoWindow, setInfoWindow] = useState(null)
-
-  console.log('stss', stss)
-  console.log('vehicles', vehicles)
-  console.log('landfills', landfills)
-
+ 
   // Dynamically load the GeoJSON file on component mount
   useEffect(() => {
     import('../common/dncc.json')
-      .then((data) => {
-        setGeoJsonData(data.default)
+      .then((d) => {
+        setGeoJsonData(d.default)
       })
       .catch((error) => console.log('Failed to load GeoJSON data:', error))
   }, []) // Empty dependency array means this effect runs once on mount
@@ -79,8 +73,8 @@ export default function StsVehiclesLandfillsMapView({
     }
   }
   return (
-    <div style={{ height: '500px', width: '100%', borderRadius: '10px' }}>
-      {(stss || vehicles || landfills) && (
+    <div className='rounded' style={{ height: '500px', width: '100%', borderRadius: '10px' }}>
+      {(data.stss || data.vehicles || data.landfills) && (
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI' }} // Replace 'YOUR_API_KEY' with your Google Maps API key
           defaultCenter={defaultProps.center}
@@ -88,9 +82,9 @@ export default function StsVehiclesLandfillsMapView({
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         >
-          {/* load all stss, vehicles, landfills */}
-          {landfills &&
-            landfills.map((landfill) => (
+          {/* load all data.stss, vehicles, landfills */}
+          {data.landfills &&
+            data.landfills.map((landfill) => (
               <LandfillMarker
                 key={landfill.lon + landfill.name}
                 lat={landfill.lat}
@@ -100,18 +94,19 @@ export default function StsVehiclesLandfillsMapView({
               />
             ))}
 
-          {stss &&
-            stss.map((sts, id) => (
+          {data.stss &&
+            data.stss.map((sts, id) => (
               <StsMarker
                 key={sts.lon + sts.wardNumber}
                 lat={sts.lat}
                 lng={sts.lon}
-                text={sts.wardNumber}
-                icon={sts.icon}
+                sts = {sts}
+                maximumWasteVolume={data?.maximumWasteVolume}
+                minimumWasteVolume={data?.minimumWasteVolume}
               />
             ))}
-          {vehicles &&
-            vehicles.map((vehicle, id) => (
+          {data.vehicles &&
+            data.vehicles.map((vehicle, id) => (
               <VehicleMarker
                 key={vehicle.lat + vehicle.registrationNumber+id}
                 lat={vehicle.lat}
