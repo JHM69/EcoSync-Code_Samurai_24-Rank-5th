@@ -9,7 +9,7 @@ const Marker = ({ text, address }) => {
       onMouseEnter={() => setShowInfo(true)}
       onMouseLeave={() => setShowInfo(false)}
     >
-      <img className="marker-icon" src="https://www.svgrepo.com/show/522166/location.svg" alt="marker" />
+      <img className="marker-icon" src="marker.png" alt="marker" />
       {showInfo && (
         <div className="info-box">
           <p>{text}</p>

@@ -32,7 +32,7 @@ function Dashboard() {
   }, [])
   return (
     <NoSSR>
-    <div className="flex flex-col gap-3 w-1/2">
+    <div className="flex flex-col gap-3">
       {loading ? (
         <div className='h-1/2 w-fill'>
           <div className='animate-pulse h-1/2 w-full bg-gray-300 rounded-md'></div>
@@ -40,12 +40,38 @@ function Dashboard() {
         </div>
       ) : error ? (
         <div>Error: {error.message}</div>
-      ) : (
+      ) : (<div>
+   
+                     <div className="flex my-3 flex-row  justify-between space-x-4">
+                            {data?.additionalData &&
+                              data?.additionalData.map((item, index) => {
+                                return (
+                                  <div
+                                    key={item.name + index}
+                                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl bg-${item.color}-100  p-3 `}
+                                  >
+                                    <div
+                                      className={`line-clamp-1 flex flex-row items-center text-xl font-light  text-${item.color}-800   md:text-xl lg:text-3xl`}
+                                    >
+                                      {item.name}
+                                    </div>
+
+                                    <span
+                                      className={`line-clamp-1 text-2xl font-bold  text-${item.color}-800  md:text-3xl lg:text-4xl`}
+                                    >
+                                      {item.value}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                          </div>
+
+        
         <StsVehiclesLandfillsMapView
-          stss={data.stss}
-          vehicles={data.vehicles}
-          landfills={data.landfills}
+          data = {data}
         />
+      </div>
+
       )}
     </div>
     </NoSSR>

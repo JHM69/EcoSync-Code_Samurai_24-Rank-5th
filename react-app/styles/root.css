@@ -145,13 +145,24 @@ textarea {
 }
 
 .marker-icon {
-  height: 24px; /* Adjust based on your preference */
-  width: 24px;
-  background-color: green; /* Adjust based on your preference */
+  height: 32px; /* Adjust based on your preference */
+  width: 32px;
+  background-color: "#ffffff" ; /* Adjust based on your preference */
   border-radius: 50%;
   padding: 5px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Adds a little shadow for depth */
 }
+
+
+.marker-icon-sts {
+  height: 32px; /* Adjust based on your preference */
+  width: 32px;
+  background-color: red;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Adds a little shadow for depth */
+}
+
 
 .info-box {
   position: absolute;
