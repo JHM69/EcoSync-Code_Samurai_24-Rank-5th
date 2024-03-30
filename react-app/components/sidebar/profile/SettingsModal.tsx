@@ -64,6 +64,7 @@ export const SettingsModal: React.FC<{
    
     try {
       const token = localStorage.getItem('token')
+      localStorage.removeItem('user')
       await axios.get(
         `${getBaseUrl()}/auth/logout`,
         {
@@ -72,13 +73,11 @@ export const SettingsModal: React.FC<{
           },
         }
         )
-
-        localStorage.removeItem('user')
-        onClose()
-        
-        window.location.reload()
     } catch (error) {
       console.error('Failed to logout', error)
+    } finally {
+      onClose()
+      window.location.reload()
     }
     // Consider using Next.js Router for navigation without a full page reload
   }
