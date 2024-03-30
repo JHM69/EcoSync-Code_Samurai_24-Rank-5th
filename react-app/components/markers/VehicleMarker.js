@@ -7,7 +7,6 @@ const VehicleMarker = ({ vehicle }) => {
   const markerStyle = {
     height: `${baseSize}px`,
     width: `${baseSize}px`,
-
     borderRadius: '10%',
     padding: '2px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
@@ -45,7 +44,6 @@ const VehicleMarker = ({ vehicle }) => {
 
       <div className='flex flex-col gap-1 p-3' style={infoBoxStyle}>
         <p className='text-bold text-xl text-green-700'>{vehicle.registrationNumber}</p>
-         
       </div>
     </div>
   )
