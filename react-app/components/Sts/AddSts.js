@@ -23,6 +23,7 @@ const AddSts = ({ props }) => {
       }).then(response => {
         console.log(response)
         toast.success('STS added successfully')
+        handleClose()
 
     }).catch(error =>
         console.log(error)

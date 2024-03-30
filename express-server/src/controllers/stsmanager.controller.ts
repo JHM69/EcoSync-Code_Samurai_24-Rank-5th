@@ -19,6 +19,7 @@ router.post('/sts', auth.required, auth.isSystemAdmin, async (req: Request, res:
 
 const createSTS = async (stsData: {
   wardNumber: string;
+  name?: string;
   capacity: string;
   lat: string;
   lon: string;
@@ -33,6 +34,7 @@ const createSTS = async (stsData: {
   return await prisma.sTS.create({
     data: {
       wardNumber: stsData.wardNumber,
+      name: stsData.name,
       capacity: Number(stsData.capacity),
       currentWasteVolume: 0,
       lat: Number(stsData.lat),
@@ -65,6 +67,7 @@ router.put('/sts/:id', auth.required, auth.isSystemAdmin, async (req: Request, r
 
 const updateSTS = async (stsData: {
   wardNumber?: string;
+  name?: string;
   capacity?: string;
   currentWasteVolume?: string;
   lat?: string;
@@ -104,16 +107,31 @@ const updateSTS = async (stsData: {
     });
   }
 
+  let capacity, currentWasteVolume, lat, lon;
+  if(stsData.capacity){
+    capacity = Number(stsData.capacity);
+  }
+  if(stsData.currentWasteVolume){
+    currentWasteVolume = Number(stsData.currentWasteVolume);
+  }
+  if(stsData.lat){
+    lat = Number(stsData.lat);
+  }
+  if(stsData.lon){
+    lon = Number(stsData.lon);
+  }
+
   return await prisma.sTS.update({
     where: {
       id,
     },
     data: {
       wardNumber: stsData.wardNumber,
-      capacity: Number(stsData.capacity),
-      currentWasteVolume: Number(stsData.currentWasteVolume),
-      lat: Number(stsData.lat),
-      lon: Number(stsData.lon),
+      name: stsData.name,
+      capacity: capacity,
+      currentWasteVolume: currentWasteVolume,
+      lat: lat,
+      lon: lon,
       address: stsData.address,
       logo: stsData.logo,
       vehicles: {

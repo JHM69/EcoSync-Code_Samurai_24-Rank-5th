@@ -90,6 +90,7 @@ model Vehicle {  // 147 vehicles
 
 model STS {  // 54 STS 
   id                  Int      @id @default(autoincrement())
+  name               String?
   wardNumber          String
   capacity            Float
   currentWasteVolume  Float

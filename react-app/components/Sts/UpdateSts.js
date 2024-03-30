@@ -5,7 +5,8 @@ import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
-import StsForm from '../LandfillForm'
+import StsForm from '../StsForm'
+import toast, { Toaster } from 'react-hot-toast'
 import { BiEdit, BiPencil } from 'react-icons/bi'
 import { FaEdit, FaUserEdit } from 'react-icons/fa'
 const UpdateSts = ({ sts, ...props }) => {
@@ -14,29 +15,42 @@ const UpdateSts = ({ sts, ...props }) => {
   const handleOpen = () => setIsOpen(true)
 
   const onFormSubmit = async (data) => {
-    const token = localStorage.getItem('token')
-    console.log(sts)
-    await axios
-      .put(getBaseUrl() + `/sts/${sts.id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res)
-        if (res.status === 200 || res.status === 201) {
-          alert('Successfully Added.')
-        } else {
-          alert(res.status)
+    try {
+      const token = localStorage.getItem('token')
+      console.log(sts)
+      await axios
+        .put(getBaseUrl() + `/sts/${sts.id}`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
           console.log(res)
-        }
-      })
+          if (res.status === 201) {
+            // alert('Successfully Updated.')
+            toast.success('STS added successfully')
+            handleClose()
+          }
+          else if(res.status === 200){
+            toast.success('STS updated successfully')
+            handleClose()
+          } else {
+            alert(res.status)
+            console.log(res)
+          }
+        })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <>
-     <div  onClick={handleOpen} className='smooth-effect hover:bg-green-400 text-green-800 bg-green-300 rounded p-2 m-3 shadow'>
-         <BiPencil {...props} />
+      <div
+        onClick={handleOpen}
+        className="smooth-effect m-3 rounded bg-green-300 p-2 text-green-800 shadow hover:bg-green-400"
+      >
+        <BiPencil {...props} />
       </div>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
@@ -76,6 +90,7 @@ const UpdateSts = ({ sts, ...props }) => {
                     defaultValues={sts}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
+                    handleClose={handleClose}
                   />
                 </Dialog.Panel>
               </Transition.Child>
