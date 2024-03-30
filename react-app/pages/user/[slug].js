@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react'
 import Layout from '../../components/layout'
 import UserLayout from '../../components/User/UserLayout'
-import DeleteSong from '../../components/User/DeleteUser'
-import UpdateSong from '../../components/User/UpdateUser'
+import DeleteUser from '../../components/User/DeleteUser'
+import UpdateUser from '../../components/User/UpdateUser'
 import axios from 'axios'
 
 import { useRouter } from 'next/router'
 
 import { getBaseUrl } from '../../utils/url'
 
-function Song () {
+function User () {
   const [user, setUser] = React.useState({})
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState(null)
@@ -43,8 +43,8 @@ function Song () {
             User Details
           </h1>
           <div className="flex items-center space-x-2">
-            <UpdateSong user={user} />
-            <DeleteSong
+            <UpdateUser user={user} />
+            <DeleteUser
               userId={user?.id}
             />
           </div>
@@ -68,4 +68,4 @@ function Song () {
   )
 }
 
-export default Song
+export default User

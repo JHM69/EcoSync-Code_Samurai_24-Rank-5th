@@ -135,15 +135,7 @@ textarea {
   position: sticky;
   top: 0;
 }
-
-
-.marker-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
+ 
 .marker-icon {
   height: 32px; /* Adjust based on your preference */
   width: 32px;

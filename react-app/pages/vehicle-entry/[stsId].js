@@ -3,17 +3,17 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { getBaseUrl } from '../../utils/url'
-import AddStsEntry from '../../components/StsEntry/AddStsEntry'
+import { getBaseUrl } from '../../utils/url' 
 import StsItemsSkeleton from '../../components/Stss/StsItemsSkeleton'
 import StsEntryItems from '../../components/StsEntrys/StsEntryItems'
-import Layout from '../../components/layout'
-import { ProgressBar } from '../../components/Sts/ViewSts'
+import Layout from '../../components/layout' 
 import MapView from '../../components/common/MapView'
 import AddWasteEntry from '../../components/WasteEntry/AddWasteEntry'
 import WasteItemsSkeleton from '../../components/WasteEntrys/WasteEntryItemsSkeleton'
 import WasteEntryItems from '../../components/WasteEntrys/WasteEntryItems'
 import { NoSSR } from '../../components/common/NoSSR'
+import ProgressBar from '../../components/common/ProgressBar'
+import AddStsEntry from '../../components/StsEntry/AddStsEntry'
 
 function VehicleEntry () {
   const [loading, setLoading] = useState(true)
@@ -145,7 +145,7 @@ function VehicleEntry () {
               Vehicle Entries{' '}
             </h1>
             <div className="flex items-center space-x-2">
-              {stsId && <AddStsEntry stsId={stsId} />}
+                {stsId && <AddStsEntry stsId={stsId} />}  
             </div>
           </div>
           {loading ? (

@@ -17,7 +17,7 @@ function Index () {
         setUser(JSON.parse(u))
       }
     } catch (e) {
-      console.log(e)
+
     }
   })
   return (
