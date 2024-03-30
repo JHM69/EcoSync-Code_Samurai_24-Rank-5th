@@ -1,25 +1,26 @@
 /* eslint-disable multiline-ternary */
 /* eslint-disable react/react-in-jsx-scope */
-import { useEffect, useState } from 'react'
+
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { getBaseUrl } from '../../utils/url'
-import AddTruckDumpEntry from '../../components/TruckDumpEntry/AddTruckDumpEntry'
-import Layout from '../../components/layout'
-import MapView from '../../components/common/MapView'
-import TruckDumpEntryItems from '../../components/TruckDumpEntrys/TruckDumpEntryItems'
-import TruckDumpEntryItemsSkeleton from '../../components/TruckDumpEntrys/TruckDumpEntryItemsSkeleton'
-import { ProgressBar } from '../../components/Sts/ViewSts'
 import { NoSSR } from '../../components/common/NoSSR'
+import MapView from '../../components/common/MapView'
+import ProgressBar from '../../components/common/ProgressBar'
+import AddTruckDumpEntry from '../../components/TruckDumpEntry/AddTruckDumpEntry'
+import TruckDumpEntryItemsSkeleton from '../../components/TruckDumpEntrys/TruckDumpEntryItemsSkeleton'
+import TruckDumpEntryItems from '../../components/TruckDumpEntrys/TruckDumpEntryItems'
+import Layout from '../../components/layout'
 
-function TruckDumpEntry() {
-  const [loading, setLoading] = useState(true)
+function LandfillControl () {
   const [loadingInfo, setLoadingInfo] = useState(true)
   const [truckDumpEntries, setTruckDumpEntries] = useState([])
 
   const [landfill, setLandfill] = useState({})
 
   const [landfillId, setTruckDumpId] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const router = useRouter()
 
@@ -135,8 +136,8 @@ function TruckDumpEntry() {
   )
 }
 
-export default TruckDumpEntry
+export default LandfillControl
 
-TruckDumpEntry.getLayout = function getLayout(page) {
+LandfillControl.getLayout = function getLayout (page) {
   return <Layout meta={{ name: 'Truck Dump Entries' }}>{page}</Layout>
 }

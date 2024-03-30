@@ -23,13 +23,10 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
     ((sts.currentWasteVolume - minimumWasteVolume) /
       (maximumWasteVolume - minimumWasteVolume)) *
       24
+  const percentage = (sts.currentWasteVolume / sts.capacity) * 100;
   const index = Math.min(
-    colors.length - 1,
-    Math.floor(
-      ((sts.currentWasteVolume - minimumWasteVolume) /
-        (maximumWasteVolume - minimumWasteVolume)) *
-        colors.length
-    )
+    Math.floor((percentage / 100) * colors.length),
+    colors.length - 1
   )
 
   const markerStyle = {

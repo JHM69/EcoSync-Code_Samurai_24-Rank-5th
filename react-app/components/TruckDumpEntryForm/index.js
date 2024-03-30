@@ -110,8 +110,8 @@ const TruckDumpEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => 
 
         <Input
           name="volumeOfWaste"
-          label="Volume of Waste in KG"
-          placeholder="Volume of Waste in KG..."
+          label="Volume of Waste in Ton"
+          placeholder="Volume of Waste in Ton..."
           type="text"
           error={errors.volumeOfWaste ? errors.volumeOfWaste.message : false}
           register={register('volumeOfWaste', {

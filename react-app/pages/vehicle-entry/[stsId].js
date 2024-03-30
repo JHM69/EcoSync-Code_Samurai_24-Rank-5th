@@ -15,7 +15,7 @@ import { NoSSR } from '../../components/common/NoSSR'
 import ProgressBar from '../../components/common/ProgressBar'
 import AddStsEntry from '../../components/StsEntry/AddStsEntry'
 
-function VehicleEntry () {
+export default function VehicleEntry () {
   const [loading, setLoading] = useState(true)
   const [loadingInfo, setLoadingInfo] = useState(true)
   const [vehicleEntries, setVehicleEntries] = useState([])
@@ -175,9 +175,7 @@ function VehicleEntry () {
     </NoSSR>
   )
 }
-
-export default VehicleEntry
-
+ 
 VehicleEntry.getLayout = function getLayout (page) {
   return <Layout meta={{ name: 'Vehicle Entries' }}>{page}</Layout>
 }
