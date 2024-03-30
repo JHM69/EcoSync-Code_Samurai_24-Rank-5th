@@ -11,7 +11,8 @@ const oilAllocations = { // Oil allocation per vehicle type in Full Capacity per
     'ContainerCarrier': 25
 };
 
-async function calculateAndSaveBillingRecords(startDate : string, endDate  : string) {
+// eslint-disable-next-line import/prefer-default-export
+export async function calculateAndSaveBillingRecords(startDate : string, endDate  : string) {
     // Assume that `VehicleEntry` records are already populated for each trip
     // Calculate the billing records based on the total volume of waste per vehicle between startDate and endDate
 

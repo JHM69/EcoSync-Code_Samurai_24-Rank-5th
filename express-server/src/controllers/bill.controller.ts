@@ -1,11 +1,12 @@
+/* eslint-disable consistent-return */
+/* eslint-disable import/first */
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
-const puppeteer = require('puppeteer');
 import { getHtml } from '../services/pdf.service';
 
-import ts from 'typescript';
-import { get } from 'http';
+const puppeteer = require('puppeteer');
+
 
 const router = Router();
 
@@ -13,7 +14,7 @@ const createBill = async (id: string, userId: number) => {
   // get sts entry by id
   const VehicleEntry = await prisma.vehicleEntry.findUnique({
     where: {
-      id: parseInt(id),
+      id: Number(id),
     },
     include: {
       vehicle: true,
@@ -38,7 +39,7 @@ const createBill = async (id: string, userId: number) => {
     throw new Error('You are not a manager of this STS');
   }
 
-  let bill = {
+  const bill = {
     entryid: VehicleEntry.id,
     billCreatedAt: new Date(),
     timeOfArrival: VehicleEntry.timeOfArrival,
@@ -53,10 +54,10 @@ const createBill = async (id: string, userId: number) => {
     cost: 0,
     assigneeId: userId,
   };
-  const unloadedFuelCost = VehicleEntry.vehicle.unloadedFuelCost;
-  const loaddedFuelCost = VehicleEntry.vehicle.loaddedFuelCost;
-  const volumeOfWaste = VehicleEntry.volumeOfWaste;
-  const capacity = VehicleEntry.vehicle.capacity;
+  const {unloadedFuelCost} = VehicleEntry.vehicle;
+  const {loaddedFuelCost} = VehicleEntry.vehicle;
+  const {volumeOfWaste} = VehicleEntry;
+  const {capacity} = VehicleEntry.vehicle;
   bill.cost = unloadedFuelCost + (volumeOfWaste / capacity) * (loaddedFuelCost - unloadedFuelCost);
   return bill;
 };
