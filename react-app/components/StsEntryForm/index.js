@@ -17,6 +17,7 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
 
   const [search2, setSearch2] = useState('')
   const [vehicles, setVehicles] = useState([])
+  const [landfills, setLandfills] = useState([])
 
   useEffect(() => {
     if (defaultValues) {
@@ -38,6 +39,22 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
       }
     }
   }, [defaultValues, setValue, vehicles])
+
+  useEffect(async() => {
+    try {
+      // make a axios call to get the landfill
+    const token = localStorage.getItem('token')
+    let landfills = await axios.get(`${getBaseUrl()}/landfills`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    setLandfills(landfills.data)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }, [])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -107,6 +124,27 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
             ))}
           </Select>
         </div>
+
+        {/* select a landfill from dropdown and add its id */}
+        <Select
+          name="landfillId"
+          label="Select a Landfill..."
+          error={errors.landfillId ? errors.landfillId.message : false}
+          register={register('landfillId', {
+            required: {
+              value: true,
+              message: 'You must select a landfill.'
+            }
+          })}
+        >
+          <option value="">Select a Landfill</option>
+          {landfills.map((landfill) => (
+            <option key={landfill.id} value={landfill.id.toString()}>
+              {landfill.name}
+            </option>
+          ))}
+        </Select>
+        
 
         <Input
           name="volumeOfWaste"

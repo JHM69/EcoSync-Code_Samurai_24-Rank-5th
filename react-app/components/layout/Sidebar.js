@@ -172,7 +172,7 @@ const Sidebar = () => {
                   managedSts.map((sts, index) => (
                     <Item
                       key={index}
-                      text={'Ward: ' + sts.wardNumber}
+                      text={sts.name || ('STS of ' + 'Ward ' + sts.wardNumber)}
                       subtitle={sts.address}
                       icon="sts"
                       href={`/vehicle-entry/${sts.id}`}

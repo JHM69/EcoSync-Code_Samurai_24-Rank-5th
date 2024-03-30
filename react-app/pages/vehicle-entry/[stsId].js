@@ -67,6 +67,7 @@ export default function VehicleEntry () {
         })
         .then((res) => {
           console.log(res.data)
+          res.data.sort((a, b) => b.id - a.id)
           setVehicleEntries(res.data)
           setLoading(false)
         })
