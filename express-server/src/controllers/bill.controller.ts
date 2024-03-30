@@ -4,8 +4,7 @@ import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import { getHtml } from '../services/pdf.service';
-import axios from 'axios';
-
+ 
 const puppeteer = require('puppeteer');
 
 const router = Router();
@@ -119,20 +118,20 @@ router.get('/bill/:id/download', auth.required, async (req: Request, res: Respon
     const page = await browser.newPage();
     await page.setContent(
       getHtml(
-        bill.id,
-        bill.createdAt,
-        bill.vehicleEntry.timeOfArrival,
-        bill.vehicleEntry.timeOfDeparture,
-        bill.vehicleEntry.volumeOfWaste,
-        bill.vehicleEntry.vehicle.id,
-        bill.vehicleEntry.vehicle.registrationNumber,
-        bill.vehicleEntry.vehicle.type,
-        bill.vehicleEntry.vehicle.unloadedFuelCost,
-        bill.vehicleEntry.vehicle.loaddedFuelCost,
-        bill.vehicleEntry.vehicle.capacity,
-        bill.amount,
-        bill.distance,
-        bill.duration,
+        bill?.id,
+        bill?.createdAt,
+        bill?.vehicleEntry.timeOfArrival,
+        bill?.vehicleEntry.timeOfDeparture,
+        bill?.vehicleEntry.volumeOfWaste,
+        bill?.vehicleEntry.vehicle.id,
+        bill?.vehicleEntry.vehicle.registrationNumber,
+        bill?.vehicleEntry.vehicle.type,
+        bill?.vehicleEntry.vehicle.unloadedFuelCost,
+        bill?.vehicleEntry.vehicle.loaddedFuelCost,
+        bill?.vehicleEntry.vehicle.capacity,
+        bill?.amount,
+        bill?.distance,
+        bill?.duration,
       ),
     );
     const pdfBuffer = await page.pdf({ format: 'A4' });
@@ -144,14 +143,5 @@ router.get('/bill/:id/download', auth.required, async (req: Request, res: Respon
   }
 });
 
-// router.get('/distance', async (req: Request, res: Response) => {
-//   try {
-//     const { from, to } = req.query;
-//     const {distance, duration} = await fetchDirections(from as string, to as string, "AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI");
-//     return res.json({ distance, duration });
-//   } catch (error: any) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
 
 export default router;

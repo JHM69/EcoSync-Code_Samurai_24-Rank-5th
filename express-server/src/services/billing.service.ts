@@ -1,3 +1,6 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable no-console */
+/* eslint-disable no-else-return */
 /* eslint-disable no-return-await */
 /* eslint-disable arrow-body-style */
 /* eslint-disable import/order */
@@ -61,13 +64,13 @@ export async function calculateAndSaveBillingRecords(startDate : string, endDate
 
 }
 
-const fetchDirections = async (origin: string, destination: string, apiKey: string) => {
+const fetchDirections = async (origin: string, destination: string) => {
     try {
         const response = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
             params: {
                 origin: origin, 
                 destination: destination, 
-                key: apiKey,
+                key: process.env.GOOGLE_API_KEY,
             },
         });
 
@@ -88,7 +91,7 @@ const fetchDirections = async (origin: string, destination: string, apiKey: stri
     }
 };
 
-const createBill = async (id: string, userId: number, stsId:number, landfillId?:number) => {
+export const createBill = async (id: string, userId: number, stsId:number, landfillId?:number) => {
     // get sts entry by id
     const VehicleEntry = await prisma.vehicleEntry.findUnique({
       where: {
@@ -117,9 +120,9 @@ const createBill = async (id: string, userId: number, stsId:number, landfillId?:
     });
   
     // get distance and duration between sts and landfill
-    const from = `${sts.lat},${sts.lon}`;
-    const to = `${landfill.lat},${landfill.lon}`;
-    const {distance, duration} = await fetchDirections(from as string, to as string, "AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI");
+    const from = `${sts?.lat},${sts?.lon}`;
+    const to = `${landfill?.lat},${landfill?.lon}`;
+    const {distance, duration} = await fetchDirections(from as string, to as string);
     // calculate the cost
     const bill = {
       entryid: VehicleEntry.id,
@@ -138,10 +141,10 @@ const createBill = async (id: string, userId: number, stsId:number, landfillId?:
       distance: distance,
       duration: duration,
     };
-    const unloadedFuelCost = VehicleEntry.vehicle.unloadedFuelCost;
-    const loaddedFuelCost = VehicleEntry.vehicle.loaddedFuelCost;
-    const volumeOfWaste = VehicleEntry.volumeOfWaste;
-    const capacity = VehicleEntry.vehicle.capacity;
+    const unloadedFuelCost = VehicleEntry?.vehicle.unloadedFuelCost;
+    const loaddedFuelCost = VehicleEntry?.vehicle.loaddedFuelCost;
+    const volumeOfWaste = VehicleEntry?.volumeOfWaste;
+    const capacity = VehicleEntry?.vehicle.capacity;
     
     bill.cost = (unloadedFuelCost + (volumeOfWaste / capacity) * (loaddedFuelCost - unloadedFuelCost))*distance;
     console.log(bill.cost);
