@@ -175,6 +175,22 @@ async function main() {
     skipDuplicates: true,
   });
   console.log('Default STSs created');
+
+  // Create Landfill
+  await prisma.landfill.create({
+    data: {
+      name: 'Aminbazar Landfill',
+      lat: 23.7833076,
+      lon: 90.329124,
+      address: 'near aminbazar bridge',
+      capacity: 10000,
+      currentWasteVolume: 0,
+      startTime: '08:00',
+      endTime: '18:00',
+      gpsCoords: '23.8103,90.4125',
+    },
+  });
+  console.log('Default Landfill created');
 }
 
 main()

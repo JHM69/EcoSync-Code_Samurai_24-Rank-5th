@@ -112,11 +112,14 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   sts             STS      @relation(fields: [stsId], references: [id])
   vehicleId       Int
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
+  landfillId      Int @default(1)
+  landfill        Landfill @relation(fields: [landfillId], references: [id])
   volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
+  bill            Bill?
   @@index([stsId], name: "idx_vehicle_entry_sts")
   @@index([vehicleId], name: "idx_vehicle_entry_vehicle")
   @@index([userId], name: "idx_vehicle_entry_user")
@@ -124,6 +127,17 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   @@index([timeOfDeparture], name: "idx_vehicle_entry_time_of_departure")
 }
 
+model Bill {
+  id              Int      @id @default(autoincrement())
+  vehicleEntryId  Int      @unique
+  vehicleEntry    VehicleEntry @relation(fields: [vehicleEntryId], references: [id])
+  amount          Float
+  paid           Boolean @default(false)
+  createdAt       DateTime @default(now())
+  distance        Float
+  duration        Float
+  @@index([vehicleEntryId], name: "idx_bills_vehicle_entry")
+}
 
 model WasteEntry {  //StsManager can entry multiple vehicles enties 
   id              Int      @id @default(autoincrement())
@@ -170,6 +184,7 @@ model Landfill {
   address         String?
   managers        User[]  
   truckDumpEntries TruckDumpEntry[]
+  vehicleEntries   VehicleEntry[]
   @@index([name], name: "idx_landfill_name")
   @@index([capacity], name: "idx_landfill_capacity")
 }

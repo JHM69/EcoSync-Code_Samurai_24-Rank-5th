@@ -12,7 +12,8 @@ const getHtml = (
     loaddedFuelCost,
     capacity,
     cost,
-    assigneeId
+    distance,
+    duration
   )=>{
     billCreatedAt = `${new Date(billCreatedAt).toLocaleTimeString()} - ${new Date(billCreatedAt).toLocaleDateString()}`;
     timeOfArrival = `${new Date(timeOfArrival).toLocaleTimeString()} - ${new Date(timeOfArrival).toLocaleDateString()}`;
@@ -212,9 +213,19 @@ const getHtml = (
             <td>BDT ${unloadedFuelCost}</td>
           </tr>
   
-          <tr class="item last">
+          <tr class="item">
             <td>Full loaded</td>
             <td>BDT ${loaddedFuelCost}</td>
+          </tr>
+
+          <tr class="item">
+            <td>Total Distance</td>
+            <td>${distance.toFixed(2)} KM</td>
+          </tr>
+
+          <tr class="item last">
+            <td>Duration</td>
+            <td>${duration.toFixed(2)} min</td>
           </tr>
   
           <tr class="total">

@@ -2,6 +2,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable import/order */
 import prisma from '../../prisma/prisma-client'; 
+import axios from 'axios';
  
  
 const oilAllocations = { // Oil allocation per vehicle type in Full Capacity per trip
@@ -60,6 +61,107 @@ export async function calculateAndSaveBillingRecords(startDate : string, endDate
 
 }
 
+const fetchDirections = async (origin: string, destination: string, apiKey: string) => {
+    try {
+        const response = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
+            params: {
+                origin: origin, 
+                destination: destination, 
+                key: apiKey,
+            },
+        });
+
+        if (response.data.status === "OK") {
+            const route = response.data.routes[0];
+            const distanceInMeters = route.legs[0].distance.value;
+            const distanceInKilometers = distanceInMeters / 1000;
+            const duration = route.legs[0].duration.value;
+            const durationInMinutes = duration / 60;
+            console.log(`Distance: ${distanceInKilometers} km, Duration: ${durationInMinutes} minutes`);
+            return { distance: distanceInKilometers, duration: durationInMinutes };
+        } else {
+            throw new Error(response.data.error_message || "Failed to fetch data");
+        }
+    } catch (error) {
+        console.error('Error fetching directions:', error);
+        throw new Error('Error fetching directions');
+    }
+};
+
+const createBill = async (id: string, userId: number, stsId:number, landfillId?:number) => {
+    // get sts entry by id
+    const VehicleEntry = await prisma.vehicleEntry.findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        vehicle: true,
+      },
+    });
+    if (!VehicleEntry) {
+      throw new Error('Vehicle Entry not found');
+    }
+    // get lat lon of sts
+    const sts = await prisma.sTS.findUnique({
+      where: {
+        id: stsId,
+      },
+    });
+    // get lat lon of landfill
+    let landfillIdNumber=1;
+    if(landfillId)landfillIdNumber=Number(landfillId);
+    const landfill = await prisma.landfill.findUnique({
+      where: {
+        id: landfillIdNumber,
+      },
+    });
+  
+    // get distance and duration between sts and landfill
+    const from = `${sts.lat},${sts.lon}`;
+    const to = `${landfill.lat},${landfill.lon}`;
+    const {distance, duration} = await fetchDirections(from as string, to as string, "AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI");
+    // calculate the cost
+    const bill = {
+      entryid: VehicleEntry.id,
+      billCreatedAt: new Date(),
+      timeOfArrival: VehicleEntry.timeOfArrival,
+      timeOfDeparture: VehicleEntry.timeOfDeparture,
+      volumeOfWaste: VehicleEntry.volumeOfWaste,
+      truckId: VehicleEntry.vehicle.id,
+      truckRegistrationNumber: VehicleEntry.vehicle.registrationNumber,
+      truckType: VehicleEntry.vehicle.type,
+      unloadedFuelCost: VehicleEntry.vehicle.unloadedFuelCost,
+      loaddedFuelCost: VehicleEntry.vehicle.loaddedFuelCost,
+      capacity: VehicleEntry.vehicle.capacity,
+      cost: 0,
+      assigneeId: userId,
+      distance: distance,
+      duration: duration,
+    };
+    const unloadedFuelCost = VehicleEntry.vehicle.unloadedFuelCost;
+    const loaddedFuelCost = VehicleEntry.vehicle.loaddedFuelCost;
+    const volumeOfWaste = VehicleEntry.volumeOfWaste;
+    const capacity = VehicleEntry.vehicle.capacity;
+    
+    bill.cost = (unloadedFuelCost + (volumeOfWaste / capacity) * (loaddedFuelCost - unloadedFuelCost))*distance;
+    console.log(bill.cost);
+    const createdBill = await prisma.bill.create({
+        data:{
+            vehicleEntryId: VehicleEntry.id,
+            amount: bill.cost,
+            distance: Number(distance),
+            duration: Number(duration),
+        },
+        include: {
+            vehicleEntry: true,
+        }
+        });
+    console.log('Bill created:', createdBill);
+    return createdBill;
+  };
+
 module.exports = {
     calculateAndSaveBillingRecords,
+    fetchDirections,
+    createBill
 };

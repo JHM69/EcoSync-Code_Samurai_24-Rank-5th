@@ -4,6 +4,8 @@ import { Request, Response, Router } from 'express';
 import ts from 'typescript';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
+import {createBill} from '../services/billing.service';
+import { create } from 'domain';
 
 const router = Router();
 
@@ -265,8 +267,29 @@ router.post('/sts/:id/entry', auth.required,auth.isSTSManager, async (req: Reque
     }
     // @ts-ignore
     const vehicleEntry = await createVehicleEntry(req.body, stsId, req.user.id);
-    res.status(201).json(vehicleEntry);
+    const bill = await createBill(vehicleEntry.id, req.user.id, stsId, req.body.landfillId);
+    // update the vehucle entry with the bill id
+    const updatedVehicleEntry= await prisma.vehicleEntry.update({
+      where: {
+        id: vehicleEntry.id,
+      },
+      data: {
+        bill: {
+          connect: {
+            id: bill.id,
+          },
+        },
+      },
+      include: {
+        sts: true,
+        vehicle: true,
+        landfill: true,
+        bill: true,
+      },
+    });
+    res.status(201).json(updatedVehicleEntry);
   } catch (error: any) {
+    console.log(error);
     res.status(400).json({ message: error.message });
   }
 });
@@ -276,6 +299,7 @@ const createVehicleEntry = async (vehicleEntryData: {
   volumeOfWaste: string;
   timeOfArrival: string;
   timeOfDeparture: string;
+  landfillId?: string;
 }, stsId: number, userId:number) => {
   // get the vehicle
   const vehicle = await prisma.vehicle.findUnique({
@@ -308,12 +332,18 @@ const createVehicleEntry = async (vehicleEntryData: {
       currentWasteVolume: sts.currentWasteVolume - Number(vehicleEntryData.volumeOfWaste),
     },
   });
-  
+  let landfillIdNumber=1;
+  if(vehicleEntryData.landfillId)landfillIdNumber=Number(vehicleEntryData.landfillId);
   return await prisma.vehicleEntry.create({
     data: {
       volumeOfWaste: Number(vehicleEntryData.volumeOfWaste),
       timeOfArrival: new Date(vehicleEntryData.timeOfArrival),
       timeOfDeparture: new Date(vehicleEntryData.timeOfDeparture),
+      landfill: {
+        connect: {
+          id: landfillIdNumber,
+        },
+      },
       sts: {
         connect: {
           id: stsId,
@@ -333,6 +363,7 @@ const createVehicleEntry = async (vehicleEntryData: {
     include: {
       sts: true,
       vehicle: true,
+      landfill: true,
     },
   });
 };
@@ -348,6 +379,7 @@ router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) 
       include: {
         sts: true,
         vehicle: true,
+        landfill: true,
       },
     });
     res.status(200).json(entries);
@@ -366,7 +398,6 @@ router.get('/sts/:id/add', auth.required, async (req: Request, res: Response) =>
       },
       include: {
         sts: true,
-        vehicle: true,
       },
     });
     res.status(200).json(entries);
@@ -428,7 +459,6 @@ router.post('/sts/:id/add', auth.required, auth.isSTSManager, async (req: Reques
       },
       include: {
         sts: true,
-        vehicle: true,
       },
     });
 
