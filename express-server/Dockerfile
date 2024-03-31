@@ -6,6 +6,9 @@ WORKDIR /usr/src/app
 # Copy application dependency manifests to the container image.
 COPY package*.json ./
 
+#to update npm to the latest version.
+RUN npm install -g npm@10.5.0 
+
 # Install dependencies
 RUN npm install
 
