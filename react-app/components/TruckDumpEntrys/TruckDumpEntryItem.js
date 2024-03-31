@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
+import React, { useEffect } from 'react'
 import UpdateTruckDumpEntry from '../TruckDumpEntry/UpdateTruckDumpEntry'
 import TruckDumpInfoEntry from '../TruckDumpEntry/ViewTruckDumpEntry'
 
 const TruckDumpEntryItem = ({
+  billId,
   id,
   vehicleId,
   volumeOfWaste,
@@ -11,8 +12,11 @@ const TruckDumpEntryItem = ({
   timeOfDeparture,
   vehicle,
   stsId,
-  sts
+  sts,
 }) => {
+  useEffect(() => {
+    console.log('billid..', billId)
+  }, [])
   return (
     <div className="smooth-effect my-2 flex cursor-pointer items-center rounded-md border px-3 py-4 shadow-sm hover:bg-green-200 hover:shadow lg:px-6">
       <div className="flex-1">
@@ -38,6 +42,7 @@ const TruckDumpEntryItem = ({
 
       <TruckDumpInfoEntry
         truckDumpEntry={{
+          billId,
           id,
           vehicleId,
           volumeOfWaste,
@@ -46,18 +51,21 @@ const TruckDumpEntryItem = ({
           vehicle,
           sts,
         }}
+        billId={billId}
       />
 
       <UpdateTruckDumpEntry
         truckDumpEntry={{
+          billId,
           id,
           vehicleId,
           volumeOfWaste,
           timeOfArrival,
           timeOfDeparture,
           vehicle,
-          stsId
+          stsId,
         }}
+        billId={billId}
       />
     </div>
   )

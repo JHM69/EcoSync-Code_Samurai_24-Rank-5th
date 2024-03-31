@@ -1,5 +1,5 @@
 /* eslint-disable multiline-ternary */
-import React from 'react'
+import React, { useEffect } from 'react'
 import LandfillItem from './LandfillItem'
 
 const LandfillItems = ({ landfills }) => {

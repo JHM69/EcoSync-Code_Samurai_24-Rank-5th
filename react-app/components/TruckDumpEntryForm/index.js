@@ -153,7 +153,7 @@ const TruckDumpEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => 
       </div>
 
       <Button type="button" onClick={onSubmit} className="w-full">
-        {type ? `${type} STS` : 'Submit'}
+        Submit
       </Button>
     </div>
   )

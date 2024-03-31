@@ -163,6 +163,7 @@ model TruckDumpEntry {
   landfill        Landfill @relation(fields: [landfillId], references: [id])
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
+  billId         Int       @default(0)
   @@index([vehicleId], name: "idx_truck_dump_entry_vehicle")
   @@index([landfillId], name: "idx_truck_dump_entry_landfill")
   @@index([userId], name: "idx_truck_dump_entry_user")

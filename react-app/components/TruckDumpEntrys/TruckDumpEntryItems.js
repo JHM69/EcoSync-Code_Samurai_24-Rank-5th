@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TruckDumpEntryItem from './TruckDumpEntryItem'
 
 const TruckDumpEntryItems = ({ truckDumpEntries }) => {
+
+  useEffect(() => {
+    console.log('truckDumpEntries..', truckDumpEntries)
+  }, [])
+
   return (
     <div className="block max-h-[75vh] overflow-y-auto rounded-lg border p-2 desktop:max-h-[80vh]">
       {truckDumpEntries?.length

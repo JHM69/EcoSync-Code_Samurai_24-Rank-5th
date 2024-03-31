@@ -11,7 +11,6 @@ const StsEntryForm = ({
   defaultValues,
   onFormSubmit,
   handleClose,
-  landfills,
   stsId,
   ...props
 }) => {
@@ -25,7 +24,7 @@ const StsEntryForm = ({
 
   const [search2, setSearch2] = useState('')
   const [vehicles, setVehicles] = useState([])
-  // const [landfills, setLandfills] = useState([])
+  const [landfills, setLandfills] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -64,6 +63,20 @@ const StsEntryForm = ({
   //   }
   // }, [])
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      axios
+        .get(`${getBaseUrl()}/landfills`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setLandfills(res.data)
+        })
+    }
+  }, [landfills])
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
