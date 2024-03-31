@@ -17,7 +17,7 @@ const UpdateSts = ({ sts,reload,setReload, ...props }) => {
   const onFormSubmit = async (data) => {
     try {
       const token = localStorage.getItem('token')
-      console.log(sts)
+      console.log("submitted sts",sts)
       await axios
         .put(getBaseUrl() + `/sts/${sts.id}`, data, {
           headers: {

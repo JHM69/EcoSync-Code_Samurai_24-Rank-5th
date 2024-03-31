@@ -32,7 +32,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReloa
       setValue('lat', defaultValues.lat)
       setValue('lon', defaultValues.lon)
       setValue('name', defaultValues.name)
-
+      
       setValue('address', defaultValues.address)
       setValue('logo', defaultValues.logo)
       if (vehicles) {
@@ -44,7 +44,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReloa
 
       if (stsManagers) {
         setValue(
-          'managerIds',
+          'managerIds2',
           defaultValues?.managers?.map((manager) => manager.id.toString()) || []
         )
       }
@@ -55,7 +55,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReloa
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(`${getBaseUrl()}/users?search=${search}`, {
+        .get(`${getBaseUrl()}/stsmanagers?search=${search}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           }
@@ -70,7 +70,7 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReloa
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(`${getBaseUrl()}/vehicle?search=${search2}`, {
+        .get(`${getBaseUrl()}/freevehicle?search=${search2}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -193,78 +193,81 @@ const StsForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setReloa
           register={register('logo')}
         />
 
-        <div className="flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
-          <div className="flex">
-            <input
-              className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
-              name="search"
-              label="Search Manager..."
-              placeholder="Search Manager by Name"
-              type="textarea"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <button
-              onClick={() => {
-                setSearch('')
-              }}
-              type="button"
-              className="w-1/5"
-            >
-              Clear
-            </button>
-          </div>
+<div className="flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
+  <div className="flex items-center space-x-2">
+    <input
+      className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
+      name="search"
+      label="Search Manager..."
+      placeholder="Search Managers by Name or Email..."
+      type="text"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+    <button
+      onClick={() => {
+        setSearch('');
+      }}
+      type="button"
+      className="w-1/5 bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+    >
+      Clear
+    </button>
+  </div>
 
-          <MultipleSelect
-            name="vehicles"
-            multiple={true}
-            label="Select Vehicles..."
-            register={register('vehicles')}
-          >
-            {stsManagers?.map((user) => (
-              <OptionWithCheckbox key={user.id} value={user.id.toString()}>
-                
-                {user.name}
-              </OptionWithCheckbox>
-            ))}
-          </MultipleSelect>
-        </div>
+  <div className="flex flex-col mt-2 space-y-2">
+    {stsManagers?.map((user) => (
+      <label key={user.id} className="flex items-center space-x-2">
+        <Input
+          type="checkbox"
+          name="managerIds"
+          value={user.id.toString()}
+          {...register('managerIds')}
+        />
+        <span>{user.name}</span>
+      </label>
+    ))}
+  </div>
+</div>
 
-        <div className="mt-3 flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
-          <div className="flex">
-            <input
-              className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
-              name="search"
-              label="Search Vehicles..."
-              placeholder="Search Vehicle by Registration Number.."
-              type="textarea"
-              value={search2}
-              onChange={(e) => setSearch2(e.target.value)}
-            />
-            <button
-              onClick={() => {
-                setSearch('')
-              }}
-              type="button"
-              className="w-1/5"
-            >
-              Clear
-            </button>
-          </div>
 
-          <MultipleSelect
-            name="vehicleIds"
-            multiple={true}
-            label="Select Vehicles..."
-            register={register('vehicleIds')}
-          >
-            {vehicles?.map((v) => (
-              <OptionWithCheckbox key={v.id} value={v.id.toString() }>
-                {v.registrationNumber}
-              </OptionWithCheckbox>
-            ))}
-          </MultipleSelect>
-        </div>
+<div className="mt-3 flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
+  <div className="flex">
+    <input
+      className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
+      name="search"
+      label="Search Vehicles..."
+      placeholder="Search available Vehicles by Registration Number.."
+      type="text" // Change type from 'textarea' to 'text'
+      value={search2}
+      onChange={(e) => setSearch2(e.target.value)}
+    />
+    <button
+      onClick={() => {
+        setSearch('')
+      }}
+      type="button"
+      className="w-1/5"
+    >
+      Clear
+    </button>
+  </div>
+
+  <div className="flex flex-col mt-2 space-y-2">
+    {vehicles?.map((v) => (
+      <label key={v.id} className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          name="vehicleIds"
+          value={v.id.toString()}
+          {...register('vehicleIds')}
+        />
+        <span>{v.registrationNumber}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
       </div>
 
       <Button type="button" onClick={onSubmit} className="w-full" disabled={loading}>

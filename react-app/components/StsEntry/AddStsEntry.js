@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 import Button from '../common/Button'
 import { Close } from '../common/icons/Close'
@@ -12,28 +12,84 @@ const AddStsEntry = ({ props, stsId }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
+  const [landfills, setLandfills] = useState([])
   const onFormSubmit = async (data) => {
     try {
       console.log(data)
+      toast('Adding the entry!', {
+        icon: '👏',
+      });
       const token = localStorage.getItem('token')
-      await axios.post(getBaseUrl() + `/sts/${stsId}/entry`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }).then(response => {
-        console.log(response)
-        toast.success('Vehicle Entry added successfully')
-      }).catch(error =>
-        console.log(error)
-      )
+      await axios
+        .post(getBaseUrl() + `/sts/${stsId}/entry`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response)
+          toast.success('Vehicle Entry added successfully')
+          toast.custom((t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            >
+              <div className="flex-1 w-0 p-4">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 pt-0.5">
+                    <img
+                      className="h-10 w-10 rounded-full"
+                      src="/logo.png"
+                      alt=""
+                    />
+                  </div>
+                  <div className="ml-3 flex-1">
+                    <p className="text-sm font-medium text-gray-900">
+                      {response.data.landfill.name}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Distance {response.data.bill.distance} KM .It will take {Number(response.data.bill.duration).toFixed(2)} min.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex border-l border-gray-200">
+                <button
+                  onClick={() => toast.dismiss(t.id)}
+                  className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          ))
+          handleClose()
+        })
+        .catch((error) => console.log(error))
     } catch (error) {
       console.log(error)
     }
   }
 
+  useEffect(async () => {
+    try {
+      // make a axios call to get the landfill
+      const token = localStorage.getItem('token')
+      let landfills = await axios.get(`${getBaseUrl()}/landfills`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setLandfills(landfills.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
   return (
     <>
-    <Toaster />
+      <Toaster />
       <Button onClick={handleOpen} type="button" {...props}>
         Add Vehicle Entry
       </Button>
@@ -71,7 +127,13 @@ const AddStsEntry = ({ props, stsId }) => {
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <StsEntryForm type={'Add'} onFormSubmit={onFormSubmit} />
+                  <StsEntryForm
+                    type={'Add'}
+                    onFormSubmit={onFormSubmit}
+                    handleClose={handleClose}
+                    landfills={landfills}
+                    stsId={stsId}
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -37,14 +37,14 @@ export default function VehicleEntry () {
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(getBaseUrl() + '/sts', {
+        .get(getBaseUrl() + `/sts/${stsId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
         .then((res) => {
           setLoadingInfo(false)
-          setSts(res.data[0])
+          setSts(res.data)
           console.log(res.data)
         })
         .catch((err) => {
@@ -91,6 +91,7 @@ export default function VehicleEntry () {
         })
         .then((res) => {
           console.log(res.data)
+          res.data.sort((a, b) => b.id - a.id)
           setWasteEntries(res.data)
           setLoading(false)
         })
@@ -131,7 +132,7 @@ export default function VehicleEntry () {
                     name={sts.wardNumber}
                     address={sts.address}
                     height = '200px'
-                    vehicles = {sts.vehicles}
+                    // vehicles = {sts.vehicles}
                 />
               </div>
             </div>
