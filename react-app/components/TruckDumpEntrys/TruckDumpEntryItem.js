@@ -2,6 +2,8 @@
 import React, { useEffect } from 'react'
 import UpdateTruckDumpEntry from '../TruckDumpEntry/UpdateTruckDumpEntry'
 import TruckDumpInfoEntry from '../TruckDumpEntry/ViewTruckDumpEntry'
+import axios from 'axios'
+import { getBaseUrl } from '../../utils/url'
 
 const TruckDumpEntryItem = ({
   billId,
@@ -14,8 +16,24 @@ const TruckDumpEntryItem = ({
   stsId,
   sts,
 }) => {
+  const [verified, setVerified] = React.useState(false)
   useEffect(() => {
-    console.log('billid..', billId)
+    const getBillInfo = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const res = await axios.get(getBaseUrl() + `/bill/${billId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setVerified(res.data.verified)
+        console.log('bill info...', res.data)
+      } catch (error) {
+        // console.log(error)
+        console.log('bill fetching error', getBaseUrl() + `/bill/${billId}`)
+      }
+    }
+    if (billId != 0) getBillInfo()
   }, [])
   return (
     <div className="smooth-effect my-2 flex cursor-pointer items-center rounded-md border px-3 py-4 shadow-sm hover:bg-green-200 hover:shadow lg:px-6">
@@ -54,7 +72,7 @@ const TruckDumpEntryItem = ({
         billId={billId}
       />
 
-      <UpdateTruckDumpEntry
+      {/* <UpdateTruckDumpEntry
         truckDumpEntry={{
           billId,
           id,
@@ -66,7 +84,27 @@ const TruckDumpEntryItem = ({
           stsId,
         }}
         billId={billId}
-      />
+      /> */}
+      {/* add a button to show verified */}
+      <div className="flex-1">
+        {verified ? (
+          <a
+            href={`http://localhost:5000/bill/${billId}/download`}
+            className="ml-2 rounded-md bg-green-500 p-2 text-white"
+            target="_blank"
+          >
+            &#10003; Download Bill
+          </a>
+        ) : (
+          <a
+            href="#"
+            disable="true"
+            className="ml-2 rounded-md bg-red-500 p-2 text-white"
+          >
+            &#10007; Bill not verified
+          </a>
+        )}
+      </div>
     </div>
   )
 }

@@ -24,7 +24,7 @@ const getHtml = (
   <html>
     <head>
       <meta charset="utf-8" />
-      <title>A simple, clean, and responsive HTML invoice template</title>
+      <title>EcoSync Bill --Quantum Guys</title>
   
       <style>
         .invoice-box {

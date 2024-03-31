@@ -22,6 +22,9 @@ function Landfills() {
           },
         })
         .then((res) => {
+          if(res.data.length > 0) {
+            res.data.sort((a, b) => a?.id - b?.id)
+          }
           console.log(res.data)
           setLandfill(res.data)
           setLoading(false)
