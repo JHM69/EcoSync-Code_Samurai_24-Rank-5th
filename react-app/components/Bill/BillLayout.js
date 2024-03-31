@@ -22,7 +22,7 @@ const BillLayout = ({
   const downloadBill = () => {
     console.log('Downloading Bill')
     // create a new window and open the pdf localhost:3000/bill/:id/download
-    window.open(`/bill/${id}/download`, '_blank')
+    window.open(`http://localhost:5000/bill/${id}/download`, '_blank')
   }
 
   return (

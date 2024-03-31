@@ -6,13 +6,21 @@ import Input from '../common/Input'
 import Select from '../common/Select'
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
-const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,stsId, ...props }) => {
+const StsEntryForm = ({
+  type,
+  defaultValues,
+  onFormSubmit,
+  handleClose,
+  landfills,
+  stsId,
+  ...props
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-    setValue
+    setValue,
   } = useForm()
 
   const [search2, setSearch2] = useState('')
@@ -62,8 +70,8 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
       axios
         .get(`${getBaseUrl()}/stsvehicle/${stsId}?search=${search2}`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then((res) => {
           setVehicles(res.data)
@@ -85,7 +93,7 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
   return (
     <div {...props} className="flex flex-col space-y-6">
       <div>
-      <div className="mt-3 flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
+        <div className="mt-3 flex flex-col rounded-[4px] border-[1px] border-gray-300 p-3">
           <div className="flex">
             <input
               className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
@@ -114,8 +122,8 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
             register={register('vehicleId', {
               required: {
                 value: true,
-                message: 'You must select a vehicle.'
-              }
+                message: 'You must select a vehicle.',
+              },
             })}
           >
             <option value="">Select a Vehicle</option>
@@ -131,15 +139,14 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
         <Select
           name="landfillId"
           label="Select a Landfill..."
+          defaultValues={'1'}
           error={errors.landfillId ? errors.landfillId.message : false}
           register={register('landfillId', {
             required: {
-              value: true,
-              message: 'You must select a landfill.'
-            }
+              message: 'You must select a landfill.',
+            },
           })}
         >
-
           <option value="">Select a Landfill</option>
           {landfills.map((landfill) => (
             <option key={landfill.id} value={landfill.id.toString()}>
@@ -147,7 +154,6 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
             </option>
           ))}
         </Select>
-        
 
         <Input
           name="volumeOfWaste"
@@ -158,8 +164,8 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
           register={register('volumeOfWaste', {
             required: {
               value: true,
-              message: 'volume Of Waste is required'
-            }
+              message: 'volume Of Waste is required',
+            },
           })}
         />
 
@@ -167,13 +173,13 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
           name="timeOfArrival"
           label="Time of Arrival"
           placeholder="Time of Arrival..."
-          type='datetime-local'
+          type="datetime-local"
           error={errors.timeOfArrival ? errors.timeOfArrival.message : false}
           register={register('timeOfArrival', {
             required: {
               value: true,
-              message: 'Time of Arrival is required'
-            }
+              message: 'Time of Arrival is required',
+            },
           })}
         />
 
@@ -181,21 +187,27 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,
           name="timeOfDeparture"
           label="Time of Departure"
           placeholder="Time of Departure..."
-          type='datetime-local'
-          error={errors.timeOfDeparture ? errors.timeOfDeparture.message : false}
+          type="datetime-local"
+          error={
+            errors.timeOfDeparture ? errors.timeOfDeparture.message : false
+          }
           register={register('timeOfDeparture', {
             required: {
               value: true,
-              message: 'Time of Departure is required'
-            }
+              message: 'Time of Departure is required',
+            },
           })}
         />
-
       </div>
 
-      <Button type="button" onClick={onSubmit} className="w-full" disable={loading}>
+      <Button
+        type="button"
+        onClick={onSubmit}
+        className="w-full"
+        disable={loading}
+      >
         {/* loading and type condition */}
-        {loading ? "Adding" : 'Add Entry'}
+        {loading ? 'Adding' : 'Add Entry'}
       </Button>
     </div>
   )
