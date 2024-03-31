@@ -1,11 +1,11 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
-import ts from 'typescript';
+ 
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import {createBill} from '../services/billing.service';
-import { create } from 'domain';
+ 
 
 const router = Router();
 
@@ -109,7 +109,7 @@ const updateSTS = async (stsData: {
     });
   }
 
-  let capacity, currentWasteVolume, lat, lon;
+  let capacity; let currentWasteVolume; let lat; let lon;
   if(stsData.capacity){
     capacity = Number(stsData.capacity);
   }
@@ -130,10 +130,10 @@ const updateSTS = async (stsData: {
     data: {
       wardNumber: stsData.wardNumber,
       name: stsData.name,
-      capacity: capacity,
-      currentWasteVolume: currentWasteVolume,
-      lat: lat,
-      lon: lon,
+      capacity,
+      currentWasteVolume,
+      lat,
+      lon,
       address: stsData.address,
       logo: stsData.logo,
       vehicles: {
@@ -267,7 +267,7 @@ router.post('/sts/:id/entry', auth.required,auth.isSTSManager, async (req: Reque
     }
     // @ts-ignore
     const vehicleEntry = await createVehicleEntry(req.body, stsId, req.user.id);
-    const bill = await createBill(vehicleEntry.id, req.user.id, stsId, req.body.landfillId);
+    const bill = await createBill(vehicleEntry?.id, req?.user.id, stsId, req.body.landfillId);
     // update the vehucle entry with the bill id
     const updatedVehicleEntry= await prisma.vehicleEntry.update({
       where: {

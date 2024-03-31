@@ -27,19 +27,17 @@ const Layout = ({ meta, children, ...props }) => {
   return (
     <div className="max-w-screen min-h-screen lg:flex">
       <Meta {...meta} />
-      <Sidebar/>
+      <Sidebar />
       <div className="mx-auto flex w-full flex-col">
-
-      <ApplicationBar
-              activeTabPageId={activeTabPageId}
-              isSidebarOpen={isSidebarOpen}
-              toggleSidebar={toggleSidebar}
-            />
+        <ApplicationBar
+          activeTabPageId={activeTabPageId}
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+        />
 
         <main className="flex-1 px-2 py-2" {...props}>
           {children}
         </main>
-        {router.pathname === '/' && <Footer />}
       </div>
     </div>
   )

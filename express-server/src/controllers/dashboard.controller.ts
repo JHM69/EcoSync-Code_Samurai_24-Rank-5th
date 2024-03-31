@@ -6,7 +6,7 @@ import { Request, Response, NextFunction, Router } from 'express';
 import NodeCache from 'node-cache';
 import auth from '../utils/auth';
   
-import { dashboardData } from '../services/dashboard.service';
+import { dashboardData, getBillsData } from '../services/dashboard.service';
  
 // Extend the Express Request interface to include cacheKey
 declare global {
@@ -19,7 +19,7 @@ declare global {
   }
 }
 
-const ecoSyncCache = new NodeCache({ stdTTL: 120 }); // 2 minutes cache
+const ecoSyncCache = new NodeCache({ stdTTL: 60 }); // 2 minutes cache
 const router = Router();
 
 function generateCacheKey(query: any): string {
@@ -41,7 +41,27 @@ async function cacheMiddleware(req: Request, res: Response, next: NextFunction):
   }
 }
 
-router.get('/dashboard', auth.optional, auth.isSystemAdmin, cacheMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+
+function generateCacheKeyBills(query: any): string {
+  return `bulls-${JSON.stringify(query)}`;
+}
+
+async function cacheMiddlewareBills(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const cacheKey = generateCacheKeyBills(req.query);
+  const cachedData = ecoSyncCache.get(cacheKey);
+  
+  if (cachedData) {
+    // eslint-disable-next-line no-console
+    console.log("Serving from cache");
+    res.json(cachedData);
+  } else {
+    // Attach cacheKey to the request to use in the route
+    req.cacheKey = cacheKey;
+    next();
+  }
+}
+
+router.get('/dashboard', auth.required, auth.isSystemAdmin, cacheMiddleware, async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Check if cacheKey is attached to the request
     if (req.cacheKey) {
@@ -59,4 +79,18 @@ router.get('/dashboard', auth.optional, auth.isSystemAdmin, cacheMiddleware, asy
   }
 });
 
+
+router.get('/dashboard-bills', auth.required, auth.isSystemAdmin, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+      // eslint-disable-next-line no-console
+      console.log("Serving from service");
+      const result = await getBillsData(req?.query?.startDate as string, req?.query?.endDate as string);
+      // Cache the new result using the cacheKey from the request
+     
+      res.json(result);
+   
+  } catch (error) {
+    next(error);
+  }
+});
 export default router;

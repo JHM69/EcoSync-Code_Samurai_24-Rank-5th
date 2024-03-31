@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
@@ -122,7 +123,7 @@ const updateLandfill = async (
 };
 
 // get all Landfills
-router.get('/landfills', auth.required, async (req: Request, res: Response) => {
+router.get('/landfills', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     const landfills = await prisma.landfill.findMany({
       include: {

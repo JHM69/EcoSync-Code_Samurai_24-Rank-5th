@@ -1,43 +1,33 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable multiline-ternary */
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 
 import { Close } from '../common/icons/Close'
-import { getBaseUrl } from '../../utils/url'
-import axios from 'axios'
 
 import { FaEye } from 'react-icons/fa'
-import UserLayout from './UserLayout'
-const UserInfo = ({ user, ...props }) => {
+import BillLayout from './BillLayout'
+const BillInfo = ({
+  id,
+  vehicleEntryId,
+  vehicleEntry,
+  amount,
+  paid,
+  createdAt,
+  distance,
+  duration,
+  ...props
+}) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
-
-  const [userLive, setUserLive] = React.useState({...user})
-  const [loading, setLoading] = React.useState(true)
-  
-  useEffect(() => {
-    setLoading(true)
-    const token = localStorage.getItem('token')
-    axios
-      .get(getBaseUrl() + '/users/' + user.id, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data)
-        setUserLive(res.data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setLoading(false)
-        console.log(err)
-      })
-  }, [user.id])
-
   return (
     <>
-      <div onClick={handleOpen} {...props} className="smooth-effect m-3 rounded bg-yellow-300 p-2 text-yellow-800 shadow hover:bg-yellow-400">
+      <div
+        onClick={handleOpen}
+        {...props}
+        className="smooth-effect m-3 rounded bg-yellow-300 p-2 text-yellow-800 shadow hover:bg-yellow-400"
+      >
         <FaEye />
       </div>
       <Transition appear show={isOpen} as={Fragment}>
@@ -70,22 +60,20 @@ const UserInfo = ({ user, ...props }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>User Information</h3>
+                    <h3>Bill Information</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  {!loading ? (
-                    <UserLayout user={userLive} />
-                  ) : (
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex flex-col space-y-1">
-                        <div className="h-40 animate-pulse rounded-md bg-gray-200" />
-                        <div className="h-20 animate-pulse rounded-md bg-gray-200" />
-                      </div>
-                      <div className="h-10 animate-pulse rounded-md bg-gray-200" />
-                      <div className="h-30 animate-pulse rounded-md bg-gray-200" />
-                    </div>
-                  )}
+                  <BillLayout
+                    id={id}
+                    vehicleEntryId={vehicleEntryId}
+                    vehicleEntry={vehicleEntry}
+                    amount={amount}
+                    paid={paid}
+                    createdAt={createdAt}
+                    distance={distance}
+                    duration={duration}
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -96,4 +84,4 @@ const UserInfo = ({ user, ...props }) => {
   )
 }
 
-export default UserInfo
+export default BillInfo

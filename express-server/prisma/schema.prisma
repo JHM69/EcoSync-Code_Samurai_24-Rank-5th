@@ -132,7 +132,7 @@ model Bill {
   vehicleEntryId  Int      @unique
   vehicleEntry    VehicleEntry @relation(fields: [vehicleEntryId], references: [id])
   amount          Float
-  paid           Boolean @default(false)
+  paid            Boolean @default(false)
   createdAt       DateTime @default(now())
   distance        Float
   duration        Float
