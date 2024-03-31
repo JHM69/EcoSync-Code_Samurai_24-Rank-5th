@@ -132,6 +132,13 @@ const Sidebar = () => {
                   href="/"
                   isActive={router.pathname === '/'}
                 />
+                 <Item
+                  text="Bills"
+                  subtitle="Manage Bills & Payments"
+                  icon="bills"
+                  href="/bills"
+                  isActive={router.pathname === '/bills'}
+                />
                 <Item
                   text="Users"
                   subtitle="Manage Users & Roles"

@@ -143,6 +143,7 @@ export const getBillsData = async (starDate : string , endDate : string) => {
         include: {
           vehicle: true,
           sts: true,
+          landfill: true,
         },
       },
     },

@@ -10,7 +10,7 @@ const BillItems = ({ bills }) => {
           )
         : (
         <div className="h-[100px] w-full text-center font-bold text-gray-300">
-           Generated Bills will appear here
+          No bills found for this date, Try to select longer date range
         </div>
           )}
     </div>

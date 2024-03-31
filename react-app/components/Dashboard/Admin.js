@@ -45,38 +45,6 @@ function Dashboard() {
     }
   }, [])
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    setLoadingBills(true)
-    if (token) {
-      axios
-        .get(
-          getBaseUrl() +
-            '/dashboard-bills' +
-            '?startDate=' +
-            new Date(value.startDate).toISOString() +
-            '&endDate=' +
-            new Date(value.endDate).toISOString() +
-            '&limit=20',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          setBillData(res.data)
-          console.log(res.data)
-          setLoadingBills(false)
-        })
-        .catch((err) => {
-          setErrorBills(err)
-          console.log(err)
-          setLoadingBills(false)
-        })
-    }
-  }, [value])
-
   const colors = [
     { b: 'bg-blue-100', c: 'text-blue-700' },
     { b: 'bg-green-100', c: 'text-green-700' },
@@ -125,66 +93,67 @@ function Dashboard() {
         </div>
       )}
 
-      {loadingBills ? (
-        <div className="w-full">
-          <div className="h-[60px] w-full animate-pulse rounded-md bg-gray-300"></div>
-        </div>
-      ) : (
-        <div>
-          <div className="my-1 flex flex-row  justify-between space-x-2">
-            {billData?.additionalData &&
-              billData?.additionalData.map((item, i) => {
-                return (
-                  <div
-                    key={item.name + i}
-                    className={`flex flex-col items-center justify-center rounded-2xl text-center ${
-                      colors[i + 2].b
-                    }  p-1`}
-                  >
-                    <div
-                      className={`line-clamp-1  mx-4 flex flex-row items-center text-xl font-light ${
-                        colors[i + 2].c
-                      }  text-xl  `}
-                    >
-                      {item.name}
-                    </div>
-
-                    <span
-                      className={`line-clamp-1 text-2xl font-bold ${
-                        colors[i + 2].c
-                      }   text-xl  `}
-                    >
-                      {item.value}
-                    </span>
-                  </div>
-                )
-              })}
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-row">
+      <div className="flex flex-col">
         {loading ? (
-          <div className="h-1/2 w-full">
+          <div className="h-full w-full">
             <div className="h-[200px] w-full animate-pulse rounded-md bg-gray-300"></div>
           </div>
         ) : error ? (
           <div>Error: {error.message}</div>
         ) : (
-          <div className="w-1/2">
+          <div className="w-full">
             <StsVehiclesLandfillsMapView data={data} />
           </div>
         )}
+        {/*
+          {loadingBills ? (
+                  <div className="w-full">
+                    <div className="h-[60px] w-full animate-pulse rounded-md bg-gray-300"></div>
+                  </div>
+          ) : (
+                  <div>
+                    <div className="mt-6 flex flex-row  justify-between space-x-2">
+                      {billData?.additionalData &&
+                        billData?.additionalData.map((item, i) => {
+                          return (
+                            <div
+                              key={item.name + i}
+                              className={`flex flex-col items-center justify-center rounded-2xl text-center ${
+                                colors[i + 2].b
+                              }  p-1`}
+                            >
+                              <div
+                                className={`line-clamp-1  mx-4 flex flex-row items-center text-xl font-light ${
+                                  colors[i + 2].c
+                                }  text-xl  `}
+                              >
+                                {item.name}
+                              </div>
+
+                              <span
+                                className={`line-clamp-1 text-2xl font-bold ${
+                                  colors[i + 2].c
+                                }   text-xl  `}
+                              >
+                                {item.value}
+                              </span>
+                            </div>
+                          )
+                        })}
+                    </div>
+                  </div>
+)}
 
         {loadingBills ? (
-          <div className="mx-4 h-1/2 w-1/2">
+          <div >
             <div className="h-13 my-2 w-full animate-pulse rounded-md bg-gray-300"></div>
             <div className="h-13 my-2 w-full animate-pulse rounded-md bg-gray-300"></div>
             <div className="h-13 my-2 w-full animate-pulse rounded-md bg-gray-300"></div>
             <div className="h-13 my-2 w-full animate-pulse rounded-md bg-gray-300"></div>
           </div>
         ) : (
-          <div className="w-1/2">
+
+          <div className="w-full">
             <Datepicker
               primaryColor={'emerald'}
               value={value}
@@ -193,7 +162,7 @@ function Dashboard() {
             />
             <BillItems bills={billData?.bills} />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )
