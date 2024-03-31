@@ -1,3 +1,5 @@
+/* eslint-disable no-return-await */
+/* eslint-disable no-console */
 /* eslint-disable import/prefer-default-export */
 import prisma from '../../prisma/prisma-client';
 import HttpException from '../models/http-exception.model';

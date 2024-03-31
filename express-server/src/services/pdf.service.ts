@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-param-reassign */
 // @ts-nocheck
 const getHtml = (
     entryid,

@@ -1,12 +1,9 @@
 version: '3.8'
 services:
-  
   express-server:
     build: ./express-server
     ports:
       - "5000:5000"
-    volumes:
-      - ./express-server:/usr/src/app
     env_file:
       - ./express-server/.env
     environment:

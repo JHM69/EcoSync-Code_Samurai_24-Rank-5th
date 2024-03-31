@@ -19,7 +19,7 @@ app.use(routes);
 app.use(express.static('public'));
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ status: 'API is running' });
+  res.json({ status: 'API is running - Ecosync Backend by Quantum Guys' });
 });
 app.post('/', (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;

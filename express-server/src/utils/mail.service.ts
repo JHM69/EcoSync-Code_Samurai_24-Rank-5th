@@ -1,3 +1,7 @@
+/* eslint-disable import/newline-after-import */
+/* eslint-disable no-console */
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable import/no-extraneous-dependencies */
 import nodemailer from 'nodemailer';
 import { env } from 'process';
 import dotenv from 'dotenv';

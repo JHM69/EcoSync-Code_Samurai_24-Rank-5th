@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { NextFunction, Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import * as authService from '../services/auth.service';

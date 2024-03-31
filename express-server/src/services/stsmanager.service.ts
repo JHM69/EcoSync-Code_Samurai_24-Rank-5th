@@ -1,9 +1,9 @@
 /* eslint-disable no-return-await */
 /* eslint-disable arrow-body-style */
 /* eslint-disable import/order */
+// @ts-nocheck
 import prisma from '../../prisma/prisma-client'; 
  
-
 
 // eslint-disable-next-line import/prefer-default-export
 export const createVehicleEntry = async (

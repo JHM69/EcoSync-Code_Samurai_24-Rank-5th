@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-shadow */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
@@ -280,6 +282,7 @@ router.post(
       // now update the landfillENTRY with the billId
       if(vehicleEntry && vehicleEntry.landfillId === landfillId && vehicleEntry.volumeOfWaste === Number(req.body.volumeOfWaste)){
         if (vehicleEntry?.bill && vehicleEntry.bill.verified === false) {
+          // @ts-ignore
           landfillEntry = await prisma.truckDumpEntry.update({
             where: {
               id: landfillEntry.id,

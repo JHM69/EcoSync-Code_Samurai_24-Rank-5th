@@ -18,7 +18,10 @@ COPY . .
 # Run the postinstall script
 RUN npm run postinstall
 
+# Build the application
+RUN npm run build
+
 # The application's port.
 EXPOSE 5000
 # Command to run the application
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "run", "start" ]

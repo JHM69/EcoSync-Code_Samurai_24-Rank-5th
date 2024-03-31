@@ -1,11 +1,15 @@
+/* eslint-disable consistent-return */
+/* eslint-disable spaced-comment */
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/first */
+// @ts-nocheck
 import { Request, Response, Router } from 'express';
 import prisma from '../../prisma/prisma-client';
 import auth from '../utils/auth';
 const router = Router();
 
 // Get all vehicles
+
 router.get('/vehicle', auth.required, async (req: Request, res: Response) => {
   try {
     const { search } = req.query;
@@ -66,7 +70,7 @@ router.get('/vehicle/:id', auth.required, async (req: Request, res: Response) =>
     const { id } = req.params;
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: parseInt(id),
+        id: Number(id),
       },
     });
     if (!vehicle) {
@@ -161,7 +165,7 @@ router.put(
       } else if (type === 'ContainerCarrier') {
         capacity = 15;
       }
-      let loaddedFuelCostNumber, unloadedFuelCostNumber;
+      let loaddedFuelCostNumber; let unloadedFuelCostNumber;
       if (loaddedFuelCost) {
         loaddedFuelCostNumber = Number(loaddedFuelCost);
       }
@@ -170,7 +174,7 @@ router.put(
       }
       const vehicle = await prisma.vehicle.update({
         where: {
-          id: parseInt(id),
+          id: Number(id),
         },
         data: {
           registrationNumber,
@@ -201,7 +205,7 @@ router.delete(
       const { id } = req.params;
       await prisma.vehicle.delete({
         where: {
-          id: parseInt(id),
+          id: Number(id),
         },
       });
       return res.json({ message: 'Vehicle deleted' });

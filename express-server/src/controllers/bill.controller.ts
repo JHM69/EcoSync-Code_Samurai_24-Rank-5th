@@ -9,6 +9,7 @@ const puppeteer = require('puppeteer');
 
 const router = Router();
 
+// eslint-disable-next-line no-unused-vars
 const createBill = async (id: string, userId: number) => {
   // get sts entry by id
   const VehicleEntry = await prisma.vehicleEntry.findUnique({

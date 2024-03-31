@@ -32,7 +32,7 @@ router.post('/users', auth.required, auth.isSystemAdmin, async (req: Request, re
 router.get('/users', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     
-    const users = await listUsers(req.query.search);
+    const users = await listUsers(req?.query?.search as string);
     res.status(200).json(users);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

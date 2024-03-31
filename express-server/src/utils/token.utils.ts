@@ -1,3 +1,5 @@
+/* eslint-disable import/newline-after-import */
+/* eslint-disable import/no-extraneous-dependencies */
 import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';

@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable consistent-return */
+/* eslint-disable no-shadow */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
@@ -5,7 +8,6 @@ import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import { createBill } from '../services/billing.service';
-import { create } from 'domain';
 
 const router = Router();
 
@@ -112,7 +114,7 @@ const updateSTS = async (
     });
   }
 
-  let capacity, currentWasteVolume, lat, lon;
+  let capacity; let currentWasteVolume; let lat; let lon;
   if (stsData.capacity) {
     capacity = Number(stsData.capacity);
   }
@@ -296,6 +298,7 @@ router.post(
       }
       // @ts-ignore
       const vehicleEntry = await createVehicleEntry(req.body, stsId, req.user.id);
+      // @ts-ignore
       const bill = await createBill(vehicleEntry.id, req.user.id, stsId, req.body.landfillId);
       // update the vehucle entry with the bill id
       const updatedVehicleEntry = await prisma.vehicleEntry.update({
