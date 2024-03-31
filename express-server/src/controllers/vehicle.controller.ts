@@ -22,6 +22,23 @@ router.get('/vehicle', auth.required, async (req: Request, res: Response) => {
   }
 });
 
+//get all free vehicles
+router.get('/freevehicle', auth.required, async (req: Request, res: Response) => {
+  try {
+    const {search} = req.query;
+    const whereQuery = search ? { registrationNumber: { contains: search.toString(), mode: 'insensitive' }, stsId:null } : { stsId:null };
+    const vehicles = await prisma.vehicle.findMany(
+      {
+        where: whereQuery,
+      },
+    );
+      
+    return res.json(vehicles);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 //get sts vehicle
 router.get('/stsvehicle/:id', auth.required, async (req: Request, res: Response) => {
   try {

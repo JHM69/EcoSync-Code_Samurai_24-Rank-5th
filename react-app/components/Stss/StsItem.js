@@ -15,10 +15,9 @@ const StsItem = ({
   managers,
   id,
   vehicles,
-  reload, setReload
+  reload,
+  setReload,
 }) => {
-
-
   return (
     <div className="smooth-effect my-2 flex cursor-pointer items-center rounded-md border px-3 py-4 shadow-sm hover:bg-green-200 hover:shadow lg:px-6">
       <img
@@ -36,11 +35,14 @@ const StsItem = ({
           capacity={capacity}
         />
       </div>
- 
 
-      <p className="flex-1 truncate px-2 font-medium">
-        {managers && managers[0]?.name}
-      </p>
+      <div className="flex-1 truncate px-2 font-medium">
+        {managers.map((manager, index) => (
+          <p key={index} className="truncate px-2 font-medium">
+            {manager.name}
+          </p>
+        ))}
+      </div>
 
       <STSInfo
         sts={{
@@ -71,17 +73,15 @@ const StsItem = ({
           managers,
           id,
           vehicles,
-        }
-      }
-      reload={reload}
-      setReload={setReload}
+        }}
+        reload={reload}
+        setReload={setReload}
       />
-     
     </div>
   )
 }
 
- function ProgressBar({ currentWasteVolume, capacity }) {
+function ProgressBar({ currentWasteVolume, capacity }) {
   // Calculate the percentage of waste volume relative to the capacity
   const percentage = (currentWasteVolume / capacity) * 100
 
@@ -91,7 +91,7 @@ const StsItem = ({
   }
 
   return (
-    <div className="relative h-6 w-[169px] overflow-hidden rounded-full border-[1px] border-green-500 bg-gray-200 text-gray-900 dark:bg-[#e3ffda]">
+    <div className="w-[169px] border-[1px] dark:bg-[#e3ffda] relative h-6 overflow-hidden rounded-full border-green-500 bg-gray-200 text-gray-900">
       {/* Filled part */}
       <div
         className="h-full rounded-l-full bg-green-500"
