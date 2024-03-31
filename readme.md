@@ -50,6 +50,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 This command will start the Express.js backend server on port 5000 and the React frontend application on port 3000. 
 
+``` docker system prune -a --volumes -f ``` to remove all the unused images and volumes.
 ## Configuration
 
 The application is configured through environment variables specified in the `docker-compose.yaml` file. Key configurations include:
