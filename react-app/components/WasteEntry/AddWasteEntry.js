@@ -14,6 +14,9 @@ const AddWasteEntry = ({ props, stsId }) => {
   const handleOpen = () => setIsOpen(true)
   const onFormSubmit = async (data) => {
     try {
+      toast('Adding the entry!', {
+        icon: '👏',
+      });
       console.log(data)
       const token = localStorage.getItem('token')
       await axios.post(getBaseUrl() + `/sts/${stsId}/add`, data, {
@@ -23,6 +26,7 @@ const AddWasteEntry = ({ props, stsId }) => {
       }).then(response => {
         console.log(response)
         toast.success('Waste Entry added successfully')
+        handleClose()
       }).catch(error =>
         console.log(error)
       )

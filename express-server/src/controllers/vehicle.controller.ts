@@ -9,7 +9,27 @@ const router = Router();
 router.get('/vehicle', auth.required, async (req: Request, res: Response) => {
   try {
     const {search} = req.query;
-    const whereQuery = search ? { registrationNumber: { contains: search.toString() } } : {};
+    const whereQuery = search ? { registrationNumber: { contains: search.toString(), mode: 'insensitive' } } : {};
+    const vehicles = await prisma.vehicle.findMany(
+      {
+        where: whereQuery,
+      },
+    );
+      
+    return res.json(vehicles);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+//get sts vehicle
+router.get('/stsvehicle/:id', auth.required, async (req: Request, res: Response) => {
+  try {
+    const {search} = req.query;
+    const { id } = req.params;
+    const whereQuery = search 
+      ? { registrationNumber: { contains: search.toString(), mode: 'insensitive' }, stsId: Number(id) } 
+      : { stsId: Number(id) };
     const vehicles = await prisma.vehicle.findMany(
       {
         where: whereQuery,

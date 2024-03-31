@@ -182,20 +182,10 @@ router.get('/sts/:id', auth.required, async (req: Request, res: Response) => {
       where: {
         id: Number(req.params.id),
       },
-      include: {
-        managers: {
-          select: {
-          id: true,
-          name: true,
-          }
-        },
-        vehicles: {
-          select: {
-          id: true,
-          registrationNumber: true,
-          }
-        }
-        },
+     include: {
+      managers:true,
+      vehicles:true,
+      },
     });
     if (!sts) {
       res.status(404).json({ message: 'STS not found' });
@@ -380,6 +370,7 @@ router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) 
         sts: true,
         vehicle: true,
         landfill: true,
+        bill: true,
       },
     });
     res.status(200).json(entries);
@@ -444,8 +435,8 @@ router.post('/sts/:id/add', auth.required, auth.isSTSManager, async (req: Reques
 
     const wasteEntry = await prisma.wasteEntry.create({
       data: {
-        volumeOfWaste: Number(req.body.volumeOfWaste),
-        timeOfArrival: new Date(req.body.timeOfArrival),
+        volumeOfWaste: Number(req.body.weight),
+        timeOfArrival: new Date(),
         sts: {
           connect: {
             id: stsId,

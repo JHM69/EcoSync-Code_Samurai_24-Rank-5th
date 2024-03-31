@@ -6,7 +6,7 @@ import Input from '../common/Input'
 import Select from '../common/Select'
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
-const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
+const StsEntryForm = ({ type, defaultValues, onFormSubmit,handleClose,landfills,stsId, ...props }) => {
   const {
     register,
     handleSubmit,
@@ -17,7 +17,8 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
 
   const [search2, setSearch2] = useState('')
   const [vehicles, setVehicles] = useState([])
-  const [landfills, setLandfills] = useState([])
+  // const [landfills, setLandfills] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (defaultValues) {
@@ -38,29 +39,28 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
         )
       }
     }
-  }, [defaultValues, setValue, vehicles])
-
-  useEffect(async() => {
-    try {
-      // make a axios call to get the landfill
-    const token = localStorage.getItem('token')
-    let landfills = await axios.get(`${getBaseUrl()}/landfills`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    setLandfills(landfills.data)
-    } catch (error) {
-      console.log(error)
-    }
-
   }, [])
+
+  // useEffect(async() => {
+  //   try {
+  //     // make a axios call to get the landfill
+  //   const token = localStorage.getItem('token')
+  //   let landfills = await axios.get(`${getBaseUrl()}/landfills`, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     }
+  //   })
+  //   setLandfills(landfills.data)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }, [])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(`${getBaseUrl()}/vehicle?search=${search2}`, {
+        .get(`${getBaseUrl()}/stsvehicle/${stsId}?search=${search2}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -73,10 +73,12 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
 
   const onSubmit = handleSubmit(async (data) => {
     console.log(data)
+    setLoading(true)
     // convert timeOfArrival to ISO string
     data.timeOfArrival = new Date(data.timeOfArrival).toISOString()
     data.timeOfDeparture = new Date(data.timeOfDeparture).toISOString()
     await onFormSubmit(data)
+    setLoading(false)
     reset()
   })
 
@@ -137,6 +139,7 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
             }
           })}
         >
+
           <option value="">Select a Landfill</option>
           {landfills.map((landfill) => (
             <option key={landfill.id} value={landfill.id.toString()}>
@@ -190,8 +193,9 @@ const StsEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
 
       </div>
 
-      <Button type="button" onClick={onSubmit} className="w-full">
-        {type ? `${type} STS` : 'Submit'}
+      <Button type="button" onClick={onSubmit} className="w-full" disable={loading}>
+        {/* loading and type condition */}
+        {loading ? "Adding" : 'Add Entry'}
       </Button>
     </div>
   )

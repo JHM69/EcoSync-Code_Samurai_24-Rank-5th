@@ -61,41 +61,67 @@ const STSEntryInfo = ({ vehicleEntry, ...props }) => {
 
                   <div className="mt-6 flex flex-col md:flex-row">
                     <div className="w-full">
-
-                    <Section title={'STS Information'}>
-                        <section className="mb-3 rounded-md border px-3 py-4"> 
-                              <h3 className="text-xl font-semibold text-gray-500">
-                                 Ward No: {vehicleEntry?.sts?.wardNumber}
-                              </h3>
-                              <p className="text-gray-600"> {vehicleEntry?.sts?.address}</p>
-                       </section>
+                      <Section title={'STS Information'}>
+                        <section className="mb-3 rounded-md border px-3 py-4">
+                          <h3 className="text-xl font-semibold text-gray-500">
+                            Ward No: {vehicleEntry?.sts?.wardNumber}
+                          </h3>
+                          <p className="text-gray-600">
+                            {' '}
+                            {vehicleEntry?.sts?.address}
+                          </p>
+                        </section>
                       </Section>
 
                       <Section title={'Vehicle Information'}>
-                        <section className="mb-3 rounded-md border px-3 py-4"> 
-                              <h3 className="text-xl font-semibold text-gray-500">
-                                Reg No: {vehicleEntry?.vehicle?.registrationNumber}
-                              </h3>
-                              <p className="text-gray-600"> Capacity No: {vehicleEntry?.vehicle?.capacity}</p>
-                              <p className="text-gray-600"> Truck Type: {vehicleEntry?.vehicle?.type}</p>
-                       </section>
+                        <section className="mb-3 rounded-md border px-3 py-4">
+                          <h3 className="text-xl font-semibold text-gray-500">
+                            Reg No: {vehicleEntry?.vehicle?.registrationNumber}
+                          </h3>
+                          <p className="text-gray-600">
+                            {' '}
+                            Capacity No: {vehicleEntry?.vehicle?.capacity}
+                          </p>
+                          <p className="text-gray-600">
+                            {' '}
+                            Truck Type: {vehicleEntry?.vehicle?.type}
+                          </p>
+                        </section>
                       </Section>
 
                       <Section title={'Waste Information'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Waste Volume Carried : {vehicleEntry?.volumeOfWaste} Ton
+                          Waste Volume Carried : {vehicleEntry?.volumeOfWaste}{' '}
+                          Ton
                         </h3>
                       </Section>
 
                       <Section title={'Time'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Arrival Time : { new Date(vehicleEntry?.timeOfArrival).toLocaleString() }
+                          Arrival Time :{' '}
+                          {new Date(
+                            vehicleEntry?.timeOfArrival
+                          ).toLocaleString()}
                         </h3>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Departure Time :  { new Date(vehicleEntry?.timeOfDeparture).toLocaleString() }
+                          Departure Time :{' '}
+                          {new Date(
+                            vehicleEntry?.timeOfDeparture
+                          ).toLocaleString()}
                         </h3>
                       </Section>
 
+                      <Section title={'Trip info'}>
+                        <h3 className="font-bond text-xl text-gray-500">
+                          Destination : {vehicleEntry.landfill?.name}
+                        </h3>
+                        <h3 className="font-bond text-xl text-gray-500">
+                          Distance : {vehicleEntry.bill?.distance} KM
+                        </h3>
+                        <h3 className="font-bond text-xl text-gray-500">
+                          Duration : {vehicleEntry.bill?.duration} Min
+                        </h3>
+                      </Section>
                     </div>
                   </div>
                 </Dialog.Panel>

@@ -11,7 +11,9 @@ const StsEntryItem = ({
   timeOfDeparture,
   vehicle,
   stsId,
-  sts
+  sts,
+  landfill,
+  bill,
 }) => {
   return (
     <div className="smooth-effect my-2 flex cursor-pointer items-center rounded-md border px-3 py-4 shadow-sm hover:bg-green-200 hover:shadow lg:px-6">
@@ -22,6 +24,10 @@ const StsEntryItem = ({
       </div>
       <div className="flex-1">
         <h3 className="text-xl text-gray-800">{volumeOfWaste} Ton</h3>
+      </div>
+
+      <div className="flex-1">
+        <h3 className="text-md text-gray-800">Landfill: {landfill?.name}</h3>
       </div>
 
       <div className="flex-1">
@@ -45,10 +51,12 @@ const StsEntryItem = ({
           timeOfDeparture,
           vehicle,
           sts,
+          landfill,
+          bill,
         }}
       />
 
-      <UpdateStsEntry
+      {/* <UpdateStsEntry
         vehicleEntry={{
           id,
           vehicleId,
@@ -56,9 +64,9 @@ const StsEntryItem = ({
           timeOfArrival,
           timeOfDeparture,
           vehicle,
-          stsId
+          stsId,
         }}
-      />
+      /> */}
     </div>
   )
 }
