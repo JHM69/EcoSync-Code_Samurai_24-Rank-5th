@@ -133,6 +133,7 @@ model Bill {
   vehicleEntry    VehicleEntry @relation(fields: [vehicleEntryId], references: [id])
   amount          Float
   paid            Boolean @default(false)
+  verified        Boolean @default(false)
   createdAt       DateTime @default(now())
   distance        Float
   duration        Float

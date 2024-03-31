@@ -269,8 +269,6 @@ router.post(
       const vehicleEntry = await prisma.vehicleEntry.findFirst({
         where: {
           vehicleId: Number(req.body.vehicleId),
-          landfillId: landfillId,
-          volumeOfWaste: Number(req.body.volumeOfWaste),
         },
         orderBy: {
           id: 'desc',
@@ -280,15 +278,26 @@ router.post(
         },
       });
       // now update the landfillENTRY with the billId
-      if (vehicleEntry?.bill) {
-        landfillEntry = await prisma.truckDumpEntry.update({
-          where: {
-            id: landfillEntry.id,
-          },
-          data: {
-            billId: vehicleEntry.bill.id,
-          },
-        });
+      if(vehicleEntry && vehicleEntry.landfillId === landfillId && vehicleEntry.volumeOfWaste === Number(req.body.volumeOfWaste)){
+        if (vehicleEntry?.bill && vehicleEntry.bill.verified === false) {
+          landfillEntry = await prisma.truckDumpEntry.update({
+            where: {
+              id: landfillEntry.id,
+            },
+            data: {
+              billId: vehicleEntry.bill.id,
+            },
+          });
+          // update the bill status to paid
+          await prisma.bill.update({
+            where: {
+              id: vehicleEntry.bill.id,
+            },
+            data: {
+              verified: true,
+            },
+          });
+        }
       }
       res.status(201).json(landfillEntry);
     } catch (error: any) {
