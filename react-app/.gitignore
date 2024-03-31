@@ -44,8 +44,5 @@ Thumbs.db
 .turbo
 node_modules
 
-**/.xatarc
-.env
-.env.*
 # Local Netlify folder
 .netlify

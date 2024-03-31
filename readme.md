@@ -53,9 +53,27 @@ This command will start the Express.js backend server on port 5000 and the React
 ``` docker system prune -a --volumes -f ``` to remove all the unused images and volumes.
 ## Configuration
 
+Example Authentication Configuration
+```bash
+TYPE = "System Admin"
+EMAIL = "jahangirhossainm69@gmail.com"
+PASSWORD = "12345678"
+```
+
+```bash
+TYPE = "STS Manager"
+EMAIL = "jahangirhmarup@gmail.com"
+PASSWORD = "12345678"
+```
+
+```bash
+TYPE = "Landfill Manager"
+EMAIL = "b190305009@cse.jnu.ac.bd"
+PASSWORD = "121212"
+```
+
 The application is configured through environment variables specified in the `docker-compose.yaml` file. Key configurations include:
 
- 
 - `JWT_SECRET`: Secret key for JWT authentication.
 - `DATABASE_URL`: Connection string for the PostgreSQL database.
 - `NODEMAILER_CONFIG`: Configuration for Nodemailer to enable email sending functionalities.
