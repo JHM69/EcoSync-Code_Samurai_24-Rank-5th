@@ -99,7 +99,7 @@ router.get('/bill/:id', auth.required, async (req: Request, res: Response) => {
   }
 });
 
-router.get('/bill/:id/download', auth.required, async (req: Request, res: Response) => {
+router.get('/bill/:id/download', async (req: Request, res: Response) => {
   try {
     // @ts-ignore
     const bill = await prisma.bill.findUnique({
