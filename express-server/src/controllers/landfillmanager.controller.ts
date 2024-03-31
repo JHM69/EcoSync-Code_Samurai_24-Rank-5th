@@ -124,7 +124,7 @@ const updateLandfill = async (
       },
     });
   }
-  
+
   return await prisma.landfill.update({
     where: {
       id,
@@ -149,7 +149,7 @@ const updateLandfill = async (
 };
 
 // get all Landfills
-router.get('/landfills', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
+router.get('/landfills', auth.required, async (req: Request, res: Response) => {
   try {
     const landfills = await prisma.landfill.findMany({
       include: {
@@ -167,31 +167,35 @@ router.get('/landfills', auth.required, auth.isSystemAdmin, async (req: Request,
   }
 });
 
-
-router.get('/mylandfills', auth.required, auth.isLandfillManager, async (req: Request, res: Response) => {
-  try {
-    const landfills = await prisma.landfill.findMany({
-      where: {
-        managers: {
-          some: {
-            id: req.user.id,
+router.get(
+  '/mylandfills',
+  auth.required,
+  auth.isLandfillManager,
+  async (req: Request, res: Response) => {
+    try {
+      const landfills = await prisma.landfill.findMany({
+        where: {
+          managers: {
+            some: {
+              id: req.user.id,
+            },
           },
         },
-      },
-      include: {
-        managers: {
-          select: {
-            id: true,
-            name: true,
+        include: {
+          managers: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
-    res.status(200).json(landfills);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
-  }
-});
+      });
+      res.status(200).json(landfills);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  },
+);
 
 // get Landfill by id
 router.get('/landfills/:id', auth.required, async (req: Request, res: Response) => {
@@ -260,7 +264,32 @@ router.post(
           .json({ message: 'You are not authorized to add entry to this landfill' });
       }
       // @ts-ignore
-      const landfillEntry = await createLandfillEntry(req.body, landfillId, req.user.id);
+      let landfillEntry = await createLandfillEntry(req.body, landfillId, req.user.id);
+      // find the latest VehicleEntry of the vehicle
+      const vehicleEntry = await prisma.vehicleEntry.findFirst({
+        where: {
+          vehicleId: Number(req.body.vehicleId),
+          landfillId: landfillId,
+          volumeOfWaste: Number(req.body.volumeOfWaste),
+        },
+        orderBy: {
+          id: 'desc',
+        },
+        include: {
+          bill: true,
+        },
+      });
+      // now update the landfillENTRY with the billId
+      if (vehicleEntry?.bill) {
+        landfillEntry = await prisma.truckDumpEntry.update({
+          where: {
+            id: landfillEntry.id,
+          },
+          data: {
+            billId: vehicleEntry.bill.id,
+          },
+        });
+      }
       res.status(201).json(landfillEntry);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -278,8 +307,8 @@ const createLandfillEntry = async (
   landfillId: number,
   userID: number,
 ) => {
-   // get the vehicle
-   const vehicle = await prisma.vehicle.findUnique({
+  // get the vehicle
+  const vehicle = await prisma.vehicle.findUnique({
     where: {
       id: Number(landfillEntryData.vehicleId),
     },

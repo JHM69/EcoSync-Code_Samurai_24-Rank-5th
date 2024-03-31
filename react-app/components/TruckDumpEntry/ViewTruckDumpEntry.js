@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 import { Close } from '../common/icons/Close'
 import { FaEye } from 'react-icons/fa'
@@ -15,6 +15,10 @@ const STSEntryInfo = ({ truckDumpEntry, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
+
+  useEffect(() => {
+    console.log('truckdumps..', truckDumpEntry)
+  }, [])
 
   return (
     <>
@@ -60,32 +64,58 @@ const STSEntryInfo = ({ truckDumpEntry, ...props }) => {
 
                   <div className="mt-6 flex flex-col md:flex-row">
                     <div className="w-full">
-
                       <Section title={'Vehicle Information'}>
                         <section className="mb-3 rounded-md border px-3 py-4">
-                              <h3 className="text-xl font-semibold text-gray-500">
-                                Reg No: {truckDumpEntry?.vehicle?.registrationNumber}
-                              </h3>
-                              <p className="text-gray-600"> Capacity No: {truckDumpEntry?.vehicle?.capacity}</p>
-                              <p className="text-gray-600"> Truck Type: {truckDumpEntry?.vehicle?.type}</p>
-                       </section>
+                          <h3 className="text-xl font-semibold text-gray-500">
+                            Reg No:{' '}
+                            {truckDumpEntry?.vehicle?.registrationNumber}
+                          </h3>
+                          <p className="text-gray-600">
+                            {' '}
+                            Capacity No: {truckDumpEntry?.vehicle?.capacity}
+                          </p>
+                          <p className="text-gray-600">
+                            {' '}
+                            Truck Type: {truckDumpEntry?.vehicle?.type}
+                          </p>
+                        </section>
                       </Section>
 
                       <Section title={'Waste Information'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Waste Volume Carried : {truckDumpEntry?.volumeOfWaste} Ton
+                          Waste Volume Carried : {truckDumpEntry?.volumeOfWaste}{' '}
+                          Ton
                         </h3>
                       </Section>
 
                       <Section title={'Time'}>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Arrival Time : { new Date(truckDumpEntry?.timeOfArrival).toLocaleString() }
+                          Arrival Time :{' '}
+                          {new Date(
+                            truckDumpEntry?.timeOfArrival
+                          ).toLocaleString()}
                         </h3>
                         <h3 className="font-bond text-xl text-gray-500">
-                          Departure Time :  { new Date(truckDumpEntry?.timeOfDeparture).toLocaleString() }
+                          Departure Time :{' '}
+                          {new Date(
+                            truckDumpEntry?.timeOfDeparture
+                          ).toLocaleString()}
                         </h3>
                       </Section>
 
+                      <Section title={'Bill'}>
+                        {/* add a download button if billId!=0 else show bill not available */}
+                        {truckDumpEntry.billId ? (
+                          <a
+                            href={`http://localhost:5000/bill/${truckDumpEntry.billId}/download`}
+                            className="rounded bg-green-500 p-2 text-white"
+                          >
+                            Download Bill
+                          </a>
+                        ) : (
+                          <p className="text-red-500">Bill not available</p>
+                        )}
+                      </Section>
                     </div>
                   </div>
                 </Dialog.Panel>
