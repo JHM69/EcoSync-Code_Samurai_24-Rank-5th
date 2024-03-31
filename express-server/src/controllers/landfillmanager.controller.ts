@@ -25,7 +25,6 @@ const createLandfill = async (landfillData: {
   capacity: string;
   startTime: string;
   endTime: string;
-  gpsCoords: string;
   lat: string;
   lon: string;
   address?: string;
@@ -39,7 +38,7 @@ const createLandfill = async (landfillData: {
       currentWasteVolume: 0,
       startTime: landfillData.startTime,
       endTime: landfillData.endTime,
-      gpsCoords: landfillData.gpsCoords,
+      gpsCoords: `${landfillData.lat},${landfillData.lon}`,
       lat: Number(landfillData.lat),
       lon: Number(landfillData.lon),
       address: landfillData.address,
@@ -52,6 +51,35 @@ const createLandfill = async (landfillData: {
     },
   });
 };
+
+// get all landfillmanagers
+router.get('/landfillmanagers', auth.required, async (req: Request, res: Response) => {
+  try {
+    const search = req.query.search ? String(req.query.search) : '';
+    const landfillManagers = await prisma.user.findMany({
+      where: {
+        roleId: 3,
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
+    res.status(200).json(landfillManagers);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 // Update Landfill by id
 router.put(
@@ -75,7 +103,6 @@ const updateLandfill = async (
     currentWasteVolume?: string;
     startTime?: string;
     endTime?: string;
-    gpsCoords?: string;
     lat?: string;
     lon?: string;
     address?: string;
@@ -96,7 +123,7 @@ const updateLandfill = async (
       },
     });
   }
-
+  
   return await prisma.landfill.update({
     where: {
       id,
@@ -104,10 +131,9 @@ const updateLandfill = async (
     data: {
       name: landfillData.name,
       capacity: Number(landfillData.capacity),
-      currentWasteVolume: Number(landfillData.currentWasteVolume),
       startTime: landfillData.startTime,
       endTime: landfillData.endTime,
-      gpsCoords: landfillData.gpsCoords,
+      gpsCoords: `${landfillData.lat},${landfillData.lon}`,
       lat: Number(landfillData.lat),
       lon: Number(landfillData.lon),
       address: landfillData.address,

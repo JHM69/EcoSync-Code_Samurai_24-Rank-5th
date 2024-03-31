@@ -99,7 +99,7 @@ const VehicleInfo = ({ vehicle, ...props }) => {
                           <div className="flex items-center space-x-4">
                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
                               <img
-                                src={vehicle.icon}
+                                src={vehicle.icon || '/truck.png'}
                                 alt={vehicle.registrationNumber}
                                 width={64}
                                 height={64}

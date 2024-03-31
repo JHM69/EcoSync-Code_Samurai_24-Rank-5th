@@ -98,6 +98,16 @@ const LandfillInfo = ({ landfill, ...props }) => {
                          
                       </Section>
 
+                      <Section title={'Working Time'}>
+                        <h3 className="font-bond text-xl text-gray-500">
+                          Starting Time : {landfill?.startTime}
+                        </h3>
+                        
+                        <h3 className="font-bond text-xl text-gray-500">
+                          Ending Time : {landfill?.endTime}
+                        </h3>
+                      </Section>
+
                       <Section title={'Landfill Managers'}>
                         {landfill.managers.map((manager) => (
                           <div

@@ -6,16 +6,18 @@ import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
 import LandfillForm from '../LandfillForm'
 import { BiPencil } from 'react-icons/bi'
+import toast from 'react-hot-toast'
 const UpdateLandfill = ({ landfill, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
 
   const onFormSubmit = async (data) => {
-    const token = localStorage.getItem('token')
+    try {
+      const token = localStorage.getItem('token')
     console.log(landfill)
     await axios
-      .put(getBaseUrl() + `/landfill/${landfill.id}`, data, {
+      .put(getBaseUrl() + `/landfills/${landfill.id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,12 +25,17 @@ const UpdateLandfill = ({ landfill, ...props }) => {
       .then((res) => {
         console.log(res)
         if (res.status === 200 || res.status === 201) {
-          alert('Successfully Added.')
+          toast.success('Successfully Updated.')
+          // alert('Successfully Added.')
+          handleClose()
         } else {
           alert(res.status)
           console.log(res)
         }
       })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

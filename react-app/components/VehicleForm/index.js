@@ -138,7 +138,7 @@ const VehicleForm = ({ type, defaultValues, onFormSubmit,handleClose,reload,setR
         />
 
       <Button type="button" onClick={onSubmit} className="w-full" disable={loading}>
-        {type ? `${type} Vehicle` : 'Submit'}
+        {loading?(type ? `Loading...` : 'Submit') :(type ? `${type} Vehicle` : 'Submit')}
       </Button>
       {type!="Add" && (<Button type="button" onClick={onSubmit2} className="w-full bg-red-500">
         Delete Vehicle

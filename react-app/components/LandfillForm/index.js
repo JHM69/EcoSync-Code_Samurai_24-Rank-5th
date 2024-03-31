@@ -20,11 +20,14 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
  
   useEffect(() => {
     if (defaultValues) {
+      console.log("default ",defaultValues)
       setValue('name', defaultValues.name)
       setValue('capacity', defaultValues.capacity)
       setValue('lat', defaultValues.lat)
       setValue('lon', defaultValues.lon)
       setValue('address', defaultValues.address) 
+      setValue('startTime', defaultValues.startTime) 
+      setValue('endTime', defaultValues.endTime) 
       
       if (landfillManagers) {
         setValue(
@@ -39,7 +42,7 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(`${getBaseUrl()}/users?search=${search}`, {
+        .get(`${getBaseUrl()}/landfillmanagers?search=${search}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -61,7 +64,7 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
         <Input
           name="name"
           label="Landfill Name"
-          placeholder="Landfill Number..."
+          placeholder="Landfill Name..."
           type="text"
           error={errors.name ? errors.name.message : false}
           register={register('name', {
@@ -83,6 +86,33 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
             required: {
               value: true,
               message: 'Capacity is required'
+            }
+          })}
+        />
+
+          <Input
+          name="startTime"
+          label="startTime"
+          placeholder="starting time..."
+          type="text" // Or 'number' if appropriate
+          error={errors.startTime ? errors.startTime.message : false}
+          register={register('startTime', {
+            required: {
+              value: true,
+              message: 'startTime is required'
+            }
+          })}
+        />
+        <Input
+          name="endTime"
+          label="endTime"
+          placeholder="ending time..."
+          type="text" // Or 'number' if appropriate
+          error={errors.endTime ? errors.endTime.message : false}
+          register={register('endTime', {
+            required: {
+              value: true,
+              message: 'endTime is required'
             }
           })}
         />
@@ -131,7 +161,7 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
               className="w-4/5 rounded-md border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-gray-200"
               name="search"
               label="Search Manager..."
-              placeholder="Search Manager by Name"
+              placeholder="Search Manager by Name or Email..."
               type="textarea"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -150,7 +180,7 @@ const LandfillForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           <MultipleSelect
             name="managerIds"
             multiple={true}
-            label="Select Vehicles..."
+            label="Select manager..."
             register={register('managerIds')}
           >
             {landfillManagers?.map((user) => (
