@@ -23,6 +23,9 @@ function Vehicles() {
           },
         })
         .then((res) => {
+          if(res.data.length > 0) {
+            res.data.sort((a, b) => a?.id - b?.id)
+          }
           console.log(res.data)
           setVehicles(res.data)
           setLoading(false)

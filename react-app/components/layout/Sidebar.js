@@ -71,6 +71,9 @@ const Sidebar = () => {
             },
           })
           .then((response) => {
+            if(response.data.length > 0) {
+              response.data.sort((a, b) => a?.id - b?.id)
+            }
             setManagedSts(response.data)
             setLoading(false)
             console.log(response)
@@ -92,6 +95,9 @@ const Sidebar = () => {
             },
           })
           .then((response) => {
+            if(response.data.length > 0) {
+              response.data.sort((a, b) => a?.id - b?.id)
+            }
             setManagedLandfills(response.data)
             setLoading(false)
             console.log(response)

@@ -24,6 +24,9 @@ function Stss() {
           },
         })
         .then((res) => {
+          if(res.data.length > 0) {
+            res.data.sort((a, b) => a?.id - b?.id)
+          }
           console.log(res.data)
           setSts(res.data)
           setLoading(false)
