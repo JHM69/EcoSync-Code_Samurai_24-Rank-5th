@@ -6,6 +6,24 @@ import axios from 'axios'
 import StsVehiclesLandfillsMapView from './DashboardMapView'
 import BillItems from '../Bills/BillItems'
 import Datepicker from 'react-tailwindcss-datepicker'
+
+const getQueryString = (params) => {
+  const { startDate, endDate } = params
+  let queryString = '/dashboard?'
+
+  const queryParams = []
+
+  if (startDate) {
+    queryParams.push('startDate=' + new Date(startDate).toISOString())
+  }
+  if (endDate) {
+    queryParams.push('endDate=' + new Date(endDate).toISOString())
+  }
+
+  queryString += queryParams.join('&')
+  return queryString
+}
+
 function Dashboard() {
   const [data, setData] = useState([])
   const [billData, setBillData] = useState({})
@@ -14,9 +32,12 @@ function Dashboard() {
   const [error, setError] = useState(null)
   const [errorBills, setErrorBills] = useState(null)
 
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+
   const [value, setValue] = useState({
     startDate: new Date(),
-    endDate: new Date().setMonth(11),
+    endDate: yesterday,
   })
 
   const handleValueChange = (newValue) => {
@@ -26,9 +47,12 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
+    const queryString = getQueryString(value)
+    setLoading(true)
+    console.log('queryString:', queryString)
     if (token) {
       axios
-        .get(getBaseUrl() + '/dashboard', {
+        .get(getBaseUrl() + queryString, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -40,10 +64,11 @@ function Dashboard() {
         })
         .catch((err) => {
           setError(err)
+          console.log(err)
           setLoading(false)
         })
     }
-  }, [])
+  }, [value])
 
   const colors = [
     { b: 'bg-blue-100', c: 'text-blue-700' },
@@ -60,8 +85,12 @@ function Dashboard() {
   return (
     <div className="flex flex-col gap-3">
       {loading ? (
-        <div className="w-full">
-          <div className="h-[40px] w-full animate-pulse rounded-md bg-gray-300"></div>
+        <div className="m-2 flex w-full flex-row justify-between">
+          <div className="mx-3 h-[80px] w-full animate-pulse rounded-2xl bg-gray-300"></div>
+          <div className="mx-3 h-[80px] w-full animate-pulse rounded-2xl bg-gray-300"></div>
+          <div className="mx-3 h-[80px] w-full animate-pulse rounded-2xl bg-gray-300"></div>
+          <div className="mx-3 h-[80px] w-full animate-pulse rounded-2xl bg-gray-300"></div>
+          <div className="mx-3 h-[80px] w-full animate-pulse rounded-2xl bg-gray-300"></div>
         </div>
       ) : error ? (
         <div>Error: {error.message}</div>
@@ -95,13 +124,22 @@ function Dashboard() {
 
       <div className="flex flex-col">
         {loading ? (
-          <div className="h-full w-full">
-            <div className="h-[200px] w-full animate-pulse rounded-md bg-gray-300"></div>
+          <div className="h-full w-full gap-2">
+            <div className="h-[40px] w-full mb-3  animate-pulse rounded bg-gray-300"></div>
+            <div className=" h-[450px] w-full animate-pulse bg-gray-300"></div>
           </div>
         ) : error ? (
           <div>Error: {error.message}</div>
         ) : (
           <div className="w-full">
+            <div className="mb-3 w-full rounded   border-[1px] border-gray-300">
+              <Datepicker
+                primaryColor={'emerald'}
+                value={value}
+                onChange={handleValueChange}
+                showShortcuts={true}
+              />
+            </div>
             <StsVehiclesLandfillsMapView data={data} />
           </div>
         )}

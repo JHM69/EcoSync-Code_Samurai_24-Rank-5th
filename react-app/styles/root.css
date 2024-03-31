@@ -170,3 +170,9 @@ textarea {
   align-items: center;
   justify-content: center;
 }
+
+
+select {
+  color: green; /* Changes the text color */
+  background-color: lightgreen; /* Optional: Changes the background color */
+}

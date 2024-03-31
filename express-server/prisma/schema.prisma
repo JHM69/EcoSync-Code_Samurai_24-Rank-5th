@@ -120,6 +120,7 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
   bill            Bill?
+  createdAt       DateTime @default(now())
   @@index([stsId], name: "idx_vehicle_entry_sts")
   @@index([vehicleId], name: "idx_vehicle_entry_vehicle")
   @@index([userId], name: "idx_vehicle_entry_user")
@@ -148,6 +149,7 @@ model WasteEntry {  //StsManager can entry multiple vehicles enties
   timeOfArrival   DateTime 
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
   @@index([stsId], name: "idx_waste_entry_sts")
   @@index([userId], name: "idx_waste_entry_user")
   @@index([timeOfArrival], name: "idx_waste_entry_time_of_arrival")
@@ -165,6 +167,7 @@ model TruckDumpEntry {
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
   billId         Int       @default(0)
+  createdAt       DateTime @default(now())
   @@index([vehicleId], name: "idx_truck_dump_entry_vehicle")
   @@index([landfillId], name: "idx_truck_dump_entry_landfill")
   @@index([userId], name: "idx_truck_dump_entry_user")

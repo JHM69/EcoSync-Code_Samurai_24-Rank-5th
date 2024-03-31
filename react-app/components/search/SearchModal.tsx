@@ -38,7 +38,7 @@ const SearchModal = ({ closeModal }: any) => {
         </div>
 
         {/* Modal panel */}
-        <div className="animate__animated  animate__fadeInDown inline-block  min-h-80 bg-[#DFDFDF] border-[1px] rounded-2xl border-gray-400 shadow-2xl text-left overflow-hidden outline-1  transform transition-all  sm:my-8 align-middle md:align-bottom  lg:w-[35rem]">
+        <div className="animate__animated  animate__fadeInDown inline-block  min-h-80 bg-[#DFDFDF] border-[1px] rounded-2xl border-gray-100 shadow-2xl text-left overflow-hidden outline-1  transform transition-all  sm:my-8 align-middle md:align-bottom  lg:w-[35rem]">
           <div className="sm:p-6 sm:pb-4 px-2 md:pt-2 md:pb-4 flex flex-col gap-y-3">
             <div className="relative">
               <div className="text-center sm:mt-0 sm:ml-4 sm:text-left">

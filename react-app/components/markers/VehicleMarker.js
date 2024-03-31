@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { FaTruck } from 'react-icons/fa'
+import { GiNuclearWaste } from 'react-icons/gi'
 
 const VehicleMarker = ({ vehicle }) => {
   const baseSize = 28
@@ -19,9 +21,9 @@ const VehicleMarker = ({ vehicle }) => {
 
   const infoBoxStyle = {
     position: 'absolute',
-    width: '200px',
+    width: '260px',
     zIndex: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     backdropFilter: 'blur(2px)',
     padding: '10px',
     borderRadius: '10px',
@@ -43,7 +45,25 @@ const VehicleMarker = ({ vehicle }) => {
       <img className='h-12 w-12' src="/truck.png" alt="marker" />
 
       <div className='flex flex-col gap-1 p-3' style={infoBoxStyle}>
-        <p className='text-bold text-xl text-green-700'>{vehicle.registrationNumber}</p>
+        
+        <p className="text-2xl font-bold text-green-700">
+          Reg No :{vehicle.registrationNumber}
+        </p>
+        {vehicle.vehicleEntries && (
+          <>
+            <div className="text-[14px] flex flex-row font-semibold">
+              <FaTruck /> Trip Completed: {vehicle.vehicleEntries.length}
+            </div>
+            <div className="text-[14px] flex flex-row font-semibold">
+              <GiNuclearWaste /> Waste Transported:
+              {vehicle.vehicleEntries.reduce(
+                (acc, curr) => acc + curr.volumeOfWaste,
+                0
+              )}{' '}
+              Ton
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

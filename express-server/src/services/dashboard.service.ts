@@ -1,8 +1,25 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable import/prefer-default-export */
 
 import prisma from '../../prisma/prisma-client';
 
-export const dashboardData = async () => {
+export const dashboardData = async (
+  startDate: string,
+  endDate: string,
+) => {
+
+  const start = startDate ? new Date(startDate) : new Date();
+  start.setHours(0, 0, 0, 0); // This ensures the start of the day is used if startDate is provided.
+
+  const end = endDate ? new Date(endDate) : new Date(); // Uses the current date if endDate is not provided.
+
+  const whereCondition = {
+    createdAt: {
+      gte: startDate ? start : undefined,
+      lte: endDate ? end : undefined,
+    }, 
+  };
+
   const stss = await prisma.sTS.findMany({
     select: {
       id: true,
@@ -17,13 +34,12 @@ export const dashboardData = async () => {
           id: true,
           name: true,
         },
-        take: 1,
+        take: 2,
       },
       vehicleEntries: {
+        where: whereCondition,
         select: {
-          id: true,
-          timeOfArrival: true,
-          timeOfDeparture: true,
+          id: true, 
           volumeOfWaste: true,
         },
       },
@@ -31,15 +47,23 @@ export const dashboardData = async () => {
     take: 54,
   });
 
-  const maximumWasteVolume = stss.reduce((acc, st) => Math.max(acc, st.currentWasteVolume), 0);
-  const minimumWasteVolume = stss.reduce(
-    (acc, st) => Math.min(acc, st.currentWasteVolume),
-    Infinity,
-  );
+  const initialValues = {
+    maximumWasteVolume: 0,
+    minimumWasteVolume: Infinity,
+    totalWastesInAllSts: 0,
+  };
 
-  const totalWastesInAllSts = stss.reduce((acc, st) => acc + st.currentWasteVolume, 0);
+  const result = stss.reduce((acc, st) => {
+    return {
+      maximumWasteVolume: Math.max(acc.maximumWasteVolume, st.currentWasteVolume),
+      minimumWasteVolume: Math.min(acc.minimumWasteVolume, st.currentWasteVolume),
+      totalWastesInAllSts: acc.totalWastesInAllSts + st.currentWasteVolume,
+    };
+  }, initialValues);
 
+  const { maximumWasteVolume, minimumWasteVolume, totalWastesInAllSts } = result;
   const vehicles = await prisma.vehicle.findMany({
+   
     select: {
       id: true,
       type: true,
@@ -50,10 +74,9 @@ export const dashboardData = async () => {
       remainingCapacity: true,
       isFull: true,
       vehicleEntries: {
+        where: whereCondition,
         select: {
           id: true,
-          timeOfArrival: true,
-          timeOfDeparture: true,
           volumeOfWaste: true,
         },
       },
@@ -69,10 +92,9 @@ export const dashboardData = async () => {
       capacity: true,
       currentWasteVolume: true,
       truckDumpEntries: {
+        where: whereCondition,
         select: {
-          id: true, 
-          timeOfArrival: true,
-          timeOfDeparture: true,
+          id: true,
           volumeOfWaste: true,
         },
       },
@@ -80,64 +102,76 @@ export const dashboardData = async () => {
     take: 5,
   });
 
+  const totalWasteDumpedInLandfills = landfills.reduce(
+    (acc, landfill) => acc + landfill.currentWasteVolume,
+    0,
+  );
+
   const additionalData = [
     {
-      name: 'Total STS',
-      value: stss.length, 
-
-       
+      name: 'STS',
+      value: stss.length,
     },
     {
-      name: 'Total Vehicles',
-      value: vehicles.length, 
-
-       
+      name: 'Vehicles',
+      value: vehicles.length,
     },
     {
-      name: 'Total Landfills',
-      value: landfills.length, 
-      
+      name: 'Landfills',
+      value: landfills.length,
     },
     {
-      name: 'Total Wastes',
+      name: 'Wastes in STS',
       value: `${totalWastesInAllSts.toFixed(2)} Ton`,
-    }
+    },
+    {
+      name: 'Waste Dumped',
+      value: `${totalWasteDumpedInLandfills.toFixed(2)} Ton`,
+    },
   ];
-
-
 
   return {
     stss,
     vehicles,
-    landfills, 
+    landfills,
     maximumWasteVolume,
     minimumWasteVolume,
     additionalData,
   };
 };
 
+export const getBillsData = async (
+  startDate: string,
+  endDate: string,
+  vehicleId: string,
+  stsId: string,
+  landfillId: string,
+  isVerified: string,
+  isPaid: string,
+  page: string,
+  limit: string,
+) => {
+  const start = startDate ? new Date(startDate) : new Date();
+  start.setHours(0, 0, 0, 0); // This ensures the start of the day is used if startDate is provided.
 
-export const getBillsData = async (starDate : string , endDate : string) => {
+  const end = endDate ? new Date(endDate) : new Date(); // Uses the current date if endDate is not provided.
 
- 
-  let start = new Date(starDate);
-  let end = new Date(endDate);
-
- 
-  if(!starDate){ 
-    start = new Date();
-    start.setHours(0,0,0,0);
-  }
-  if(!endDate){
-    end = new Date();
-  }
-  const bills = await prisma.bill.findMany({
-    where: {
-      createdAt: {
-        gte: start.toISOString(),
-        lte: end.toISOString(),
-      },
+  const whereCondition = {
+    createdAt: {
+      gte: startDate ? start : undefined,
+      lte: endDate ? end : undefined,
     },
+    vehicleEntry: {
+      vehicleId: vehicleId ? Number(vehicleId) : undefined,
+      stsId: stsId ? Number(stsId) : undefined,
+      landfillId: landfillId ? Number(landfillId) : undefined,
+    },
+    isVerified: isVerified !== undefined ? isVerified === 'true' : undefined,
+    paid: isPaid !== undefined ? isPaid === 'true' : undefined,
+  };
+
+  const bills = await prisma.bill.findMany({
+    where: whereCondition,
     include: {
       vehicleEntry: {
         include: {
@@ -150,44 +184,75 @@ export const getBillsData = async (starDate : string , endDate : string) => {
     orderBy: {
       createdAt: 'desc',
     },
+    skip: page ? Number(page) : 0,
+    take: limit ? Number(limit) : 50,
   });
 
-  const totals = bills.reduce((acc, bill) => {
-    acc.totalCost += bill.amount;
-    acc.totalDistance += bill.distance;
-    acc.totalWasteTransported += bill.vehicleEntry.volumeOfWaste;
-    if(bill.paid) acc.paidCost += bill.amount;
-    return acc;
-  }, { totalCost: 0, totalDistance: 0, totalWasteTransported: 0, paidCost : 0});
-  
+  const totals = bills.reduce(
+    (acc, bill) => {
+      acc.totalCost += bill.amount;
+      acc.totalDistance += bill.distance;
+      acc.totalWasteTransported += bill.vehicleEntry.volumeOfWaste;
+      if (bill.paid) acc.paidCost += bill.amount;
+      return acc;
+    },
+    { totalCost: 0, totalDistance: 0, totalWasteTransported: 0, paidCost: 0 },
+  );
+
   const totalBills = bills.length;
 
   const additionalData = [
     {
       name: 'Bills Generated',
       value: totalBills,
-      unit : ''
+      unit: '',
     },
     {
       name: 'Total Cost',
-      value: `${totals.totalCost.toFixed(2)} Tk`, 
+      value: `${totals.totalCost.toFixed(2)} Tk`,
     },
-    
+
     {
       name: 'Total Distance',
-      value: `${totals.totalDistance.toFixed(2)} Km`, 
+      value: `${totals.totalDistance.toFixed(2)} Km`,
     },
     {
       name: 'Waste Transported',
-      value: `${totals.totalWasteTransported.toFixed(2)} Ton`, 
-    }
+      value: `${totals.totalWasteTransported.toFixed(2)} Ton`,
+    },
   ];
 
   return {
     bills,
     additionalData,
   };
-}
+};
 
+export const getBillFilterData = async () => {
+  const vehicles = await prisma.vehicle.findMany({
+    select: {
+      id: true,
+      registrationNumber: true,
+    },
+  });
+  const stss = await prisma.sTS.findMany({
+    select: {
+      id: true,
+      name: true,
+      wardNumber: true,
+    },
+  });
 
-   
+  const landfills = await prisma.landfill.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
+  return {
+    vehicles,
+    stss,
+    landfills,
+  };
+};

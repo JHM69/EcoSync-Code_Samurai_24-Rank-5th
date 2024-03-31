@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { FaTruck } from 'react-icons/fa'
+import { GiNuclearWaste } from 'react-icons/gi'
 
 const LandfillMarker = ({ landfill }) => {
   const baseSize = 28
@@ -20,9 +22,9 @@ const LandfillMarker = ({ landfill }) => {
 
   const infoBoxStyle = {
     position: 'absolute',
-    width: '200px',
+    width: '260px',
     zIndex: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     backdropFilter: 'blur(2px)',
     padding: '10px',
     borderRadius: '10px',
@@ -44,7 +46,24 @@ const LandfillMarker = ({ landfill }) => {
       <img className='h-12 w-12' src="/marker.png" alt="marker" />
 
       <div className='flex flex-col gap-1 p-3' style={infoBoxStyle}>
-        <p className='text-bold text-xl text-green-700'>{landfill.name}</p>
+      <p className="text-2xl font-bold text-green-700">
+          {landfill.name}
+        </p>
+        {landfill.truckDumpEntries && (
+          <>
+            <div className="text-[14px] flex flex-row font-semibold">
+              <FaTruck />Truck Trip: {landfill.truckDumpEntries.length}
+            </div>
+            <div className="text-[14px] flex flex-row font-semibold">
+              <GiNuclearWaste /> Waste Dumped:
+              {landfill.truckDumpEntries.reduce(
+                (acc, curr) => acc + curr.volumeOfWaste,
+                0
+              )}{' '}
+              Ton
+            </div>
+          </>
+        ) }
       </div>
     </div>
   )

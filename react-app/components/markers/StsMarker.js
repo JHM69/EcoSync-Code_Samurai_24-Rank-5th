@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import ProgressBar from '../common/ProgressBar'
-import { BsPerson } from 'react-icons/bs'
-import { FaAddressBook, FaAddressCard } from 'react-icons/fa'
+import { BsPeopleFill, BsPerson } from 'react-icons/bs'
+import { FaAddressBook, FaAddressCard, FaPeopleCarry, FaTruck } from 'react-icons/fa'
+import { GiNuclearWaste } from 'react-icons/gi'
 
 const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
   const baseSize = 28
@@ -16,7 +17,7 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
     'rgba(174, 46, 0, 0.9)', // Orange Red with 80% opacity
     'rgba(203, 0, 0, 0.9)', // Red with 80% opacity
     'rgba(160, 0, 0, 0.9)', // Dark Red with 80% opacity
-  ];
+  ]
 
   const size =
     baseSize +
@@ -41,14 +42,14 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    transition: 'opacity 0.5s ease'
+    transition: 'opacity 0.5s ease',
   }
 
   const infoBoxStyle = {
     position: 'absolute',
-    width: '200px',
+    width: '250px',
     zIndex: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     backdropFilter: 'blur(4px)',
     padding: '10px',
     borderRadius: '10px',
@@ -56,7 +57,7 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
     transition: 'opacity 0.5s ease',
     opacity: showDetails ? 1 : 0,
     pointerEvents: showDetails ? 'all' : 'none',
-    transform: `translateY(${showDetails ? '0' : '-10px'})`
+    transform: `translateY(${showDetails ? '0' : '-10px'})`,
   }
 
   return (
@@ -66,23 +67,38 @@ const StsMarker = ({ sts, minimumWasteVolume, maximumWasteVolume }) => {
       onMouseEnter={() => setShowDetails(true)}
       onMouseLeave={() => setShowDetails(false)}
     >
-      <p className="text-[8px] p-1 font-bold text-white">
+      <p className="p-1 text-[8px] font-bold text-white">
         {sts.currentWasteVolume} T
       </p>
       <div className="flex flex-col gap-1 p-3" style={infoBoxStyle}>
-        <p className="text-bold text-xl text-green-700">
+        <p className="text-2xl font-bold text-green-700">
           Ward: {sts.wardNumber}
         </p>
         {sts.address && (
-          <div className="text-md  flex flex-row">
+             <div className="text-[14px] flex flex-row font-semibold">
             {' '}
             <FaAddressBook /> {sts.address}
           </div>
         )}
+        {sts.vehicleEntries && (
+          <>
+            <div className="text-[14px] flex flex-row font-semibold">
+              <FaTruck /> Truck Entries: {sts.vehicleEntries.length}
+            </div>
+            <div className="text-[14px] flex flex-row font-semibold">
+              <GiNuclearWaste /> Waste Transported:
+              {sts.vehicleEntries.reduce(
+                (acc, curr) => acc + curr.volumeOfWaste,
+                0
+              )}{' '}
+              Ton
+            </div>
+          </>
+        )}
         {sts?.managers.length > 0 && (
-          <div className="flex flex-row items-center">
-            {' '}
-            <BsPerson /> {sts?.managers[0]?.name}
+          <div className="text-[14px] flex flex-row font-semibold">
+            <BsPeopleFill /> Managers:{' '}
+            {sts?.managers.map((manager) => manager.name).join(', ')}
           </div>
         )}
         <ProgressBar
