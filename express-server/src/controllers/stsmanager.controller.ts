@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-return-await */
 import { Request, Response, Router } from 'express';
-import ts from 'typescript';
+ 
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import { createBill } from '../services/billing.service';
@@ -133,10 +133,10 @@ const updateSTS = async (
     data: {
       wardNumber: stsData.wardNumber,
       name: stsData.name,
-      capacity: capacity,
-      currentWasteVolume: currentWasteVolume,
-      lat: lat,
-      lon: lon,
+      capacity,
+      currentWasteVolume,
+      lat,
+      lon,
       address: stsData.address,
       logo: stsData.logo,
       vehicles: {

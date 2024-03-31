@@ -2,13 +2,15 @@
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}'
+    './components/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js'
   ],
   theme: {
     extend: {
       screens: {
         laptop: '1024px',
-        desktop: '1281px'
+        desktop: '1281px',
       },
       fontFamily: {
         sans: [
@@ -19,9 +21,9 @@ module.exports = {
           'Roboto',
           'Helvetica Neue',
           'Ubuntu',
-          'sans-serif'
-        ]
-      }
-    }
-  }
+          'sans-serif',
+        ],
+      },
+    },
+  },
 }
