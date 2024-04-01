@@ -63,13 +63,13 @@ PASSWORD = "12345678"
 ```bash
 TYPE = "STS Manager"
 EMAIL = "jahangirhmarup@gmail.com"
-PASSWORD = "12345678"
+PASSWORD = "121212"
 ```
 
 ```bash
 TYPE = "Landfill Manager"
 EMAIL = "b190305009@cse.jnu.ac.bd"
-PASSWORD = "121212"
+PASSWORD = "12345678"
 ```
 
 The application is configured through environment variables specified in the `docker-compose.yaml` file. Key configurations include:
