@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SelectCategory">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="66dp"
+        android:text="@string/select_your_interests"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="66dp"
+        android:text="@string/select_difficulty"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chips_categories" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chips_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:singleSelection="false">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/arts_and_literature"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/arts_amp_literature"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_waves_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/film_and_tv"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/film_amp_tv"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_live_tv_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/food_and_drink"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/food_amp_drink"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_fastfood_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/general_knowledge"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/general_knowledge"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_format_quote_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/geography"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/geography"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_map_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/history"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/history"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_baseline_history_toggle_off_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/science"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:fontFamily="@font/regular"
+            android:text="@string/science"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:checkedIconVisible="false"
+            app:chipIcon="@drawable/ic_outline_science_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/music"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/music"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_music_note_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/society_and_culture"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/society_amp_culture"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_outline_nature_people_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sport_and_leisure"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="@string/sport_amp_leisure"
+            android:textStyle="bold"
+            app:checkedIconEnabled="false"
+            app:checkedIconTint="@color/colorPrimaryDark"
+            app:chipIcon="@drawable/ic_baseline_sports_cricket_24"
+            app:chipIconEnabled="true"
+            app:chipIconVisible="true"
+            tools:ignore="Deprecated" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chips_difficulty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/easy"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/easy"
+        />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/medium"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/medium" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/hard"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hard"
+        />
+
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/start"
+        android:textSize="20sp"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chips_difficulty" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

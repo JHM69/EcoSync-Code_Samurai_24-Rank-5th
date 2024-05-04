@@ -1,0 +1,1 @@
+package com.quantum_guys.dncc_eco_sync.retrofit;import com.quantum_guys.dncc_eco_sync.model.User;import java.util.Map;import retrofit2.Call;import retrofit2.http.Body;import retrofit2.http.POST;public interface AuthService {    @POST("auth/login")    Call<User> login(            @Body Map<String, String> loginRequest    );}

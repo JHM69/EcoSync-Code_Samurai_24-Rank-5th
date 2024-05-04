@@ -1,0 +1,32 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Jahangir/.gradle/caches/transforms-3/9b621b9adbb5e6f80fca528acc7aa9a7/transformed/jetified-commons-0.8.6.1/res/layout/md_preference_custom.xml" value="0.1" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.1" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/drawable/ic_round_timer_24.xml" value="0.1" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/drawable/rounded.xml" value="0.1" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout-v24/activity_quiz_battle.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/activity_quiz_battle.xml" value="0.5" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/activity_result.xml" value="0.2" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/activity_select_category.xml" value="0.25" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/activity_splash.xml" value="0.2" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/item_each_question_result.xml" value="0.43572129538763493" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/item_result.xml" value="0.5" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/item_result_question.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/progress_button.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/layout/question_top_layout.xml" value="0.13524590163934427" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Users/Jahangir/StudioProjects/QuizApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

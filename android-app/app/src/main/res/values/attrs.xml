@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CalendarPickerView">
+        <attr name="android:background" />
+        <attr name="tsquare_dividerColor" format="color" />
+        <attr name="tsquare_dayBackground" format="reference" />
+        <attr name="tsquare_dayTextColor" format="color" />
+        <attr name="tsquare_titleTextColor" format="color" />
+        <attr name="tsquare_displayHeader" format="boolean" />
+        <attr name="tsquare_headerTextColor" format="color" />
+        <attr name="tsquare_orientation_horizontal" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="calendar_cell">
+        <attr name="tsquare_state_selectable" format="boolean" />
+        <attr name="tsquare_state_current_month" format="boolean" />
+        <attr name="tsquare_state_today" format="boolean" />
+        <attr name="tsquare_state_range_first" format="boolean" />
+        <attr name="tsquare_state_range_middle" format="boolean" />
+        <attr name="tsquare_state_range_last" format="boolean" />
+        <attr name="tsquare_state_highlighted" format="boolean" />
+        <attr name="tsquare_state_unavailable" format="boolean" />
+        <attr name="tsquare_state_deactivated" format="boolean" />
+    </declare-styleable>
+
+
+    <!-- Switch image button. -->
+    <declare-styleable name="SwitchImageButton">
+        <attr name="drawable_res_on" format="reference" />
+        <attr name="drawable_res_off" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DrawInsetsFrameLayout">
+        <attr name="insetBackground" format="color|reference" />
+    </declare-styleable>
+
+    <attr name="digitCellStyle"
+        format="reference"/>
+    <attr name="keypadBackgroundColor"
+        format="color"/>
+    <attr name="keypadTextColor"
+        format="color"/>
+    <declare-styleable name="StepView">
+        <attr name="sv_selectedCircleColor" format="color" />
+        <attr name="sv_selectedCircleRadius" format="dimension" />
+        <attr name="sv_selectedTextColor" format="color" />
+        <attr name="sv_selectedStepNumberColor" format="color" />
+        <attr name="sv_stepNumberTextSize" format="dimension" />
+        <attr name="sv_doneStepMarkColor" format="color" />
+        <attr name="sv_doneCircleColor" format="color" />
+        <attr name="sv_doneCircleRadius" format="dimension" />
+        <attr name="sv_doneTextColor" format="color" />
+        <attr name="sv_nextTextColor" format="color" />
+        <attr name="sv_nextStepLineColor" format="color" />
+        <attr name="sv_doneStepLineColor" format="color" />
+        <attr name="sv_stepPadding" format="dimension" />
+        <attr name="sv_textPadding" format="dimension" />
+        <attr name="sv_stepLineWidth" format="dimension" />
+        <attr name="sv_textSize" format="dimension" />
+        <attr name="sv_background" format="color" />
+        <attr name="sv_animationDuration" format="integer" />
+        <attr name="sv_stepViewStyle" format="reference" />
+        <attr name="sv_animationType" format="enum">
+            <enum name="Line" value="0" />
+            <enum name="Circle" value="1" />
+            <enum name="All" value="2" />
+            <enum name="None" value="3" />
+        </attr>
+        <attr name="sv_stepsNumber" format="integer" />
+        <attr name="sv_steps" format="reference" />
+        <attr name="sv_typeface" format="reference" />
+        <attr name="sv_nextStepCircleEnabled" format="boolean" />
+        <attr name="sv_nextStepCircleColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="MaxHeightScrollView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+</resources>
