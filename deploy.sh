@@ -1,12 +1,12 @@
 
-cd cs_backend
+cd express-server
 docker build -t cs_backend .
 docker stop cs_backend || true
 docker rm cs_backend || true
 docker run -d --name cs_backend -p 5000:5000 cs_backend 
 docker system prune -a --volumes -f
 
-cd ../cs_frontend
+cd ../react-app
 docker build -t cs_frontend .
 docker stop cs_frontend || true
 docker rm cs_frontend || true
