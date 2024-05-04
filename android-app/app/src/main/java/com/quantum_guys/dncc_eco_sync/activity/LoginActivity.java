@@ -1,6 +1,7 @@
 package com.quantum_guys.dncc_eco_sync.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.quantum_guys.dncc_eco_sync.MainActivity;
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.model.User;
 import com.quantum_guys.dncc_eco_sync.retrofit.ApiUtils;
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         Button login = findViewById(R.id.buttonLogin);
         login.setOnClickListener(v -> {
             try {
+                mDialog.show();
                 EditText emailEd = findViewById(R.id.editTextEmail);
 
                 EditText passEd = findViewById(R.id.editTextPassword);
@@ -58,16 +61,32 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(@NotNull Call call, @NotNull Response response) {
 
                         if (response.isSuccessful()) {
-                            User user = (User) response.body();
 
-                            SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean("logged", true);
-                            editor.putString("name", Objects.requireNonNull(user).getName());
-                            editor.putString("token", user.getToken());
-                            editor.apply();
+                            try{
+                                User user = (User) response.body();
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("logged", true);
+                                editor.putString("name", Objects.requireNonNull(user).getName());
+                                editor.putString("token", user.getToken());
+                                editor.apply();
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }catch (Exception e){
+                                Log.d("SSSF", e.getMessage());
+                            }
+
+//                          jahangirhossainm69@gmail.com
+
+
+
 
                             mDialog.dismiss();
+                        }else{
+                            mDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
                         }
                     }
 

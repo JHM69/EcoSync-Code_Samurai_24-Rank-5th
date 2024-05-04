@@ -26,7 +26,7 @@
 
     <color name="edit_text_focused_border_color">#4CAF6D</color>
     <color name="edit_text_default_border_color">#BDBDBD</color>
-    <color name="primary_text_color">#009688</color>
+    <color name="primary_text_color">#4CAF6D</color>
 
 
 </resources>

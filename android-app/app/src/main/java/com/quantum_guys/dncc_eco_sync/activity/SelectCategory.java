@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.jhm69.quizapp_hometask.R;
+import com.quantum_guys.dncc_eco_sync.R;
 
 public class SelectCategory extends AppCompatActivity {
     StringBuilder category = new StringBuilder();
