@@ -89,7 +89,7 @@ const TruckDumpEntryItem = ({
       <div className="flex-1">
         {verified ? (
           <a
-            href={`http://localhost:5000/bill/${billId}/download`}
+            href={`http://3.208.28.247:5000/bill/${billId}/download`}
             className="ml-2 rounded-md bg-green-500 p-2 text-white"
             target="_blank"
           >

@@ -107,7 +107,7 @@ const STSEntryInfo = ({ truckDumpEntry, ...props }) => {
                         {/* add a download button if billId!=0 else show bill not available */}
                         {truckDumpEntry.billId ? (
                           <a
-                            href={`http://localhost:5000/bill/${truckDumpEntry.billId}/download`}
+                            href={`http://3.208.28.247:5000/bill/${truckDumpEntry.billId}/download`}
                             className="rounded bg-green-500 p-2 text-white"
                           >
                             Download Bill

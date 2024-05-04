@@ -72,7 +72,7 @@ const BillItem = ({
           distance={distance}
             duration={duration}
           />
-          <button onClick={() => window.open(`http://localhost:5000/bill/${id}/download`, '_blank')} className="flex items-center justify-center px-2 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition duration-150 ease-in-out">
+          <button onClick={() => window.open(`http://3.208.28.247:5000/bill/${id}/download`, '_blank')} className="flex items-center justify-center px-2 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition duration-150 ease-in-out">
             <BiDownload className="mr-1" />
           </button>
       </div>

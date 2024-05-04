@@ -35,8 +35,8 @@ CMD [ "npm", "run", "start" ]
 # docker system prune -a --volumes -f
 
 
-# docker build -t cs_frontend .
-# docker stop cs_frontend || true
-# docker rm cs_frontend || true
-# docker run -d --name cs_frontend -p 3000:3000 cs_frontend 
-# docker system prune -a --volumes -f
+docker build -t cs_frontend .
+docker stop cs_frontend || true
+docker rm cs_frontend || true
+docker run -d --name cs_frontend -p 3000:3000 cs_frontend 
+docker system prune -a --volumes -f
