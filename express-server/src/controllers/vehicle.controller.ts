@@ -154,6 +154,7 @@ router.put(
       // if (capacity !== 3 && capacity !== 5 && capacity !== 7)
       //   return res.status(400).json({ message: 'Capacity must be 3, 5 or 7' });
       if (
+        type &&
         type !== 'OpenTruck' &&
         type !== 'DumpTruck' &&
         type !== 'Compactor' &&
@@ -180,21 +181,33 @@ router.put(
       if (unloadedFuelCost) {
         unloadedFuelCostNumber = Number(unloadedFuelCost);
       }
+      if(driverIds){
+        await prisma.vehicle.update({
+          where: {
+            id: Number(id),
+          },
+          data: {
+            drivers: {
+             set:[]
+            },
+          },
+        });
+      }
       const vehicle = await prisma.vehicle.update({
         where: {
           id: Number(id),
         },
         data: {
-          registrationNumber,
-          type,
-          capacity,
-          lat, // Default to 0 if lat is not provided
-          lon, // Default to 0 if lon is not provided
-          isFull, // Default to false if isFull is not provided
-          loaddedFuelCost: loaddedFuelCostNumber, // Default to 0 if loaddedFuelCost is not provided
-          unloadedFuelCost: unloadedFuelCostNumber, // Default to 0 if unloadedFuelCost is not provided
+          registrationNumber: registrationNumber || undefined,
+          type: type || undefined,
+          capacity: capacity || undefined,
+          lat: lat || undefined, // Default to 0 if lat is not provided
+          lon: lon || undefined, // Default to 0 if lon is not provided
+          isFull: isFull || undefined, // Default to false if isFull is not provided
+          loaddedFuelCost: loaddedFuelCostNumber || undefined, // Default to 0 if loaddedFuelCost is not provided
+          unloadedFuelCost: unloadedFuelCostNumber || undefined, // Default to 0 if unloadedFuelCost is not provided
           drivers: {
-            set: driverIds.map((id) => ({ id })),
+            connect: driverIds.map((id) => ({ id })),
           }
         },
         include: {
