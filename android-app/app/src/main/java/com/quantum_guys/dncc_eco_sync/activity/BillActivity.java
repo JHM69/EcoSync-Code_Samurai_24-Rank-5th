@@ -18,12 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.marlonlom.utilities.timeago.TimeAgo;
+import com.quantum_guys.dncc_eco_sync.MainActivity;
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.adapter.ResultEachQuestionAdapter;
 import com.quantum_guys.dncc_eco_sync.viewmodel.BattleViewModel;
 
 
-public class ResultActivity extends AppCompatActivity {
+public class BillActivity extends AppCompatActivity {
     public ProgressDialog mDialog;
     Button playAgain;
     RecyclerView mRecyclerView;
@@ -33,7 +34,7 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.activity_result);
+        setContentView(R.layout.activity_bills);
         Toolbar toolbar = findViewById(R.id.toolbar2);
         String id = getIntent().getStringExtra("id");
 
@@ -44,29 +45,27 @@ public class ResultActivity extends AppCompatActivity {
         playAgain = findViewById(R.id.playAgain);
 
 
-
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Please wait..");
         mDialog.setIndeterminate(true);
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.setCancelable(false);
 
-        TextView topic = findViewById(R.id.topic);
+
         //score = findViewById(R.id.textView6);
         BattleViewModel battleViewModel = ViewModelProviders.of(this).get(BattleViewModel.class);
-        mRecyclerView = findViewById(R.id.recv);
+
 
         battleViewModel.getBattle(id).observe(this, quiz -> {
             toolbar.setSubtitle("Played "+ TimeAgo.using(quiz.getTimestamp()));
-            resultEachQuestionAdapter = new ResultEachQuestionAdapter(quiz.getQuestionList(), quiz.answers, quiz.answerList,ResultActivity.this);
+            resultEachQuestionAdapter = new ResultEachQuestionAdapter(quiz.getQuestionList(), quiz.answers, quiz.answerList, BillActivity.this);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(resultEachQuestionAdapter);
             resultEachQuestionAdapter.notifyDataSetChanged();
-            //score.setText(quiz.getScore());
-            topic.setText("score : "+quiz.getScore());
-           playAgain.setOnClickListener(view -> startActivity(new Intent(getApplication(), SelectCategory.class)));
+
+            playAgain.setOnClickListener(view -> startActivity(new Intent(getApplication(), MainActivity.class)));
         });
 
     }

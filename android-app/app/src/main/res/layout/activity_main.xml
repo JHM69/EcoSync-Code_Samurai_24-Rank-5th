@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,13 +7,15 @@
     app:layoutDescription="@xml/activity_main_scene"
     tools:context=".MainActivity">
 
-    <com.airbnb.lottie.LottieAnimationView
+    <ImageView
         android:id="@+id/animationView"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="16dp"
         android:scaleX="1.1"
         android:scaleY="1.1"
+        android:src="@drawable/logo_round"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
@@ -24,18 +26,18 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:drawableLeft="@drawable/ic_round_offline_bolt_24"
+        android:drawableLeft="@drawable/baseline_arrow_circle_up_24"
         android:fontFamily="@font/regular"
         android:text="@string/play_quiz"
         android:textSize="15sp"
         android:textStyle="bold"
         app:cornerRadius="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/animationView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/animationView"
+        app:layout_constraintTop_toBottomOf="@+id/animationView"
         tools:ignore="RtlHardcoded" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -61,7 +63,7 @@
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animationView" />
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <TextView
         android:id="@+id/textView6"
@@ -89,5 +91,5 @@
         app:layout_constraintTop_toBottomOf="@+id/button"
         app:srcCompat="@drawable/ic_logo"
         tools:ignore="ContentDescription" />
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
