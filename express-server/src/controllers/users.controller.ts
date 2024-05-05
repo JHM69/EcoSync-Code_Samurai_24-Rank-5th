@@ -21,7 +21,7 @@ import HttpException from '../models/http-exception.model';
 // Create a new user
 router.post('/users', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
-    const user = await createUser(req.body.userId, req.body.name, req.body.image);
+    const user = await createUser(req.body.userId, req.body.name, req.body.image,req.body.phone,req.body.drivingLicense);
     res.status(201).json(user);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -62,7 +62,7 @@ router.get('/users/:userId', auth.required, async (req: Request, res: Response) 
 // update user 
 router.put('/users/:userId', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
-    const user = await updateUser(req, Number(req.params.userId), req.body.name, req.body.image, req.body.roleId);
+    const user = await updateUser(req, Number(req.params.userId), req.body.name, req.body.image, req.body.roleId, req.body.phone, req.body.drivingLicense);
     res.status(200).json(user);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -115,7 +115,7 @@ router.get('/profile', auth.required, async (req: Request, res: Response) => {
 router.put('/profile', auth.required, async (req: Request, res: Response) => {
   try {
     if (!req.user?.id) throw new HttpException(400, 'Invalid token');
-    const user = await updateProfile(req.user.id, req.body.name, req.body.image);
+    const user = await updateProfile(req.user.id, req.body.name, req.body.image, req.body.phone, req.body.drivingLicense);
     res.status(200).json(user);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

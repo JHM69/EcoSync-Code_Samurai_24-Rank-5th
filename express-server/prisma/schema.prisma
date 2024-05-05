@@ -21,10 +21,12 @@ enum RoleType {
   STSManager
   LandfillManager
   Unassigned
+  Driver
 }
 model User {
   id         Int       @id @default(autoincrement())
   email      String    @unique
+  phone      String?   @unique
   name       String
   password   String
   image      String?   @default("https://static.productionready.io/images/smiley-cyrus.jpg")
@@ -39,6 +41,8 @@ model User {
   truckDumpEntries     TruckDumpEntry[] //Landfill Managers can have multiple truck dump entries
   sts                  STS[]
   landfills            Landfill[]
+  vehicles             Vehicle[] //Drivers can have multiple vehicles
+  drivingLicense       String?  //Drivers can have driving license
   passwordResetToken   PasswordResetToken? 
   changedAdminPassword Boolean @default(false)
   @@index([roleId], name: "idx_user_role")
@@ -72,6 +76,7 @@ model Vehicle {  // 147 vehicles
   registrationNumber String   @unique
   type          VehicleType
   name          String?
+  drivers        User[]
   capacity      Int
   remainingCapacity Int
   lat           Float @default(0)

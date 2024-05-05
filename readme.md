@@ -56,8 +56,8 @@ This command will start the Express.js backend server on port 5000 and the React
 Example Authentication Configuration
 ```bash
 TYPE = "System Admin"
-EMAIL = "jahangirhossainm69@gmail.com"
-PASSWORD = "12345678"
+EMAIL = "admin@admin.com"
+PASSWORD = "1234"
 ```
 
 ```bash

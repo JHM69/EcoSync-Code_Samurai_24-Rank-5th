@@ -23,7 +23,7 @@ async function isImageURL(url: string) {
 }
 
 // Function to create a new user
-export const createUser = async (userId: number, name: string, image: string) => {
+export const createUser = async (userId: number, name: string, image: string, phone:string,drivingLicense:string) => {
   if (userId && name) {
     // Validate the image URL
     if (image)
@@ -46,6 +46,8 @@ export const createUser = async (userId: number, name: string, image: string) =>
       data: {
         name,
         image: image || undefined,
+        phone: phone || undefined,
+        drivingLicense: drivingLicense || undefined,
       },
     });
   }
@@ -59,6 +61,8 @@ export const updateUser = async (
   name: string,
   image: string,
   roleId,
+  phone: string,
+  drivingLicense: string,
 ) => {
   if (userId) {
     if (!req.user) throw new HttpException(400, 'Invalid token');
@@ -89,6 +93,8 @@ export const updateUser = async (
         image:
           image ||
           'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        phone: phone || undefined,
+        drivingLicense: drivingLicense || undefined,
       },
     });
   }
@@ -194,7 +200,7 @@ export const getProfile = async (userId: string) => {
   });
 };
 // Function to update profile
-export const updateProfile = async (userId: number, name: string, image: string) => {
+export const updateProfile = async (userId: number, name: string, image: string,phone:string,drivingLicense:string) => {
   // Validate the image URL
   if (image)
     if ((await isImageURL(image)) === false) {
@@ -216,6 +222,8 @@ export const updateProfile = async (userId: number, name: string, image: string)
     data: {
       name: name || undefined,
       image: image || undefined,
+      phone: phone || undefined,
+      drivingLicense: drivingLicense || undefined,
     },
     include: {
       role: {

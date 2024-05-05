@@ -86,8 +86,9 @@ router.get('/vehicle/:id', auth.required, async (req: Request, res: Response) =>
 router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     // Extract vehicle data from request body
-    const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost } =
+    const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost, drivers } =
       req.body;
+    const driverIds = drivers? drivers.map(id => Number(id)) : [];
 
     // if (capacity !== 3 && capacity !== 5 && capacity !== 7)
     //   return res.status(400).json({ message: 'Capacity must be 3, 5 or 7' });
@@ -123,6 +124,12 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
         isFull: isFull || false, // Default to false if isFull is not provided
         loaddedFuelCost: Number(loaddedFuelCost) || 23.815485092033324, // Default to 0 if loaddedFuelCost is not provided
         unloadedFuelCost: Number(unloadedFuelCost) || 90.36613393405976, // Default to 0 if unloadedFuelCost is not provided
+        drivers: {
+          connect: driverIds.map((id) => ({ id })),
+        }
+      },
+      include: {
+        drivers: true,
       },
     });
 
@@ -140,8 +147,9 @@ router.put(
   async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost } =
+      const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost,drivers } =
         req.body;
+      const driverIds = drivers? drivers.map(id => Number(id)) : [];
 
       // if (capacity !== 3 && capacity !== 5 && capacity !== 7)
       //   return res.status(400).json({ message: 'Capacity must be 3, 5 or 7' });
@@ -185,6 +193,12 @@ router.put(
           isFull, // Default to false if isFull is not provided
           loaddedFuelCost: loaddedFuelCostNumber, // Default to 0 if loaddedFuelCost is not provided
           unloadedFuelCost: unloadedFuelCostNumber, // Default to 0 if unloadedFuelCost is not provided
+          drivers: {
+            set: driverIds.map((id) => ({ id })),
+          }
+        },
+        include: {
+          drivers: true,
         },
       });
 
