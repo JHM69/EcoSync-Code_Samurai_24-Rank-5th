@@ -52,7 +52,6 @@ dependencies {
     //noinspection LifecycleAnnotationProcessorWithJava8
 
 
-    implementation "com.airbnb.android:lottie:3.4.0"
 
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"

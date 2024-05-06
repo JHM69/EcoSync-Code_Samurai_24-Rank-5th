@@ -27,7 +27,7 @@
     implementation "android.arch.lifecycle:livedata:1.1.1"
     implementation 'com.github.marlonlom:timeago:3.0.2'
 
-    implementation "com.airbnb.android:lottie:3.4.0"
+ 
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
 ```

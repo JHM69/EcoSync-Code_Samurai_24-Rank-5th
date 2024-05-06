@@ -6,28 +6,48 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.transition.Explode;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.internal.ConnectionCallbacks;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,8 +69,12 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.quantum_guys.dncc_eco_sync.R;
+import com.quantum_guys.dncc_eco_sync.model.Landfill;
+import com.quantum_guys.dncc_eco_sync.model.STS;
+import com.quantum_guys.dncc_eco_sync.model.Trip;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,10 +83,35 @@ import androidmads.library.qrgenearator.QRGEncoder;
 import es.dmoral.toasty.Toasty;
 
 
-public class MapView extends AppCompatActivity implements OnMapReadyCallback, RoutingListener {
+public class MapView extends AppCompatActivity implements ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, GoogleApiClient.ConnectionCallbacks, OnMapReadyCallback, RoutingListener {
     GoogleMap map;
     Marker busLocation;
     private List<Polyline> polyLines = new ArrayList<>();
+
+
+    Trip trip = new Trip();
+
+    // Populate the trip object
+
+    List<LatLng> stsList = new ArrayList<>();
+    PendingResult<LocationSettingsResult> result;
+    final static int REQUEST_LOCATION = 199;
+    int gap = 10;
+    LocationRequest mLocationRequest;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private GoogleApiClient mGoogleApiClient;
+
+    private static final int REQUEST_CODE_PERMISSION = 2;
+    String mPermission = android.Manifest.permission.ACCESS_FINE_LOCATION;
+
+
+    TextView speed, stationCurrent;
+    private TextView totalAmount;
+    private TextView cashAmount;
+    private TextView emptySeat;
+    private ImageView stop;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -75,6 +124,29 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
         askPermission();
         setContentView(R.layout.activity_map);
 
+
+        buildGoogleApiClient();
+
+
+
+//        for (STS sts : trip.getVisitedSTSs()) {
+//            stsList.add(new LatLng(
+//                    sts.getLat(),
+//                    sts.getLon()
+//            ));
+//        }
+
+        stsList.add(
+                new LatLng(23.7085685,90.4086507 // CSE JnU
+
+                )
+        );
+        stsList.add(
+                new LatLng(
+                        23.72866,90.396453  // CSE DU
+                )
+        );
+
         Button qr_btn = findViewById(R.id.scan_button);
         qr_btn.setOnClickListener(v -> {
             ScanQR bottomSheetFragment = new ScanQR(MapView.this);
@@ -82,12 +154,20 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
         });
 
 
+        cashAmount = findViewById(R.id.textView27);
+        emptySeat = findViewById(R.id.textView28);
+        stop = findViewById(R.id.imageView2);
+        stop.setVisibility(View.VISIBLE);
+        speed = findViewById(R.id.textView35);
+        stationCurrent = findViewById(R.id.textView34);
+
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
-        }else{
+        } else {
             Toast.makeText(
                     this,
                     "Map Fragment is null",
@@ -99,16 +179,17 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
             Routing routing = new Routing.Builder()
                     .travelMode(Routing.TravelMode.DRIVING)
                     .withListener(this)
-//                    .waypoints(allStations)
-                    .key(getString(R.string.google_api_key))
+                    .waypoints(stsList)
+                    .key(getString(R.string.google_maps_key))
                     .build();
 
             routing.execute();
         } catch (Exception d) {
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+
             Toast.makeText(this, d.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     @Override
@@ -138,12 +219,13 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
 
     @Override
     public void onRoutingSuccess(ArrayList<com.directions.route.Route> route, int shortestRouteIndex) {
-       // CameraUpdate center = CameraUpdateFactory.newLatLng(allStations.get(0));
-       // CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
+        // CameraUpdate center = CameraUpdateFactory.newLatLng(allStations.get(0));
+        // CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
 
-     //   map.moveCamera(center);
-     //   map.moveCamera(zoom);
+        //   map.moveCamera(center);
+        //   map.moveCamera(zoom);
 
+        Toast.makeText(this, "Route Success", Toast.LENGTH_SHORT).show();
         if (polyLines.size() > 0) {
             for (Polyline poly : polyLines) {
                 poly.remove();
@@ -151,6 +233,16 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
         }
         polyLines = new ArrayList<>();
         //add route(s) to the map.
+
+
+        // Drawing for Testing
+
+        for (LatLng lt : stsList){
+            MarkerOptions options = new MarkerOptions();
+            options.position(lt);
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            map.addMarker(options);
+        }
 
         try {
             for (int i = 0; i < route.size(); i++) {
@@ -162,35 +254,23 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
                 Polyline polyline = map.addPolyline(polyOptions);
                 polyLines.add(polyline);
             }
-        } catch (Exception ignored) {
-
+        } catch (Exception f) {
+            Toast.makeText(
+                    this,
+                    f.getLocalizedMessage(),
+                    Toast.LENGTH_SHORT
+            ).show();
         }
 
-//        for (int i = 0; i < routeValue.getStationList().size(); i++) {
-//            if (i == 0) {
-//                Station l = routeValue.getStationList().get(i);
-//                MarkerOptions options = new MarkerOptions();
-//                options.position(new LatLng(l.getLat(), l.getLon()));
-//                options.title(l.getName());
-//                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-//                map.addMarker(options);
-//            } else if (i == routeValue.getStationList().size() - 1) {
-//                Station l = routeValue.getStationList().get(i);
-//                MarkerOptions options = new MarkerOptions();
-//                options.position(new LatLng(l.getLat(), l.getLon()));
-//                options.title(l.getName());
-//                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-//                map.addMarker(options);
-//            } else {
-//                Station l = routeValue.getStationList().get(i);
-//                MarkerOptions options = new MarkerOptions();
-//                options.position(new LatLng(l.getLat(), l.getLon()));
-//                options.title(l.getName());
-//                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-//                map.addMarker(options);
-//            }
-//        }
-//
+        for (int i = 0; i < trip.getVisitedSTSs().size(); i++) {
+            STS sts = trip.getVisitedSTSs().get(i);
+            MarkerOptions options = new MarkerOptions();
+            options.position(new LatLng(sts.getLat(), sts.getLon()));
+            options.title(sts.getName());
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            map.addMarker(options);
+        }
+
     }
 
     @Override
@@ -201,7 +281,7 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
 
     @SuppressLint("CheckResult")
     private void updateCamera(LatLng current, float bearing) {
-        try{
+        try {
             Toasty.info(
                     this,
                     "Updating Location...",
@@ -210,7 +290,7 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
             ).show();
             MarkerOptions options = new MarkerOptions();
             options.position(current);
-            options.icon(bitmapDescriptorFromVector(this, R.drawable.truck));
+            options.icon(bitmapDescriptorFromVector(this, R.drawable.truck_small));
 
             options.flat(true);
             options.anchor(0.5f, 0.5f);
@@ -221,7 +301,7 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
             CameraPosition cameraPosition = new CameraPosition.Builder(map.getCameraPosition())
                     .target(current).zoom(10).build();
             map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(
                     this,
                     e.getLocalizedMessage(),
@@ -239,9 +319,6 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
-
-
 
 
     private void askPermission() {
@@ -275,11 +352,186 @@ public class MapView extends AppCompatActivity implements OnMapReadyCallback, Ro
         map = googleMap;
         map.setTrafficEnabled(false);
         map.setBuildingsEnabled(true);
-        updateCamera(new LatLng( 0,0 ), 0);
+        updateCamera(new LatLng(23.7088742,90.4111186), 0);
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5 * 1000);
+        mLocationRequest.setFastestInterval(10 * 1000);
+        mLocationRequest.setSmallestDisplacement(gap);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            showSettingsAlert();
+        } else {
+            if (mGoogleApiClient.isConnected())
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        builder.setAlwaysShow(true);
+
+        result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+
+        result.setResultCallback(result -> {
+            final Status status = result.getStatus();
+            //final LocationSettingsStates state = result.getLocationSettingsStates();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    // All location settings are satisfied. The client can initialize location
+                    // requests here.
+                    //...
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    // Location settings are not satisfied. But could be fixed by showing the user
+                    // a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        status.startResolutionForResult(
+                                this,
+                                REQUEST_LOCATION);
+                    } catch (IntentSender.SendIntentException e) {
+                        // Ignore the error.
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    // Location settings are not satisfied. However, we have no way to fix the
+                    // settings so we won't show the dialog.
+                    //...
+                    break;
+            }
+        });
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        HashMap<String, Object> mapUpdate = new HashMap<>();
+        double lat = location.getLatitude();
+        double lon = location.getLongitude();
+        int velocity = (int) (location.getSpeed() * 3.6);
+        speed.setText(velocity + getString(R.string.kmh));
+        mapUpdate.put("lat", lat);
+        mapUpdate.put("lon", lon);
+        mapUpdate.put("velocity", velocity);
+        mapUpdate.put("bearing", location.getBearing());
+
+        Toasty.info(
+                this,
+                "Location Updated:" +
+                        " Lat: " + lat
+                        + " Lon: " + lon
+                        + " Bearing: " + location.getBearing()
+                        + " Velocity: " + velocity,
+                Toast.LENGTH_SHORT,
+                true
+        ).show();
+
+        //We will Update the mapData object to the server
+
+//
+        if(!trip.getVisitedSTSs().isEmpty()){
+            float[] results = new float[1];
+
+            Location.distanceBetween(lat, lon, trip.getVisitedSTSs().get(0).getLat(), trip.getVisitedSTSs().get(0).getLat(), results);
+            float currentDistance = results[0];
+
+            if (currentDistance > 250) {
+                //Almost Close to the STS, May trigger a Notification to STS Manager
+            }
+        }
+
+
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            if (this.mGoogleApiClient != null) {
+                this.mGoogleApiClient.connect();
+            }
+        } catch (Exception ignored) {
+
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            //stop location updates when Activity is no longer active
+            if (mGoogleApiClient != null) {
+                //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+
+    public synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getBaseContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("GPS Error");
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Fix",
+                (dialog, which) -> {
+                    Intent intent = new Intent(
+                            Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                });
+        alertDialog.setNegativeButton("Cancel",
+                (dialog, which) -> {
+                    dialog.cancel();
+                });
+
+        // Showing Alert Message
+        alertDialog.show();
     }
 }

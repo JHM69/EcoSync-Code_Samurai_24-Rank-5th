@@ -18,15 +18,26 @@
     <color name="stepview_selected_number">#7e57c2</color>
     <color name="stepview_mark">@color/stepview_selected_number</color>
     <color name="green">#21AA27</color>
-
+    <color name="empty_back">#F7F7F7</color>
+    <color name="payment_cash">#6C97C1</color>
+    <color name="payment_wallet_text">#B5E4B8</color>
+    <color name="payment_wallet_back">#D3EDD4</color>
+    <color name="payment_cash_text">#CFE3F2</color>
+    <color name="payment_cash_back">#E1EFFB</color>
 
     <color name="button_pressed_color">#2C7143</color>
     <color name="button_default_color">#4CAF6D</color>
-
+    <color name="empty_text">#E1E1E1</color>
+    <color name="payment_wallet">#338837</color>
 
     <color name="edit_text_focused_border_color">#4CAF6D</color>
     <color name="edit_text_default_border_color">#BDBDBD</color>
     <color name="primary_text_color">#4CAF6D</color>
+    <color name="pre_booked_not_done">#D26C4C</color>
+
+
+    <color name="text_black_gray">#888888</color>
+
 
 
 </resources>
