@@ -86,7 +86,7 @@ router.post('/meta', auth.required, async (req: Request, res: Response) => {
           lon: lonFloat,
         },
       });
-      
+
     // create a entry in VehicleMeta
     const vehicleMeta = await prisma.vehicleMeta.create({
       data: {
@@ -208,6 +208,47 @@ router.get('/landfilltrips/:landfillId', auth.required, async (req: Request, res
     });
 
     return res.status(200).json(trips);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+});
+
+// cancel trip
+router.post('/canceltrip', auth.required, async (req: Request, res: Response) => {
+  try {
+    const { tripId } = req.body;
+    // check if the trip driver is the current user
+    const trip = await prisma.trip.findUnique({
+      where: { id: parseInt(tripId) },
+      include: { driver: true },
+    });
+
+    if (!trip) {
+      return res.status(404).json({ message: 'Trip not found' });
+    }
+
+    if (trip.driver.id !== req.user.id) {
+      return res.status(403).json({ message: 'You are not allowed to cancel this trip' });
+    }
+
+    // mark the trip as completed
+    const updatedTrip = await prisma.trip.update({
+      where: { id: parseInt(tripId) },
+      data: {
+        completed: true,
+      },
+      include: {
+        vehicle: true,
+        driver: true,
+        startLandfill: true,
+        vehicleEntries: true,
+        vehicleMetas: true,
+        truckDumpEntries: true,
+        bill: true,
+      },
+    });
+
+    return res.status(200).json(updatedTrip);
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
