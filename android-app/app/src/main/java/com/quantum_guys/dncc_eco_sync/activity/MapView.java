@@ -72,6 +72,7 @@ import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.model.Landfill;
 import com.quantum_guys.dncc_eco_sync.model.STS;
 import com.quantum_guys.dncc_eco_sync.model.Trip;
+import com.quantum_guys.dncc_eco_sync.model.VehicleEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +129,6 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         buildGoogleApiClient();
 
 
-
 //        for (STS sts : trip.getVisitedSTSs()) {
 //            stsList.add(new LatLng(
 //                    sts.getLat(),
@@ -137,14 +137,10 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
 //        }
 
         stsList.add(
-                new LatLng(23.7085685,90.4086507 // CSE JnU
-
-                )
+                new LatLng(23.7085685, 90.4086507) // CSE JnU
         );
         stsList.add(
-                new LatLng(
-                        23.72866,90.396453  // CSE DU
-                )
+                new LatLng( 23.72866, 90.396453) // CSE DU
         );
 
         Button qr_btn = findViewById(R.id.scan_button);
@@ -194,6 +190,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         new AlertDialog.Builder(this)
                 .setTitle("Quite?")
                 .setMessage("Are you sure want to quite and go back?")
@@ -237,7 +234,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
 
         // Drawing for Testing
 
-        for (LatLng lt : stsList){
+        for (LatLng lt : stsList) {
             MarkerOptions options = new MarkerOptions();
             options.position(lt);
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -262,11 +259,11 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
             ).show();
         }
 
-        for (int i = 0; i < trip.getVisitedSTSs().size(); i++) {
-            STS sts = trip.getVisitedSTSs().get(i);
+        for (int i = 0; i < trip.getVehicleEntries().size(); i++) {
+            VehicleEntry vehicleEntry = trip.getVehicleEntries().get(i);
             MarkerOptions options = new MarkerOptions();
-            options.position(new LatLng(sts.getLat(), sts.getLon()));
-            options.title(sts.getName());
+            options.position(new LatLng(vehicleEntry.getLat(), vehicleEntry.getLon()));
+            options.title(vehicleEntry.getVehicle().getName());
             options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             map.addMarker(options);
         }
@@ -352,7 +349,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         map = googleMap;
         map.setTrafficEnabled(false);
         map.setBuildingsEnabled(true);
-        updateCamera(new LatLng(23.7088742,90.4111186), 0);
+        updateCamera(new LatLng(23.7088742, 90.4111186), 0);
     }
 
     @Override
@@ -464,14 +461,20 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         //We will Update the mapData object to the server
 
 //
-        if(!trip.getVisitedSTSs().isEmpty()){
+        if (!trip.getVehicleEntries().isEmpty()) {
             float[] results = new float[1];
-
-            Location.distanceBetween(lat, lon, trip.getVisitedSTSs().get(0).getLat(), trip.getVisitedSTSs().get(0).getLat(), results);
+            VehicleEntry lastEntry = trip.getVehicleEntries().get(trip.getVehicleEntries().size() - 1);
+            Location.distanceBetween(lat, lon, lastEntry.getLat(), lastEntry.getLat(), results);
             float currentDistance = results[0];
 
             if (currentDistance > 250) {
-                //Almost Close to the STS, May trigger a Notification to STS Manager
+                // Crossed 250 meters from last STS Vehicle Entry
+                Toasty.info(
+                        this,
+                        "Crossed 250 meters from last STS Vehicle Entry",
+                        Toast.LENGTH_SHORT,
+                        true
+                ).show();
             }
         }
 

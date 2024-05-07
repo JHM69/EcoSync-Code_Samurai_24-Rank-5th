@@ -1,8 +1,6 @@
 package com.quantum_guys.dncc_eco_sync.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,10 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.quantum_guys.dncc_eco_sync.MainActivity;
 import com.quantum_guys.dncc_eco_sync.R;
+import com.quantum_guys.dncc_eco_sync.global.UserDB;
 import com.quantum_guys.dncc_eco_sync.model.User;
+import com.quantum_guys.dncc_eco_sync.model.UserResponse;
 import com.quantum_guys.dncc_eco_sync.retrofit.ApiUtils;
 import com.quantum_guys.dncc_eco_sync.retrofit.AuthService;
 import com.quantum_guys.dncc_eco_sync.view.CustomProgressDialogue;
@@ -60,25 +59,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) {
 
+                           Log.d("LoginPage",  response.message() );
+
                         if (response.isSuccessful()) {
 
-                            try{
-                                User user = (User) response.body();
+                            Log.d("LoginPage", "Success");
 
-                                SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putBoolean("logged", true);
-                                editor.putString("name", Objects.requireNonNull(user).getName());
-                                editor.putString("token", user.getToken());
-                                editor.apply();
+                            User user = ((UserResponse) Objects.requireNonNull(response.body())).user;
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }catch (Exception e){
-                                Log.d("SSSF", e.getMessage());
-                            }
+                            UserDB.login(getApplicationContext(), user);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
 
-//                          jahangirhossainm69@gmail.com
 
 
 

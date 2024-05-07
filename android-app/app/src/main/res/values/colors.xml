@@ -37,7 +37,7 @@
 
 
     <color name="text_black_gray">#888888</color>
-
+    <color name="camera_overlay">#FFFFFF</color>
 
 
 </resources>

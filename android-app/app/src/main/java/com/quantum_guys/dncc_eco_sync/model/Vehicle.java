@@ -1,27 +1,49 @@
 package com.quantum_guys.dncc_eco_sync.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Vehicle implements Serializable {
+
     int id;
+
+
     String registrationNumber;
+
+
     String type;
+
+
     String name;
+
+
     int capacity;
+
+
     int remainingCapacity;
+
+
     double lat;
+
+
     double lon;
+
+
     boolean isFull;
-    int loaddedFuelCost;
+
+
+    int loadedFuelCost;
+
+
     int unloadedFuelCost;
+
+
     int stsId;
+
+
     User driver;
 
-    public Vehicle(int id, String registrationNumber, String type, String name, int capacity, int remainingCapacity, double lat, double lon, boolean isFull, int loaddedFuelCost, int unloadedFuelCost, int stsId, User driver) {
+    public Vehicle(int id, String registrationNumber, String type, String name, int capacity, int remainingCapacity, double lat, double lon, boolean isFull, int loadedFuelCost, int unloadedFuelCost, int stsId, User driver) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.type = type;
@@ -31,31 +53,15 @@ public class Vehicle implements Serializable {
         this.lat = lat;
         this.lon = lon;
         this.isFull = isFull;
-        this.loaddedFuelCost = loaddedFuelCost;
+        this.loadedFuelCost = loadedFuelCost;
         this.unloadedFuelCost = unloadedFuelCost;
         this.stsId = stsId;
         this.driver = driver;
     }
 
-    public Vehicle(int id, String registrationNumber, String type, String name, int capacity, int remainingCapacity, double lat, double lon, boolean isFull, int loaddedFuelCost, int unloadedFuelCost, int stsId) {
-        this.id = id;
-        this.registrationNumber = registrationNumber;
-        this.type = type;
-        this.name = name;
-        this.capacity = capacity;
-        this.remainingCapacity = remainingCapacity;
-        this.lat = lat;
-        this.lon = lon;
-        this.isFull = isFull;
-        this.loaddedFuelCost = loaddedFuelCost;
-        this.unloadedFuelCost = unloadedFuelCost;
-        this.stsId = stsId;
-    }
-
     public Vehicle() {
     }
 
-    @JsonProperty("id")
     public int getId() {
         return this.id;
     }
@@ -65,7 +71,6 @@ public class Vehicle implements Serializable {
     }
 
 
-    @JsonProperty("registrationNumber")
     public String getRegistrationNumber() {
         return this.registrationNumber;
     }
@@ -74,7 +79,6 @@ public class Vehicle implements Serializable {
         this.registrationNumber = registrationNumber;
     }
 
-    @JsonProperty("type")
     public String getType() {
         return this.type;
     }
@@ -83,7 +87,6 @@ public class Vehicle implements Serializable {
         this.type = type;
     }
 
-    @JsonProperty("name")
     public String getName() {
         return this.name;
     }
@@ -93,7 +96,6 @@ public class Vehicle implements Serializable {
     }
 
 
-    @JsonProperty("capacity")
     public int getCapacity() {
         return this.capacity;
     }
@@ -102,7 +104,6 @@ public class Vehicle implements Serializable {
         this.capacity = capacity;
     }
 
-    @JsonProperty("remainingCapacity")
     public int getRemainingCapacity() {
         return this.remainingCapacity;
     }
@@ -112,7 +113,6 @@ public class Vehicle implements Serializable {
     }
 
 
-    @JsonProperty("lat")
     public double getLat() {
         return this.lat;
     }
@@ -122,7 +122,6 @@ public class Vehicle implements Serializable {
     }
 
 
-    @JsonProperty("lon")
     public double getLon() {
         return this.lon;
     }
@@ -132,7 +131,6 @@ public class Vehicle implements Serializable {
     }
 
 
-    @JsonProperty("isFull")
     public boolean getIsFull() {
         return this.isFull;
     }
@@ -142,22 +140,23 @@ public class Vehicle implements Serializable {
     }
 
 
-
-    @JsonProperty("loaddedFuelCost")
-    public int getLoaddedFuelCost() {
-        return this.loaddedFuelCost;
+    public boolean isFull() {
+        return isFull;
     }
 
-    public void setLoaddedFuelCost(int loaddedFuelCost) {
-        this.loaddedFuelCost = loaddedFuelCost;
+    public void setFull(boolean full) {
+        isFull = full;
+    }
+
+    public int getLoadedFuelCost() {
+        return loadedFuelCost;
+    }
+
+    public void setLoadedFuelCost(int loadedFuelCost) {
+        this.loadedFuelCost = loadedFuelCost;
     }
 
 
-
-
-
-
-    @JsonProperty("unloadedFuelCost")
     public int getUnloadedFuelCost() {
         return this.unloadedFuelCost;
     }
@@ -167,7 +166,6 @@ public class Vehicle implements Serializable {
     }
 
 
-    @JsonProperty("stsId")
     public int getStsId() {
         return this.stsId;
     }
@@ -178,7 +176,6 @@ public class Vehicle implements Serializable {
 
 
 
-    @JsonProperty("driver")
     public User getDriver() {
         return this.driver;
     }
