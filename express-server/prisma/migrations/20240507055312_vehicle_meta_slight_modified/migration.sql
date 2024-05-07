@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "VehicleMeta" ALTER COLUMN "timestamp" SET DEFAULT CURRENT_TIMESTAMP;

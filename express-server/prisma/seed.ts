@@ -12,6 +12,7 @@ async function main() {
       { type: 'STSManager' },
       { type: 'LandfillManager' },
       { type: 'Unassigned' },
+      { type: 'Driver' },
     ],
     skipDuplicates: true, // Skip if already exists
   });

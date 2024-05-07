@@ -42,6 +42,7 @@ model User {
   sts                  STS[]
   landfills            Landfill[]
   vehicles             Vehicle[] //Drivers can have multiple vehicles
+  trips                Trip[] //Drivers can have multiple trips
   drivingLicense       String?  //Drivers can have driving license
   passwordResetToken   PasswordResetToken? 
   changedAdminPassword Boolean @default(false)
@@ -87,7 +88,7 @@ model Vehicle {  // 147 vehicles
   stsId        Int?
   sts          STS?      @relation(fields: [stsId], references: [id])
   vehicleEntries VehicleEntry[]
-  truckDumpEntries TruckDumpEntry[] 
+  trips          Trip[]
   @@index([type], name: "idx_vehicle_type")  
   @@index([capacity], name: "idx_vehicle_capacity")
   @@index([loaddedFuelCost], name: "idx_vehicle_loadded_fuel_cost")
@@ -120,12 +121,13 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
   landfillId      Int @default(1)
   landfill        Landfill @relation(fields: [landfillId], references: [id])
+  tripId          Int
+  trip            Trip    @relation(fields: [tripId], references: [id])
   volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
-  bill            Bill?
   createdAt       DateTime @default(now())
   @@index([stsId], name: "idx_vehicle_entry_sts")
   @@index([vehicleId], name: "idx_vehicle_entry_vehicle")
@@ -136,15 +138,12 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
 
 model Bill {
   id              Int      @id @default(autoincrement())
-  vehicleEntryId  Int      @unique
-  vehicleEntry    VehicleEntry @relation(fields: [vehicleEntryId], references: [id])
-  amount          Float
   paid            Boolean @default(false)
+  amount          Float
   verified        Boolean @default(false)
   createdAt       DateTime @default(now())
-  distance        Float
-  duration        Float
-  @@index([vehicleEntryId], name: "idx_bills_vehicle_entry")
+  tripId          Int     @unique
+  trip            Trip     @relation(fields: [tripId], references: [id])
 }
 
 model WasteEntry {  //StsManager can entry multiple vehicles enties 
@@ -163,8 +162,6 @@ model WasteEntry {  //StsManager can entry multiple vehicles enties
 
 model TruckDumpEntry {
   id              Int      @id @default(autoincrement())
-  vehicleId       Int
-  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
   volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
@@ -173,8 +170,9 @@ model TruckDumpEntry {
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
   billId         Int       @default(0)
+  tripId          Int
+  trip            Trip     @relation(fields: [tripId], references: [id])
   createdAt       DateTime @default(now())
-  @@index([vehicleId], name: "idx_truck_dump_entry_vehicle")
   @@index([landfillId], name: "idx_truck_dump_entry_landfill")
   @@index([userId], name: "idx_truck_dump_entry_user")
   @@index([timeOfArrival], name: "idx_truck_dump_entry_time_of_arrival")
@@ -195,7 +193,36 @@ model Landfill {
   address         String?
   managers        User[]  
   truckDumpEntries TruckDumpEntry[]
+  trips           Trip[]
   vehicleEntries   VehicleEntry[]
   @@index([name], name: "idx_landfill_name")
   @@index([capacity], name: "idx_landfill_capacity")
+}
+
+model VehicleMeta{
+  id Int @id @default(autoincrement())
+  tripId Int
+  trip Trip @relation(fields: [tripId], references: [id]) 
+  lat Float
+  lon Float
+  weight Float
+  timestamp DateTime @default(now())
+}
+
+model Trip{
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  vehicleId Int
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  driverId Int
+  driver User @relation(fields: [driverId], references: [id])
+  startLandfillId Int
+  startLandfill Landfill @relation(fields: [startLandfillId], references: [id])
+  vehicleMetas VehicleMeta[]
+  vehicleEntries VehicleEntry[]
+  truckDumpEntries TruckDumpEntry[]
+  completed Boolean @default(false)
+  distance Float @default(0)
+  duration Float @default(0)
+  bill Bill?
 }

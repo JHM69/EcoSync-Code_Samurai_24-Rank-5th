@@ -8,6 +8,7 @@ import authController from '../controllers/auth.controller';
 import vehicleController from '../controllers/vehicle.controller';
 import billController from '../controllers/bill.controller';
 import dashboardController from '../controllers/dashboard.controller';
+import tripController from '../controllers/trip.controller';
 
 const api = Router() 
   .use(usersController) 
@@ -17,6 +18,7 @@ const api = Router()
   .use(rbacController)
   .use(vehicleController)
   .use(billController)
-  .use(dashboardController);
+  .use(dashboardController)
+  .use(tripController);
 
 export default Router().use('/', api);
