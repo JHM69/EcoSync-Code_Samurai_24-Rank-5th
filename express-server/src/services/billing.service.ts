@@ -6,65 +6,8 @@
 /* eslint-disable import/order */
 import prisma from '../../prisma/prisma-client'; 
 import axios from 'axios';
- 
- 
-const oilAllocations = { // Oil allocation per vehicle type in Full Capacity per trip
-    'OpenTruck': 10, 
-    'DumpTruck': 15,
-    'Compactor': 20,
-    'ContainerCarrier': 25
-};
 
-// eslint-disable-next-line import/prefer-default-export
-export async function calculateAndSaveBillingRecords(startDate : string, endDate  : string) {
-    // Assume that `VehicleEntry` records are already populated for each trip
-    // Calculate the billing records based on the total volume of waste per vehicle between startDate and endDate
-
-    // Fetching all vehicle IDs first to iterate over them
-    const vehicles = await prisma.vehicle.findMany({
-        select: { id: true, type: true, capacity: true }
-    });
-
-    // Preparing for bulk creation of billing records
-    const billingRecordsData : any[] = [];
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const vehicle of vehicles) {
-        // eslint-disable-next-line no-await-in-loop
-        const entries = await prisma.vehicleEntry.findMany({
-            where: {
-                vehicleId: vehicle.id,
-                AND: [
-                    { timeOfArrival: { gte: startDate } },
-                    { timeOfDeparture: { lte: endDate } }
-                ],
-            }
-        });
-
-        // Summing the volume of waste for this vehicle in the given period
-        const totalVolumeOfWaste = entries.reduce((sum, entry) => sum + entry.volumeOfWaste, 0);
-        const totalCapacityForPeriod = vehicle.capacity * 3 * entries.length / 3; // Assuming 3 trips per day for each day in the period
-
-        const capacityUtilization = totalVolumeOfWaste / totalCapacityForPeriod;
-        const oilAllocation = (oilAllocations[vehicle.type] * capacityUtilization) * entries.length / 3; // Oil allocation based on the number of days active
-
-        billingRecordsData.push({
-            vehicleId: vehicle.id,
-            date: endDate, // Using endDate as the reference for this billing period
-            volumeOfWaste: totalVolumeOfWaste,
-            capacityUtilization,
-            oilAllocated: oilAllocation,
-            totalVolumeOfWaste,
-            totalCapacityForPeriod,
-        });
-
-    }
-
-    return billingRecordsData;
-
-}
-
-const fetchDirections = async (origin: string, destination: string) => {
+export const fetchDirections = async (origin: string, destination: string) => {
     try {
         const response = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
             params: {
@@ -92,80 +35,96 @@ const fetchDirections = async (origin: string, destination: string) => {
     }
 };
 
-export const createBill = async (id: string, userId: number, stsId:number, landfillId?:number) => {
-    // get sts entry by id
-    const VehicleEntry = await prisma.vehicleEntry.findUnique({
-      where: {
-        id: Number(id),
-      },
-      include: {
-        vehicle: true,
-      },
-    });
-    if (!VehicleEntry) {
-      throw new Error('Vehicle Entry not found');
-    }
-    // get lat lon of sts
-    const sts = await prisma.sTS.findUnique({
-      where: {
-        id: stsId,
-      },
-    });
-    // get lat lon of landfill
-    let landfillIdNumber=1;
-    if(landfillId)landfillIdNumber=Number(landfillId);
-    const landfill = await prisma.landfill.findUnique({
-      where: {
-        id: landfillIdNumber,
-      },
-    });
-  
-    // get distance and duration between sts and landfill
-    const from = `${sts?.lat},${sts?.lon}`;
-    const to = `${landfill?.lat},${landfill?.lon}`;
-    const {distance, duration} = await fetchDirections(from as string, to as string);
-    // calculate the cost
-    const bill = {
-      entryid: VehicleEntry.id,
-      billCreatedAt: new Date(),
-      timeOfArrival: VehicleEntry.timeOfArrival,
-      timeOfDeparture: VehicleEntry.timeOfDeparture,
-      volumeOfWaste: VehicleEntry.volumeOfWaste,
-      truckId: VehicleEntry.vehicle.id,
-      truckRegistrationNumber: VehicleEntry.vehicle.registrationNumber,
-      truckType: VehicleEntry.vehicle.type,
-      unloadedFuelCost: VehicleEntry.vehicle.unloadedFuelCost,
-      loaddedFuelCost: VehicleEntry.vehicle.loaddedFuelCost,
-      capacity: VehicleEntry.vehicle.capacity,
-      cost: 0,
-      assigneeId: userId,
-      distance: distance,
-      duration: duration,
-    };
-    const unloadedFuelCost = VehicleEntry?.vehicle.unloadedFuelCost;
-    const loaddedFuelCost = VehicleEntry?.vehicle.loaddedFuelCost;
-    const volumeOfWaste = VehicleEntry?.volumeOfWaste;
-    const capacity = VehicleEntry?.vehicle.capacity;
-    
-    bill.cost = (unloadedFuelCost + (volumeOfWaste / capacity) * (loaddedFuelCost - unloadedFuelCost))*distance;
-    console.log(bill.cost);
-    const createdBill = await prisma.bill.create({
-        data:{
-            vehicleEntryId: VehicleEntry.id,
-            amount: bill.cost,
-            distance: Number(distance),
-            duration: Number(duration),
-        },
+export const createBill = async (tripId:number)=>{
+    const trip = await prisma.trip.findUnique({
+        where: { id: tripId },
         include: {
-            vehicleEntry: true,
-        }
-        });
-    console.log('Bill created:', createdBill);
-    return createdBill;
-  };
+          vehicle: true,
+          driver: true,
+          startLandfill: true,
+          vehicleEntries: {
+            include: {
+              sts: true,
+            },
+          },
+          vehicleMetas: {
+            orderBy: {
+              id: 'asc',
+            },
+          },
+          truckDumpEntries: {
+            include: {
+              landfill: true,
+            },
+          },
+          bill: true,
+        },
+      });
 
-module.exports = {
-    calculateAndSaveBillingRecords,
-    fetchDirections,
-    createBill
-};
+    //create an array to keep lat lon
+    let latLonArray=[];
+    latLonArray.push(`${trip.startLandfill.lat},${trip.startLandfill.lon},0`);
+    trip.vehicleMetas.forEach((meta)=>{
+        latLonArray.push(`${meta.lat},${meta.lon},${meta.weight}`);
+    });
+    latLonArray.push(`${trip.truckDumpEntries[0].landfill.lat},${trip.truckDumpEntries[0].landfill.lon},0`);
+
+    let distance=0, amount=0;
+    for(let i=0;i<latLonArray.length-1;i++){
+        const from = latLonArray[i];
+        const to = latLonArray[i+1];
+        const d=latLonDistance(Number(from.split(",")[0]), Number(from.split(",")[1]), Number(to.split(",")[0]), Number(to.split(",")[1]));
+        distance+=d;
+        amount+=getAmount(d, trip.vehicle.unloadedFuelCost, trip.vehicle.loaddedFuelCost, Number(from.split(",")[2]), trip.vehicle.capacity);
+    }
+   // duration of the trip
+   const duration = (trip.truckDumpEntries[0].timeOfDeparture.getTime()-trip.createdAt.getTime())/60000;
+  
+   
+   const bill = await prisma.bill.create({
+        data:{
+            amount: amount,
+            trip: {
+                connect: {
+                    id: tripId,
+                },
+            },
+        }
+    });
+
+    await prisma.trip.update({
+        where: {
+          id: tripId,
+        },
+        data: {
+          bill: {
+            connect: {
+              id: bill.id,
+            },
+          },
+          distance: distance,
+          duration: duration,
+        },
+      });
+
+      return bill;
+}
+
+//create a function that will calculate the distance between two lat lon mathematically
+const latLonDistance = (lat1:number, lon1:number, lat2:number, lon2:number)=>{
+    const R = 6371e3; // metres
+    const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+    const φ2 = lat2 * Math.PI/180;
+    const Δφ = (lat2-lat1) * Math.PI/180;
+    const Δλ = (lon2-lon1) * Math.PI/180;
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const d = R * c; // in metres
+    return d;
+}
+
+const getAmount = (distance:number, unloadedFuelCost:number, loaddedFuelCost:number, volumeOfWaste:number, capacity:number)=>{
+    return (unloadedFuelCost + (volumeOfWaste / capacity) * (loaddedFuelCost - unloadedFuelCost))*distance;
+}

@@ -77,9 +77,10 @@ model Vehicle {  // 147 vehicles
   registrationNumber String   @unique
   type          VehicleType
   name          String?
+  status        String @default("Active") //Active, UnderMaintenance, Damaged, Stolen
   drivers        User[]
-  capacity      Int
-  remainingCapacity Int
+  capacity      Float
+  remainingCapacity Float
   lat           Float @default(0)
   lon           Float @default(0)
   isFull        Boolean @default(false)
@@ -87,7 +88,6 @@ model Vehicle {  // 147 vehicles
   unloadedFuelCost Float
   stsId        Int?
   sts          STS?      @relation(fields: [stsId], references: [id])
-  vehicleEntries VehicleEntry[]
   trips          Trip[]
   @@index([type], name: "idx_vehicle_type")  
   @@index([capacity], name: "idx_vehicle_capacity")
@@ -117,20 +117,15 @@ model VehicleEntry {  //StsManager can entry multiple vehicles enties
   id              Int      @id @default(autoincrement())
   stsId           Int
   sts             STS      @relation(fields: [stsId], references: [id])
-  vehicleId       Int
-  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
-  landfillId      Int @default(1)
-  landfill        Landfill @relation(fields: [landfillId], references: [id])
   tripId          Int
   trip            Trip    @relation(fields: [tripId], references: [id])
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
   volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
-  userId          Int
-  user            User     @relation(fields: [userId], references: [id])
   createdAt       DateTime @default(now())
   @@index([stsId], name: "idx_vehicle_entry_sts")
-  @@index([vehicleId], name: "idx_vehicle_entry_vehicle")
   @@index([userId], name: "idx_vehicle_entry_user")
   @@index([timeOfArrival], name: "idx_vehicle_entry_time_of_arrival")
   @@index([timeOfDeparture], name: "idx_vehicle_entry_time_of_departure")
@@ -140,6 +135,7 @@ model Bill {
   id              Int      @id @default(autoincrement())
   paid            Boolean @default(false)
   amount          Float
+  optimalAmount   Float?
   verified        Boolean @default(false)
   createdAt       DateTime @default(now())
   tripId          Int     @unique
@@ -165,13 +161,12 @@ model TruckDumpEntry {
   volumeOfWaste   Float
   timeOfArrival   DateTime
   timeOfDeparture DateTime
+  tripId          Int
+  trip            Trip     @relation(fields: [tripId], references: [id])
   landfillId      Int
   landfill        Landfill @relation(fields: [landfillId], references: [id])
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
-  billId         Int       @default(0)
-  tripId          Int
-  trip            Trip     @relation(fields: [tripId], references: [id])
   createdAt       DateTime @default(now())
   @@index([landfillId], name: "idx_truck_dump_entry_landfill")
   @@index([userId], name: "idx_truck_dump_entry_user")
@@ -183,8 +178,8 @@ model TruckDumpEntry {
 model Landfill {
   id              Int      @id @default(autoincrement())
   name            String
-  capacity        Int
-  currentWasteVolume Int
+  capacity        Float
+  currentWasteVolume Float
   startTime      String
   endTime        String
   gpsCoords       String
@@ -194,7 +189,6 @@ model Landfill {
   managers        User[]  
   truckDumpEntries TruckDumpEntry[]
   trips           Trip[]
-  vehicleEntries   VehicleEntry[]
   @@index([name], name: "idx_landfill_name")
   @@index([capacity], name: "idx_landfill_capacity")
 }
@@ -224,5 +218,7 @@ model Trip{
   completed Boolean @default(false)
   distance Float @default(0)
   duration Float @default(0)
+  optimalDistance Float?
+  optimalDuration Float?
   bill Bill?
 }

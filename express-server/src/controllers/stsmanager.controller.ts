@@ -7,7 +7,7 @@ import { Request, Response, Router } from 'express';
  
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
-import { createBill } from '../services/billing.service';
+import { createSTS, updateSTS } from '../services/stsmanager.service';
 
 const router = Router();
 
@@ -21,44 +21,6 @@ router.post('/sts', auth.required, auth.isSystemAdmin, async (req: Request, res:
   }
 });
 
-const createSTS = async (stsData: {
-  wardNumber: string;
-  name?: string;
-  capacity: string;
-  lat: string;
-  lon: string;
-  managerIds?: string[];
-  address?: string;
-  logo?: string;
-  vehicleIds?: string[];
-}) => {
-  const managerIds = stsData.managerIds ? stsData.managerIds.map(id => Number(id)) : [];
-  const vehicleIds = stsData.vehicleIds ? stsData.vehicleIds.map(id => Number(id)) : [];
-
-  return await prisma.sTS.create({
-    data: {
-      wardNumber: stsData.wardNumber,
-      name: stsData.name,
-      capacity: Number(stsData.capacity),
-      currentWasteVolume: 0,
-      lat: Number(stsData.lat),
-      lon: Number(stsData.lon),
-      address: stsData.address,
-      logo: stsData.logo,
-      vehicles: {
-        connect: vehicleIds.map(id => ({ id })), // Connect vehicles by id
-      },
-      managers: {
-        connect: managerIds.map(id => ({ id })),
-      },
-    },
-    include: {
-      managers: true,
-      vehicles: true,
-    },
-  });
-};
-
 // Update STS by id
 router.put('/sts/:id', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
@@ -68,92 +30,6 @@ router.put('/sts/:id', auth.required, auth.isSystemAdmin, async (req: Request, r
     res.status(400).json({ message: error.message });
   }
 });
-
-const updateSTS = async (
-  stsData: {
-    wardNumber?: string;
-    name?: string;
-    capacity?: string;
-    currentWasteVolume?: string;
-    lat?: string;
-    lon?: string;
-    managerIds?: string[];
-    address?: string;
-    logo?: string;
-    vehicleIds?: string[];
-  },
-  id: number,
-) => {
-  const managerIds = stsData.managerIds ? stsData.managerIds.map(id => Number(id)) : [];
-  const vehicleIds = stsData.vehicleIds ? stsData.vehicleIds.map(id => Number(id)) : [];
-
-  if (stsData.managerIds) {
-    // remove all managers
-    await prisma.sTS.update({
-      where: {
-        id,
-      },
-      data: {
-        managers: {
-          set: [],
-        },
-      },
-    });
-  }
-  if (stsData.vehicleIds) {
-    // remove all vehicles
-    await prisma.sTS.update({
-      where: {
-        id,
-      },
-      data: {
-        vehicles: {
-          set: [],
-        },
-      },
-    });
-  }
-
-  let capacity; let currentWasteVolume; let lat; let lon;
-  if (stsData.capacity) {
-    capacity = Number(stsData.capacity);
-  }
-  if (stsData.currentWasteVolume) {
-    currentWasteVolume = Number(stsData.currentWasteVolume);
-  }
-  if (stsData.lat) {
-    lat = Number(stsData.lat);
-  }
-  if (stsData.lon) {
-    lon = Number(stsData.lon);
-  }
-
-  return await prisma.sTS.update({
-    where: {
-      id,
-    },
-    data: {
-      wardNumber: stsData.wardNumber,
-      name: stsData.name,
-      capacity,
-      currentWasteVolume,
-      lat,
-      lon,
-      address: stsData.address,
-      logo: stsData.logo,
-      vehicles: {
-        connect: vehicleIds.map(id => ({ id })),
-      },
-      managers: {
-        connect: managerIds.map(id => ({ id })),
-      },
-    },
-    include: {
-      managers: true,
-      vehicles: true,
-    },
-  });
-};
 
 // get all stsmangers
 router.get('/stsmanagers', auth.required, async (req: Request, res: Response) => {
@@ -267,12 +143,8 @@ router.get('/mysts', auth.required, async (req: Request, res: Response) => {
   }
 });
 
-// STS managers can add entry of vehicles leaving the STS with STS ID, vehicle number, weight of waste, time of arrival and time of departure.
-router.post(
-  '/sts/:id/entry',
-  auth.required,
-  auth.isSTSManager,
-  async (req: Request, res: Response) => {
+// create vehicle entry
+router.post('/sts/:id/entry', auth.required, auth.isSTSManager, async (req: Request, res: Response) => {
     try {
       const stsId = Number(req.params.id);
       // check if the user is a manager of the STS
@@ -296,30 +168,93 @@ router.post(
       if (!isManager) {
         return res.status(403).json({ message: 'You are not a manager of this STS' });
       }
-      // @ts-ignore
-      const vehicleEntry = await createVehicleEntry(req.body, stsId, req.user.id);
-      // @ts-ignore
-      const bill = await createBill(vehicleEntry.id, req.user.id, stsId, req.body.landfillId);
-      // update the vehucle entry with the bill id
-      const updatedVehicleEntry = await prisma.vehicleEntry.update({
+
+      const {tripId, volumeOfWaste, timeOfArrival, timeOfDeparture} = req.body;
+      const trip = await prisma.trip.findUnique({
         where: {
-          id: vehicleEntry.id,
+          id: Number(tripId),
+        },
+        include: {
+          vehicle: true,
+        },
+      });
+
+      if (!trip) {
+        return res.status(404).json({ message: 'Trip not found' });
+      }
+      if(trip.completed){
+        return res.status(400).json({ message: 'Trip already completed' });
+      }
+
+      // update the sts current waste volume
+      await prisma.sTS.update({
+        where: {
+          id: stsId,
         },
         data: {
-          bill: {
+          currentWasteVolume: sts.currentWasteVolume - Number(volumeOfWaste),
+        },
+      });
+
+      // update the remaining capacity of the vehicle
+      await prisma.vehicle.update({
+        where: {
+          id: trip.vehicle.id,
+        },
+        data: {
+          remainingCapacity: trip.vehicle.remainingCapacity - Number(volumeOfWaste),
+        },
+      });
+
+      // create a vehicle entry
+      const vehicleEntry = await prisma.vehicleEntry.create({
+        data: {
+          volumeOfWaste: Number(volumeOfWaste),
+          timeOfArrival: new Date(timeOfArrival),
+          timeOfDeparture: new Date(timeOfDeparture),
+          trip: {
             connect: {
-              id: bill.id,
+              id: Number(tripId),
+            },
+          },
+          sts: {
+            connect: {
+              id: stsId,
+            },
+          },
+          user: {
+            connect: {
+              id: req.user.id,
             },
           },
         },
         include: {
           sts: true,
-          vehicle: true,
-          landfill: true,
-          bill: true,
+          trip:{
+            include:{
+              vehicle:true,
+              startLandfill:true,
+              vehicleEntries:{
+                include:{
+                  sts:true,
+                  user:{
+                    select:{
+                      id:true,
+                      name:true,
+                      email:true,
+                      phone:true,
+                      image:true,
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
       });
-      res.status(201).json(updatedVehicleEntry);
+
+      return res.status(201).json(vehicleEntry);
+      
     } catch (error: any) {
       console.log(error);
       res.status(400).json({ message: error.message });
@@ -327,85 +262,7 @@ router.post(
   },
 );
 
-const createVehicleEntry = async (
-  vehicleEntryData: {
-    vehicleId: string;
-    volumeOfWaste: string;
-    timeOfArrival: string;
-    timeOfDeparture: string;
-    landfillId?: string;
-  },
-  stsId: number,
-  userId: number,
-) => {
-  // get the vehicle
-  const vehicle = await prisma.vehicle.findUnique({
-    where: {
-      id: Number(vehicleEntryData.vehicleId),
-    },
-  });
-  // update the remaining capacity of the vehicle
-  await prisma.vehicle.update({
-    where: {
-      id: Number(vehicleEntryData.vehicleId),
-    },
-    data: {
-      // @ts-ignore
-      remainingCapacity: vehicle.remainingCapacity - Number(vehicleEntryData.volumeOfWaste),
-    },
-  });
-  const sts = await prisma.sTS.findUnique({
-    where: {
-      id: stsId,
-    },
-  });
-  // update sts currentWasteVolume
-  await prisma.sTS.update({
-    where: {
-      id: stsId,
-    },
-    data: {
-      // @ts-ignore
-      currentWasteVolume: sts.currentWasteVolume - Number(vehicleEntryData.volumeOfWaste),
-    },
-  });
-  let landfillIdNumber = 1;
-  if (vehicleEntryData.landfillId) landfillIdNumber = Number(vehicleEntryData.landfillId);
-  return await prisma.vehicleEntry.create({
-    data: {
-      volumeOfWaste: Number(vehicleEntryData.volumeOfWaste),
-      timeOfArrival: new Date(vehicleEntryData.timeOfArrival),
-      timeOfDeparture: new Date(vehicleEntryData.timeOfDeparture),
-      landfill: {
-        connect: {
-          id: landfillIdNumber,
-        },
-      },
-      sts: {
-        connect: {
-          id: stsId,
-        },
-      },
-      vehicle: {
-        connect: {
-          id: Number(vehicleEntryData.vehicleId),
-        },
-      },
-      user: {
-        connect: {
-          id: userId,
-        },
-      },
-    },
-    include: {
-      sts: true,
-      vehicle: true,
-      landfill: true,
-    },
-  });
-};
-
-// get all entries of a STS. anyone can get the entries of a STS.
+// get all entries of a STS.
 router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) => {
   try {
     const stsId = Number(req.params.id);
@@ -415,9 +272,26 @@ router.get('/sts/:id/entry', auth.required, async (req: Request, res: Response) 
       },
       include: {
         sts: true,
-        vehicle: true,
-        landfill: true,
-        bill: true,
+        trip:{
+          include:{
+            vehicle:true,
+            startLandfill:true,
+            vehicleEntries:{
+              include:{
+                sts:true,
+                user:{
+                  select:{
+                    id:true,
+                    name:true,
+                    email:true,
+                    phone:true,
+                    image:true,
+                  }
+                }
+              }
+            }
+          }
+        }
       },
     });
     res.status(200).json(entries);

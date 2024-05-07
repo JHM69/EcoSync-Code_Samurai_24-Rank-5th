@@ -18,7 +18,9 @@ router.post('/trip', auth.required, async (req: Request, res: Response) => {
     // check if the vehicle's drivers array includes the current user id
     const vehicle = await prisma.vehicle.findUnique({
       where: { id: parseInt(vehicleId) },
-      include: { drivers: true },
+      include: {  
+       drivers: true,
+    },
     });
 
     if (!vehicle) {
@@ -44,7 +46,15 @@ router.post('/trip', auth.required, async (req: Request, res: Response) => {
       },
       include: {
         vehicle: true,
-        driver: true,
+        driver: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+            },
+          },
         startLandfill: true,
       },
     });
@@ -103,6 +113,7 @@ router.post('/meta', auth.required, async (req: Request, res: Response) => {
                 vehicle:true,
                 vehicleEntries:true,
                 vehicleMetas:true,
+                startLandfill:true,
             }
         }
       },
@@ -120,7 +131,15 @@ router.get('/trip', auth.required, async (req: Request, res: Response) => {
     const trips = await prisma.trip.findMany({
       include: {
         vehicle: true,
-        driver: true,
+        driver: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+            },
+          },
         startLandfill: true,
         vehicleEntries: true,
         vehicleMetas: true,
@@ -142,7 +161,15 @@ router.get('/trip/:tripId', auth.required, async (req: Request, res: Response) =
       where: { id: parseInt(req.params.tripId) },
       include: {
         vehicle: true,
-        driver: true,
+        driver: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+            },
+          },
         startLandfill: true,
         vehicleEntries: true,
         vehicleMetas: true,
@@ -169,7 +196,15 @@ router.get('/mytrips', auth.required, async (req: Request, res: Response) => {
       where: { driverId: req.user.id },
       include: {
         vehicle: true,
-        driver: true,
+        driver: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+            },
+          },
         startLandfill: true,
         vehicleEntries: true,
         vehicleMetas: true,
@@ -195,7 +230,15 @@ router.get('/landfilltrips/:landfillId', auth.required, async (req: Request, res
       where: { startLandfillId: parseInt(req.params.landfillId) },
       include: {
         vehicle: true,
-        driver: true,
+        driver: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+            },
+          },
         startLandfill: true,
         vehicleEntries: true,
         vehicleMetas: true,
@@ -239,7 +282,15 @@ router.post('/canceltrip', auth.required, async (req: Request, res: Response) =>
       },
       include: {
         vehicle: true,
-        driver: true,
+        driver: {
+            select: {
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+            },
+          },
         startLandfill: true,
         vehicleEntries: true,
         vehicleMetas: true,

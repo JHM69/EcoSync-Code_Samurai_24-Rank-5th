@@ -86,7 +86,7 @@ router.get('/vehicle/:id', auth.required, async (req: Request, res: Response) =>
 router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, res: Response) => {
   try {
     // Extract vehicle data from request body
-    const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost, drivers } =
+    const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost, drivers, status } =
       req.body;
     const driverIds = drivers? drivers.map(id => Number(id)) : [];
 
@@ -124,6 +124,7 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
         isFull: isFull || false, // Default to false if isFull is not provided
         loaddedFuelCost: Number(loaddedFuelCost) || 23.815485092033324, // Default to 0 if loaddedFuelCost is not provided
         unloadedFuelCost: Number(unloadedFuelCost) || 90.36613393405976, // Default to 0 if unloadedFuelCost is not provided
+        status: status || 'Active', // Default to Active if status is not provided
         drivers: {
           connect: driverIds.map((id) => ({ id })),
         }
@@ -147,7 +148,7 @@ router.put(
   async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost,drivers } =
+      const { registrationNumber, type, lat, lon, isFull, loaddedFuelCost, unloadedFuelCost,drivers,status } =
         req.body;
       const driverIds = drivers? drivers.map(id => Number(id)) : [];
 
@@ -206,6 +207,7 @@ router.put(
           isFull: isFull || undefined, // Default to false if isFull is not provided
           loaddedFuelCost: loaddedFuelCostNumber || undefined, // Default to 0 if loaddedFuelCost is not provided
           unloadedFuelCost: unloadedFuelCostNumber || undefined, // Default to 0 if unloadedFuelCost is not provided
+          status: status || undefined, // Default to Active if status is not provided
           drivers: {
             connect: driverIds.map((id) => ({ id })),
           }
