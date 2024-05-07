@@ -23,4 +23,9 @@
     <string name="score_5">Score: 5</string>
     <string name="time">time</string>
     <string name="submit">Submit</string>
+    <string name="_0_0km_h">0.0km/h</string>
+    <string name="google_maps_key">AIzaSyD-fWxpG3gd-rK4AxONA9e0ifvhUdBxkC4</string>
+    <string name="kmh">km/h</string>
+
+
 </resources>

@@ -1,27 +1,27 @@
 package com.quantum_guys.dncc_eco_sync.model;
 
-import java.io.Serializable;
+import androidx.room.Entity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
-import java.util.List;
 
-public class User implements Serializable {
-    private int id;
-    private String email;
-    private String name;
-    private String password;
-    private String image;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date lastLogin;
-    private Date lastLogout;
-    private int roleId;
-    private boolean changedAdminPassword;
-    private Role role;
-    private String token;
+public class User {
+    String token;
+    Role role;
+    boolean changedAdminPassword;
+    int roleId;
+    Date lastLogout;
+    Date lastLogin;
+    Date updatedAt;
+    Date createdAt;
+    String image;
+    String password;
+    String name;
+    int id;
+    String email;
 
-    // Constructor
-    public User(int id, String email, String name, String password, String image, Date createdAt, Date updatedAt,
-                Date lastLogin, Date lastLogout, int roleId, boolean changedAdminPassword, Role role, String token) {
+    public User(int id, String email, String name, String password, String image, Date createdAt, Date updatedAt, Date lastLogin, Date lastLogout, int roleId, boolean changedAdminPassword, Role role, String token) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -37,130 +37,147 @@ public class User implements Serializable {
         this.token = token;
     }
 
-    // Getters and Setters
+    public User() {
+    }
+
+    @JsonProperty("id")
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
+
+    @JsonProperty("email")
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+
+    @JsonProperty("name")
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+
+
+    @JsonProperty("password")
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+
+
+    @JsonProperty("image")
     public String getImage() {
-        return image;
+        return this.image;
     }
 
     public void setImage(String image) {
         this.image = image;
     }
 
+
+
+    @JsonProperty("createdAt")
     public Date getCreatedAt() {
-        return createdAt;
+        return this.createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
+
+
+    @JsonProperty("updatedAt")
     public Date getUpdatedAt() {
-        return updatedAt;
+        return this.updatedAt;
     }
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
+
+
+    @JsonProperty("lastLogin")
     public Date getLastLogin() {
-        return lastLogin;
+        return this.lastLogin;
     }
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 
+
+
+    @JsonProperty("lastLogout")
     public Date getLastLogout() {
-        return lastLogout;
+        return this.lastLogout;
     }
 
     public void setLastLogout(Date lastLogout) {
         this.lastLogout = lastLogout;
     }
 
+
+
+    @JsonProperty("roleId")
     public int getRoleId() {
-        return roleId;
+        return this.roleId;
     }
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
     }
 
-    public boolean isChangedAdminPassword() {
-        return changedAdminPassword;
+
+
+    @JsonProperty("changedAdminPassword")
+    public boolean getChangedAdminPassword() {
+        return this.changedAdminPassword;
     }
 
     public void setChangedAdminPassword(boolean changedAdminPassword) {
         this.changedAdminPassword = changedAdminPassword;
     }
 
+
+
+    @JsonProperty("role")
     public Role getRole() {
-        return role;
+        return this.role;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
 
+
+
+    @JsonProperty("token")
     public String getToken() {
-        return token;
+        return this.token;
     }
 
     public void setToken(String token) {
         this.token = token;
     }
-}
 
-class Role {
-    private int id;
-    private String type;
-    private List<Permission> permissions;
 
-    public Role(int id, String type, List<Permission> permissions) {
-        this.id = id;
-        this.type = type;
-        this.permissions = permissions;
-    }
-}
-
-class Permission {
-    private int id;
-    private String name;
-
-    public Permission(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }
