@@ -46,6 +46,9 @@ model User {
   drivingLicense       String?  //Drivers can have driving license
   passwordResetToken   PasswordResetToken? 
   changedAdminPassword Boolean @default(false)
+  faceVerificationAdded Boolean @default(false)
+  faceData Json?
+  notifications         Notification[]
   @@index([roleId], name: "idx_user_role")
   @@index([name], name: "idx_user_name")
   @@index([email], name: "idx_user_email")
@@ -89,6 +92,7 @@ model Vehicle {  // 147 vehicles
   stsId        Int?
   sts          STS?      @relation(fields: [stsId], references: [id])
   trips          Trip[]
+  notifications         Notification[]
   @@index([type], name: "idx_vehicle_type")  
   @@index([capacity], name: "idx_vehicle_capacity")
   @@index([loaddedFuelCost], name: "idx_vehicle_loadded_fuel_cost")
@@ -109,6 +113,7 @@ model STS {  // 54 STS
   vehicles            Vehicle[]
   vehicleEntries      VehicleEntry[]
   wasteEntries        WasteEntry[]
+  notifications         Notification[]
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
 }
@@ -221,4 +226,22 @@ model Trip{
   optimalDistance Float?
   optimalDuration Float?
   bill Bill?
+  notifications         Notification[]
+}
+
+model Notification{
+  id Int @id @default(autoincrement())
+  message String?
+  name String?
+  type Int @default(0)
+  driverId Int?
+  driver User? @relation(fields: [driverId], references: [id])
+  stsId Int?
+  sts STS? @relation(fields: [stsId], references: [id])
+  truckId Int?
+  truck Vehicle? @relation(fields: [truckId], references: [id])
+  tripId Int?
+  trip Trip? @relation(fields: [tripId], references: [id])
+  timeStamp DateTime @default(now())
+  extra String?
 }
