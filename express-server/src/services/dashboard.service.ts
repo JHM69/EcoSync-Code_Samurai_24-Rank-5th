@@ -73,13 +73,6 @@ export const dashboardData = async (
       lon: true,
       remainingCapacity: true,
       isFull: true,
-      vehicleEntries: {
-        where: whereCondition,
-        select: {
-          id: true,
-          volumeOfWaste: true,
-        },
-      },
     },
   });
 
@@ -98,6 +91,7 @@ export const dashboardData = async (
           volumeOfWaste: true,
         },
       },
+      trips: true,
     },
     take: 5,
   });
@@ -173,13 +167,11 @@ export const getBillsData = async (
   const bills = await prisma.bill.findMany({
     where: whereCondition,
     include: {
-      vehicleEntry: {
+      trip: {
         include: {
-          vehicle: true,
-          sts: true,
-          landfill: true,
-        },
-      },
+          vehicleEntries: true,
+      }
+    },
     },
     orderBy: {
       createdAt: 'desc',
@@ -191,8 +183,8 @@ export const getBillsData = async (
   const totals = bills.reduce(
     (acc, bill) => {
       acc.totalCost += bill.amount;
-      acc.totalDistance += bill.distance;
-      acc.totalWasteTransported += bill.vehicleEntry.volumeOfWaste;
+      acc.totalDistance += bill.trip.distance;
+      acc.totalWasteTransported += bill.trip.vehicleEntries[0].volumeOfWaste;
       if (bill.paid) acc.paidCost += bill.amount;
       return acc;
     },
