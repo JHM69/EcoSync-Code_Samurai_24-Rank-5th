@@ -43,11 +43,13 @@ model User {
   landfills            Landfill[]
   vehicles             Vehicle[] //Drivers can have multiple vehicles
   trips                Trip[] //Drivers can have multiple trips
+  tripPlans            TripPlan[] //Drivers can have multiple trip plans
   drivingLicense       String?  //Drivers can have driving license
   passwordResetToken   PasswordResetToken? 
   changedAdminPassword Boolean @default(false)
   faceVerificationAdded Boolean @default(false)
   faceData Json?
+  deviceId String?
   notifications         Notification[]
   @@index([roleId], name: "idx_user_role")
   @@index([name], name: "idx_user_name")
@@ -93,6 +95,7 @@ model Vehicle {  // 147 vehicles
   sts          STS?      @relation(fields: [stsId], references: [id])
   trips          Trip[]
   notifications         Notification[]
+  tripPlans        TripPlan[]
   @@index([type], name: "idx_vehicle_type")  
   @@index([capacity], name: "idx_vehicle_capacity")
   @@index([loaddedFuelCost], name: "idx_vehicle_loadded_fuel_cost")
@@ -114,6 +117,7 @@ model STS {  // 54 STS
   vehicleEntries      VehicleEntry[]
   wasteEntries        WasteEntry[]
   notifications         Notification[]
+  tripPlanStss        TripPlanSts[]
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
 }
@@ -194,6 +198,7 @@ model Landfill {
   managers        User[]  
   truckDumpEntries TruckDumpEntry[]
   trips           Trip[]
+  tripPlanLandfills TripPlanLandfill[]
   @@index([name], name: "idx_landfill_name")
   @@index([capacity], name: "idx_landfill_capacity")
 }
@@ -227,6 +232,7 @@ model Trip{
   optimalDuration Float?
   bill Bill?
   notifications         Notification[]
+  tripPlan TripPlan?
 }
 
 model Notification{
@@ -244,4 +250,40 @@ model Notification{
   trip Trip? @relation(fields: [tripId], references: [id])
   timeStamp DateTime @default(now())
   extra String?
+}
+
+model TripPlan {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  type String @default("human") //human, machine
+  driverId Int
+  driver User @relation(fields: [driverId], references: [id])
+  vehicleId Int
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  tripPlanStss TripPlanSts[]
+  tripPlanLandfills TripPlanLandfill[]
+  tripId Int? @unique
+  trip Trip? @relation(fields: [tripId], references: [id])
+}
+
+model TripPlanSts {
+  id Int @id @default(autoincrement())
+  tripPlanId Int
+  tripPlan TripPlan @relation(fields: [tripPlanId], references: [id])
+  stsId Int
+  sts STS @relation(fields: [stsId], references: [id])
+  time DateTime
+  visited Boolean @default(false)
+  visitedAt DateTime?
+}
+
+model TripPlanLandfill {
+  id Int @id @default(autoincrement())
+  tripPlanId Int
+  tripPlan TripPlan @relation(fields: [tripPlanId], references: [id])
+  landfillId Int
+  landfill Landfill @relation(fields: [landfillId], references: [id])
+  time DateTime
+  visited Boolean @default(false)
+  visitedAt DateTime?
 }
