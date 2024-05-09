@@ -30,6 +30,7 @@
     "clsx": "^1.2.1",
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.5",
+    "firebase": "^10.11.1",
     "google-map-react": "^2.2.1",
     "next": "latest",
     "react": "^18.2.0",

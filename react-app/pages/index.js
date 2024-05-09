@@ -6,18 +6,30 @@ import { useState } from 'react'
 import Layout from '../components/layout'
 import Dashboard from '../components/Dashboard/Admin'
 import { NoSSR } from '../components/common/NoSSR'
- function Index() {
+// import { getToken } from 'firebase/messaging'
+// import { messaging  } from '../firebase'
+
+function Index() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState({})
 
-
-
+ async function requestNotificationPermission() {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      // const token = await getToken(messaging, { vapidKey: 'BD-sZ1qm1L6xGXotL17_bw6Awo8gwL4ttD0redOqz2Cch4Ik0W5XgzLBRHBWYWjQ3bEDxD5xiOnuxjhhNHopcJs' });
+    } else {
+      alert('Enable Notification Permission to get the important updates.');
+      console.log('Unable to get permission to notify.');
+    }
+  }
   useState(() => {
     try {
       const u = localStorage.getItem('user')
       if (u) {
         setLoading(false)
         setUser(JSON.parse(u))
+        requestNotificationPermission()
       }
     } catch (e) {}
   })

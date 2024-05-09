@@ -50,6 +50,7 @@ model User {
   faceVerificationAdded Boolean @default(false)
   faceData Json?
   deviceId String?
+  fcmToken String?
   notifications         Notification[]
   @@index([roleId], name: "idx_user_role")
   @@index([name], name: "idx_user_name")
