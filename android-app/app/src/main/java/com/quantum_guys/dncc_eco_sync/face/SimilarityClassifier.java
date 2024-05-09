@@ -25,17 +25,12 @@ public interface SimilarityClassifier {
 
     class Recognition {
 
-        private final String id;
-    private final String licenceNo;
 
 
     private final Float distance;
     private Object extra;
 
-    public Recognition(
-            final String id, final String licenceNo, final Float distance) {
-      this.id = id;
-      this.licenceNo = licenceNo;
+    public Recognition(final Float distance) {
       this.distance = distance;
       this.extra = null;
 
@@ -54,14 +49,6 @@ public interface SimilarityClassifier {
     @Override
     public String toString() {
       String resultString = "";
-      if (id != null) {
-        resultString += "[" + id + "] ";
-      }
-
-      if (licenceNo != null) {
-        resultString += licenceNo + " ";
-      }
-
       if (distance != null) {
         resultString += String.format("(%.1f%%) ", distance * 100.0f);
       }

@@ -15,12 +15,12 @@ public class VehicleEntry implements Serializable {
 
     User user;
 
-    STS sts;
+    Sts sts;
     Vehicle vehicle;
     Landfill landfill;
 
 
-    public VehicleEntry(Integer id, Integer stsId, Integer vehicleId, Integer landfillId, Integer userId, double lon, double lat, float volumeOfWaste, Date timeOfArrival, Date timeOfDeparture, User user, STS sts, Vehicle vehicle, Landfill landfill) {
+    public VehicleEntry(Integer id, Integer stsId, Integer vehicleId, Integer landfillId, Integer userId, double lon, double lat, float volumeOfWaste, Date timeOfArrival, Date timeOfDeparture, User user, Sts sts, Vehicle vehicle, Landfill landfill) {
         this.id = id;
         this.stsId = stsId;
         this.vehicleId = vehicleId;
@@ -128,13 +128,6 @@ public class VehicleEntry implements Serializable {
         this.user = user;
     }
 
-    public STS getSts() {
-        return sts;
-    }
-
-    public void setSts(STS sts) {
-        this.sts = sts;
-    }
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -150,5 +143,13 @@ public class VehicleEntry implements Serializable {
 
     public void setLandfill(Landfill landfill) {
         this.landfill = landfill;
+    }
+
+    public Sts getSts() {
+        return sts;
+    }
+
+    public void setSts(Sts sts) {
+        this.sts = sts;
     }
 }

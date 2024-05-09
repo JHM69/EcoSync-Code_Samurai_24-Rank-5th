@@ -44,6 +44,18 @@ public class User implements Serializable {
     String email;
 
 
+    @SerializedName("faceVerificationAdded")
+    @Expose
+    @JsonProperty("faceVerificationAdded")
+    boolean faceVerificationAdded;
+
+
+    @SerializedName("faceData")
+    @Expose
+    @JsonProperty("faceData")
+    String faceData;
+
+
     @SerializedName("changedAdminPassword")
     @Expose
     @JsonProperty("changedAdminPassword")
@@ -80,13 +92,15 @@ public class User implements Serializable {
     Date createdAt;
 
 
-    public User(String token, String image, String password, String name, int id, String email, boolean changedAdminPassword, int roleId, Date lastLogout, Date lastLogin, Date updatedAt, Date createdAt) {
+    public User(String token, String image, String password, String name, int id, String email, boolean faceVerificationAdded, String faceData, boolean changedAdminPassword, int roleId, Date lastLogout, Date lastLogin, Date updatedAt, Date createdAt) {
         this.token = token;
         this.image = image;
         this.password = password;
         this.name = name;
         this.id = id;
         this.email = email;
+        this.faceVerificationAdded = faceVerificationAdded;
+        this.faceData = faceData;
         this.changedAdminPassword = changedAdminPassword;
         this.roleId = roleId;
         this.lastLogout = lastLogout;
@@ -194,7 +208,21 @@ public class User implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public boolean isFaceVerificationAdded() {
+        return faceVerificationAdded;
+    }
 
+    public void setFaceVerificationAdded(boolean faceVerificationAdded) {
+        this.faceVerificationAdded = faceVerificationAdded;
+    }
+
+    public String getFaceData() {
+        return faceData;
+    }
+
+    public void setFaceData(String faceData) {
+        this.faceData = faceData;
+    }
 }
 
 

@@ -225,5 +225,31 @@ const changePassword = async (userId: number, oldPassword: string, newPassword: 
 };
 
 
+const addFaceData = async (userId: number, faceData: string) => {
+  // check not null
+  if (!userId || !faceData) {
+    throw new HttpException(400, 'Missing required fields: userId, faceData');
+  }
+  const user = await prisma.user.findUnique({ where: { id: Number(userId) } });
+  if (!user) {
+    throw new HttpException(404, 'User not found');
+  }
+  return await prisma.user.update({
+    where: { id: Number(userId) },
+    data: { faceData },
+  });
+};
 
-export { createUser, login, logout, initiatePasswordReset, confirmPasswordReset, changePassword };
+
+const getFaceData = async (userId: number) => {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw new HttpException(404, 'User not found');
+  }
+  return user.faceData;
+};
+
+ 
+
+
+export {getFaceData, addFaceData, createUser, login, logout, initiatePasswordReset, confirmPasswordReset, changePassword };

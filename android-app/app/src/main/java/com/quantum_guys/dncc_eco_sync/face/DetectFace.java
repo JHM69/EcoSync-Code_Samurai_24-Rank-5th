@@ -39,18 +39,21 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.quantum_guys.dncc_eco_sync.BuildConfig;
-import com.quantum_guys.dncc_eco_sync.R;
-
-import com.quantum_guys.dncc_eco_sync.model.Notification;
-import com.quantum_guys.dncc_eco_sync.util.IdGenerator;
-import com.google.common.util.concurrent.ListenableFuture; 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
+import com.quantum_guys.dncc_eco_sync.BuildConfig;
+import com.quantum_guys.dncc_eco_sync.R;
+import com.quantum_guys.dncc_eco_sync.activity.MapView;
+import com.quantum_guys.dncc_eco_sync.global.UserDB;
+import com.quantum_guys.dncc_eco_sync.model.Notification;
+import com.quantum_guys.dncc_eco_sync.retrofit.ApiUtils;
+import com.quantum_guys.dncc_eco_sync.retrofit.AuthService;
+import com.quantum_guys.dncc_eco_sync.util.IdGenerator;
 import com.quantum_guys.dncc_eco_sync.util.SendNotificationPack.APIService;
 import com.quantum_guys.dncc_eco_sync.util.SendNotificationPack.Client;
 import com.quantum_guys.dncc_eco_sync.util.SendNotificationPack.MyResponse;
@@ -76,6 +79,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.dmoral.toasty.Toasty;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -236,13 +240,7 @@ public class DetectFace extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        driverLicenceNo = intent.getStringExtra("licenceNo");
-        //bus = (Bus) intent.getSerializableExtra("bus");
-        routeId = intent.getStringExtra("routeId");
-        endTrip = intent.getBooleanExtra("endTrip", false);
-        returnTrip = intent.getBooleanExtra("returnTrip", false);
-        preBook = intent.getBooleanExtra("preBook", false);
-        authorityId = intent.getStringExtra("authorityId");
+
         tripId = intent.getStringExtra("tripId");
 
         //db = FirebaseDatabase.getInstance().getReference();
@@ -455,42 +453,10 @@ public class DetectFace extends AppCompatActivity {
                     distance = nearest.second;
                     if (distance < 1.000f) {
                         if (licenceNo.equals(driverLicenceNo)) {
-                            if (returnTrip) {
-                                HashMap<String, Object> map = new HashMap<>();
-                                map.put("endTimestamp", (-1 * System.currentTimeMillis()));
-                                map.put("active", false);
-                                map.put("errorLastFace", false);
-                                //db.child("Bus").child(bus.getBusNo()).child("Trips").child(tripId).updateChildren(map);
-                                Notification notification = new Notification(IdGenerator.getRandomId(), "Successfully Completed a Trip.", driverLicenceNo, 1, driverLicenceNo, routeId, "bus.getBusNo()", tripId, (-1 * System.currentTimeMillis()), "");
-                                new SendNotificationAsyncTask(notification, authorityId).execute();
-                                Toasty.success(this, "Verification Success", Toast.LENGTH_SHORT).show();
-//                                startActivity(new Intent(getApplicationContext(), SelectRoadActivity.class)
-//                                        .putExtra("licenceNo", driverLicenceNo)
-//                                        .putExtra("bus", bus)
-//                                        .putExtra("routeId", routeId)
-//                                        .putExtra("authorityId", authorityId)
-//                                        .putExtra("returnTrip", true));
-                            } else if (endTrip) {
-                                Notification notification = new Notification(IdGenerator.getRandomId(), "Successfully Completed a Trip.", driverLicenceNo, 1, driverLicenceNo, routeId, "bus.getBusNo()", tripId, (-1 * System.currentTimeMillis()), "");
-                                new SendNotificationAsyncTask(notification, authorityId).execute();
-                                HashMap<String, Object> map = new HashMap<>();
-                                map.put("endTimestamp", (-1 * System.currentTimeMillis()));
-                                map.put("active", false);
-                                map.put("errorLastFace", false);
-                                //db.child("Bus").child(bus.getBusNo()).child("Trips").child(tripId).updateChildren(map);
-                                executor.shutdownNow();
-                                //startActivity(new Intent(getApplicationContext(), BusNoActivity.class));
-                                finish();
-                            } else {
-                                Toasty.success(this, "Verification Success", Toast.LENGTH_SHORT).show();
-//                                startActivity(new Intent(getApplicationContext(), SelectRoadActivity.class)
-//                                        .putExtra("licenceNo", driverLicenceNo)
-//                                        .putExtra("bus", bus)
-//                                        .putExtra("routeId", routeId)
-//                                        .putExtra("preBook", preBook)
-//                                        .putExtra("authorityId", authorityId));
 
-                            }
+                                Toasty.success(this, "Verification Success", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MapView.class)
+                                        .putExtra("tripId", tripId) );
                             executor.shutdownNow();
                             finish();
 
@@ -631,19 +597,32 @@ public class DetectFace extends AppCompatActivity {
 
     void initFace() {
         loading(true);
-//        db.child("DriversFace").child(driverLicenceNo).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String faceData = "";
-                getRecognitionFromString(faceData);
-                loading(false);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+                String faceData = UserDB.getFaceData(context);
+
+                if(faceData == null || faceData.isEmpty()) {
+                    AuthService authService = ApiUtils.getAuthService(this);
+                    authService.getFaceData("Bearer " + UserDB.getToken(context)).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            try {
+                                if (response.body() != null) {
+                                    getRecognitionFromString(response.body().string());
+                                    loading(false);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                            Toasty.error(context, "Failed to load face data", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                    });
+
+                }
     }
 
     private void getRecognitionFromString(String json) {

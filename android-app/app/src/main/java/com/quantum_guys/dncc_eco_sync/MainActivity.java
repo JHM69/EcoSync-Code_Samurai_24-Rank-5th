@@ -1,17 +1,20 @@
 package com.quantum_guys.dncc_eco_sync;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.quantum_guys.dncc_eco_sync.adapter.TabAdapter;
+import com.quantum_guys.dncc_eco_sync.face.AddFace;
 import com.quantum_guys.dncc_eco_sync.fragment.MainFragment;
 import com.quantum_guys.dncc_eco_sync.fragment.NotificationFragment;
 import com.quantum_guys.dncc_eco_sync.fragment.TripFragment;
@@ -43,6 +46,24 @@ public class MainActivity extends AppCompatActivity {
 
 
         user = UserDB.getAuthUser(getApplicationContext());
+
+        if(user == null) {
+            Toasty.error(getApplicationContext(), "User not found", Toasty.LENGTH_SHORT).show();
+            finish();
+        }
+        if(user.getRoleId() == 5 && !user.isFaceVerificationAdded()) {
+            //Show a uncancelable AlertDialog with a message "You need to add your face verification to access this page" and a button "Add Face Verification"
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setMessage("You need to add your face verification to access this page");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Add Face Verification", (dialog, which) -> {
+                //Start the activity FaceVerificationActivity
+                Intent intent = new Intent(MainActivity.this, AddFace.class);
+                startActivity(intent);
+            });
+            builder.show();
+
+        }
 
 
         authName = findViewById(R.id.userName2);
