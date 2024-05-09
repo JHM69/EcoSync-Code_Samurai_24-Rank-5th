@@ -226,12 +226,12 @@ public class Trip implements Serializable {
     }
 
     public String getVehicleRegNo() {
-        return "Vehicle: " + getVehicle().name;
+        return "Vehicle: " + getVehicle().getRegistrationNumber();
     }
 
     public String getLastStsName() {
         try {
-            return "Last STS: " + vehicleEntries.get(vehicleEntries.size() - 1).sts.getName();
+            return "Last STS: " + vehicleEntries.get(vehicleEntries.size() - 1).getStsId();
         } catch (Exception d) {
             return "Nothing to Show";
         }

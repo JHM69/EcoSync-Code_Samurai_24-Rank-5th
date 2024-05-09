@@ -1,78 +1,60 @@
 package com.quantum_guys.dncc_eco_sync.model;
 
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+public class Vehicle {
 
-public class Vehicle implements Serializable {
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("registrationNumber")
+    @Expose
+    private String registrationNumber;
+    @SerializedName("type")
+    @Expose
+    private String type;
+    @SerializedName("name")
+    @Expose
+    private Object name;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("capacity")
+    @Expose
+    private Integer capacity;
+    @SerializedName("remainingCapacity")
+    @Expose
+    private Integer remainingCapacity;
+    @SerializedName("lat")
+    @Expose
+    private Double lat;
+    @SerializedName("lon")
+    @Expose
+    private Double lon;
+    @SerializedName("isFull")
+    @Expose
+    private Boolean isFull;
+    @SerializedName("loaddedFuelCost")
+    @Expose
+    private Integer loaddedFuelCost;
+    @SerializedName("unloadedFuelCost")
+    @Expose
+    private Integer unloadedFuelCost;
+    @SerializedName("stsId")
+    @Expose
+    private Object stsId;
 
-    int id;
-
-
-    String registrationNumber;
-
-
-    String type;
-
-
-    String name;
-
-
-    int capacity;
-
-
-    int remainingCapacity;
-
-
-    double lat;
-
-
-    double lon;
-
-
-    boolean isFull;
-
-
-    int loadedFuelCost;
-
-
-    int unloadedFuelCost;
-
-
-    int stsId;
-
-
-    User driver;
-
-    public Vehicle(int id, String registrationNumber, String type, String name, int capacity, int remainingCapacity, double lat, double lon, boolean isFull, int loadedFuelCost, int unloadedFuelCost, int stsId, User driver) {
-        this.id = id;
-        this.registrationNumber = registrationNumber;
-        this.type = type;
-        this.name = name;
-        this.capacity = capacity;
-        this.remainingCapacity = remainingCapacity;
-        this.lat = lat;
-        this.lon = lon;
-        this.isFull = isFull;
-        this.loadedFuelCost = loadedFuelCost;
-        this.unloadedFuelCost = unloadedFuelCost;
-        this.stsId = stsId;
-        this.driver = driver;
+    public Integer getId() {
+        return id;
     }
 
-    public Vehicle() {
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-
 
     public String getRegistrationNumber() {
-        return this.registrationNumber;
+        return registrationNumber;
     }
 
     public void setRegistrationNumber(String registrationNumber) {
@@ -80,109 +62,91 @@ public class Vehicle implements Serializable {
     }
 
     public String getType() {
-        return this.type;
+        return type;
     }
 
     public void setType(String type) {
         this.type = type;
     }
 
-    public String getName() {
-        return this.name;
+    public Object getName() {
+        return name;
     }
 
-    public void setName(String name) {
+    public void setName(Object name) {
         this.name = name;
     }
 
-
-    public int getCapacity() {
-        return this.capacity;
+    public String getStatus() {
+        return status;
     }
 
-    public void setCapacity(int capacity) {
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
-    public int getRemainingCapacity() {
-        return this.remainingCapacity;
+    public Integer getRemainingCapacity() {
+        return remainingCapacity;
     }
 
-    public void setRemainingCapacity(int remainingCapacity) {
+    public void setRemainingCapacity(Integer remainingCapacity) {
         this.remainingCapacity = remainingCapacity;
     }
 
-
-    public double getLat() {
-        return this.lat;
+    public Double getLat() {
+        return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-
-    public double getLon() {
-        return this.lon;
+    public Double getLon() {
+        return lon;
     }
 
-    public void setLon(double lon) {
+    public void setLon(Double lon) {
         this.lon = lon;
     }
 
-
-    public boolean getIsFull() {
-        return this.isFull;
-    }
-
-    public void setIsFull(boolean isFull) {
-        this.isFull = isFull;
-    }
-
-
-    public boolean isFull() {
+    public Boolean getIsFull() {
         return isFull;
     }
 
-    public void setFull(boolean full) {
-        isFull = full;
+    public void setIsFull(Boolean isFull) {
+        this.isFull = isFull;
     }
 
-    public int getLoadedFuelCost() {
-        return loadedFuelCost;
+    public Integer getLoaddedFuelCost() {
+        return loaddedFuelCost;
     }
 
-    public void setLoadedFuelCost(int loadedFuelCost) {
-        this.loadedFuelCost = loadedFuelCost;
+    public void setLoaddedFuelCost(Integer loaddedFuelCost) {
+        this.loaddedFuelCost = loaddedFuelCost;
     }
 
-
-    public int getUnloadedFuelCost() {
-        return this.unloadedFuelCost;
+    public Integer getUnloadedFuelCost() {
+        return unloadedFuelCost;
     }
 
-    public void setUnloadedFuelCost(int unloadedFuelCost) {
+    public void setUnloadedFuelCost(Integer unloadedFuelCost) {
         this.unloadedFuelCost = unloadedFuelCost;
     }
 
-
-    public int getStsId() {
-        return this.stsId;
+    public Object getStsId() {
+        return stsId;
     }
 
-    public void setStsId(int stsId) {
+    public void setStsId(Object stsId) {
         this.stsId = stsId;
     }
-
-
-
-    public User getDriver() {
-        return this.driver;
-    }
-
-    public void setDriver(User driver) {
-        this.driver = driver;
-    }
-
 
 }

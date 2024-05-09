@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginRequestBody.put("email", emailEd.getText().toString());
                 loginRequestBody.put("password", passEd.getText().toString());
 
-                AuthService authService = ApiUtils.getAuthService();
+                AuthService authService = ApiUtils.getAuthService(this);
                 authService.login(loginRequestBody).enqueue(new retrofit2.Callback() {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) {

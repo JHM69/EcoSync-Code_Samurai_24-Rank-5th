@@ -59,6 +59,13 @@
             android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".face.AddFace"
+            android:exported="false" />
+
+        <activity
+            android:name=".face.DetectFace"
+            android:exported="false" />
+        <activity
             android:name=".activity.MapView"
             android:exported="false" />
         <activity

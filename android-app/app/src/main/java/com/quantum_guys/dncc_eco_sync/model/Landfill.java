@@ -1,75 +1,118 @@
 package com.quantum_guys.dncc_eco_sync.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+public class Landfill {
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("capacity")
+    @Expose
+    private Integer capacity;
+    @SerializedName("currentWasteVolume")
+    @Expose
+    private Integer currentWasteVolume;
+    @SerializedName("startTime")
+    @Expose
+    private String startTime;
+    @SerializedName("endTime")
+    @Expose
+    private String endTime;
+    @SerializedName("gpsCoords")
+    @Expose
+    private String gpsCoords;
+    @SerializedName("lat")
+    @Expose
+    private Double lat;
+    @SerializedName("lon")
+    @Expose
+    private Double lon;
+    @SerializedName("address")
+    @Expose
+    private String address;
 
-public class Landfill implements Serializable {
-    @JsonProperty("id")
-    public int getId() {
-        return this.id; }
-    public void setId(int id) {
-        this.id = id; }
-    int id;
-    @JsonProperty("name")
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
-        return this.name; }
+        return name;
+    }
+
     public void setName(String name) {
-        this.name = name; }
-    String name;
-    @JsonProperty("capacity")
-    public int getCapacity() {
-        return this.capacity; }
-    public void setCapacity(int capacity) {
-        this.capacity = capacity; }
-    int capacity;
-    @JsonProperty("currentWasteVolume")
-    public int getCurrentWasteVolume() {
-        return this.currentWasteVolume; }
-    public void setCurrentWasteVolume(int currentWasteVolume) {
-        this.currentWasteVolume = currentWasteVolume; }
-    int currentWasteVolume;
-    @JsonProperty("startTime")
+        this.name = name;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
+    public Integer getCurrentWasteVolume() {
+        return currentWasteVolume;
+    }
+
+    public void setCurrentWasteVolume(Integer currentWasteVolume) {
+        this.currentWasteVolume = currentWasteVolume;
+    }
+
     public String getStartTime() {
-        return this.startTime; }
+        return startTime;
+    }
+
     public void setStartTime(String startTime) {
-        this.startTime = startTime; }
-    String startTime;
-    @JsonProperty("endTime")
+        this.startTime = startTime;
+    }
+
     public String getEndTime() {
-        return this.endTime; }
+        return endTime;
+    }
+
     public void setEndTime(String endTime) {
-        this.endTime = endTime; }
-    String endTime;
-    @JsonProperty("gpsCoords")
+        this.endTime = endTime;
+    }
+
     public String getGpsCoords() {
-        return this.gpsCoords; }
+        return gpsCoords;
+    }
+
     public void setGpsCoords(String gpsCoords) {
-        this.gpsCoords = gpsCoords; }
-    String gpsCoords;
-    @JsonProperty("lat")
-    public double getLat() {
-        return this.lat; }
-    public void setLat(double lat) {
-        this.lat = lat; }
-    double lat;
-    @JsonProperty("lon")
-    public double getLon() {
-        return this.lon; }
-    public void setLon(double lon) {
-        this.lon = lon; }
-    double lon;
-    @JsonProperty("address")
+        this.gpsCoords = gpsCoords;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
     public String getAddress() {
-        return this.address; }
+        return address;
+    }
+
     public void setAddress(String address) {
-        this.address = address; }
-    String address;
-    @JsonProperty("managers")
-    public ArrayList<User> getManagers() {
-        return this.managers; }
-    public void setManagers(ArrayList<User> managers) {
-        this.managers = managers; }
-    ArrayList<User> managers;
+        this.address = address;
+    }
+
 }
