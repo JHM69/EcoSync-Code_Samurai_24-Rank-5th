@@ -9,6 +9,7 @@ import vehicleController from '../controllers/vehicle.controller';
 import billController from '../controllers/bill.controller';
 import dashboardController from '../controllers/dashboard.controller';
 import tripController from '../controllers/trip.controller';
+import tripPlanController from '../controllers/tripplan.controller';
 
 const api = Router() 
   .use(usersController) 
@@ -19,6 +20,7 @@ const api = Router()
   .use(vehicleController)
   .use(billController)
   .use(dashboardController)
-  .use(tripController);
+  .use(tripController)
+  .use(tripPlanController);
 
 export default Router().use('/', api);

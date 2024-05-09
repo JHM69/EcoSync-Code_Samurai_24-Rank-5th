@@ -13,7 +13,7 @@ const router = Router();
 router.post('/trip', auth.required, async (req: Request, res: Response) => {
   try {
     // Extract trip data from request body
-    const {vehicleId, startLandfillId} = req.body;
+    const {tripPlanId,vehicleId, startLandfillId} = req.body;
 
     // check if the vehicle's drivers array includes the current user id
     const vehicle = await prisma.vehicle.findUnique({
@@ -34,6 +34,9 @@ router.post('/trip', auth.required, async (req: Request, res: Response) => {
     // Create the trip in the database
     const trip = await prisma.trip.create({
       data: {
+        tripPlan: {
+            connect: { id: parseInt(tripPlanId) },
+        },
         startLandfill: {
             connect: { id: parseInt(startLandfillId) },
         },
@@ -45,6 +48,20 @@ router.post('/trip', auth.required, async (req: Request, res: Response) => {
         },
       },
       include: {
+        tripPlan: {
+            include: {
+                tripPlanStss: {
+                    include: {
+                        sts: true,
+                    },
+                },
+                tripPlanLandfills: {
+                    include: {
+                        landfill: true,
+                    },
+                },
+                },
+        },
         vehicle: true,
         driver: {
             select: {
@@ -125,33 +142,43 @@ router.post('/meta', auth.required, async (req: Request, res: Response) => {
   }
 });
 
-// get all trips
+// get all trips with limit, offset, and descending order
 router.get('/trip', auth.required, async (req: Request, res: Response) => {
-  try {
-    const trips = await prisma.trip.findMany({
-      include: {
-        vehicle: true,
-        driver: {
-            select: {
-              name: true,
-              email: true,
-              phone: true,
-              image: true,
-              drivingLicense: true,
+    try {
+        const { limit, offset } = req.query;
+        const trips = await prisma.trip.findMany({
+            include: {
+                tripPlan: {
+                        include: {
+                                tripPlanStss: true,
+                                tripPlanLandfills: true,
+                                },
+                },
+                vehicle: true,
+                driver: {
+                        select: {
+                            name: true,
+                            email: true,
+                            phone: true,
+                            image: true,
+                            drivingLicense: true,
+                        },
+                    },
+                startLandfill: true,
+                vehicleEntries: true,
+                vehicleMetas: true,
+                truckDumpEntries: true,
+                bill: true,
             },
-          },
-        startLandfill: true,
-        vehicleEntries: true,
-        vehicleMetas: true,
-        truckDumpEntries: true,
-        bill: true,
-      },
-    });
+            orderBy: { id: 'desc' },
+            take: limit ? parseInt(limit.toString()) : undefined,
+            skip: offset ? parseInt(offset.toString()) : undefined,
+        });
 
-    return res.status(200).json(trips);
-  } catch (error: any) {
-    return res.status(400).json({ message: error.message });
-  }
+        return res.status(200).json(trips);
+    } catch (error: any) {
+        return res.status(400).json({ message: error.message });
+    }
 });
 
 // get specific trip
@@ -160,6 +187,20 @@ router.get('/trip/:tripId', auth.required, async (req: Request, res: Response) =
     const trip = await prisma.trip.findUnique({
       where: { id: parseInt(req.params.tripId) },
       include: {
+       tripPlan: {
+            include: {
+                tripPlanStss: {
+                    include: {
+                        sts: true,
+                    },
+                },
+                tripPlanLandfills: {
+                    include: {
+                        landfill: true,
+                    },
+                },
+                },
+        },
         vehicle: true,
         driver: {
             select: {
@@ -195,6 +236,20 @@ router.get('/mytrips', auth.required, async (req: Request, res: Response) => {
     const trips = await prisma.trip.findMany({
       where: { driverId: req.user.id },
       include: {
+       tripPlan: {
+            include: {
+                tripPlanStss: {
+                    include: {
+                        sts: true,
+                    },
+                },
+                tripPlanLandfills: {
+                    include: {
+                        landfill: true,
+                    },
+                },
+                },
+        },
         vehicle: true,
         driver: {
             select: {
@@ -229,6 +284,20 @@ router.get('/landfilltrips/:landfillId', auth.required, async (req: Request, res
     const trips = await prisma.trip.findMany({
       where: { startLandfillId: parseInt(req.params.landfillId) },
       include: {
+       tripPlan: {
+            include: {
+                tripPlanStss: {
+                    include: {
+                        sts: true,
+                    },
+                },
+                tripPlanLandfills: {
+                    include: {
+                        landfill: true,
+                    },
+                },
+                },
+        },
         vehicle: true,
         driver: {
             select: {
@@ -281,6 +350,20 @@ router.post('/canceltrip', auth.required, async (req: Request, res: Response) =>
         completed: true,
       },
       include: {
+       tripPlan: {
+            include: {
+                tripPlanStss: {
+                    include: {
+                        sts: true,
+                    },
+                },
+                tripPlanLandfills: {
+                    include: {
+                        landfill: true,
+                    },
+                },
+                },
+        },
         vehicle: true,
         driver: {
             select: {

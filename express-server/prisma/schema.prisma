@@ -215,6 +215,8 @@ model VehicleMeta{
 
 model Trip{
   id Int @id @default(autoincrement())
+  tripPlanId Int @unique
+  tripPlan TripPlan @relation(fields: [tripPlanId], references: [id])
   createdAt DateTime @default(now())
   vehicleId Int
   vehicle Vehicle @relation(fields: [vehicleId], references: [id])
@@ -232,7 +234,6 @@ model Trip{
   optimalDuration Float?
   bill Bill?
   notifications         Notification[]
-  tripPlan TripPlan?
 }
 
 model Notification{
@@ -262,8 +263,7 @@ model TripPlan {
   vehicle Vehicle @relation(fields: [vehicleId], references: [id])
   tripPlanStss TripPlanSts[]
   tripPlanLandfills TripPlanLandfill[]
-  tripId Int? @unique
-  trip Trip? @relation(fields: [tripId], references: [id])
+  trip Trip?
 }
 
 model TripPlanSts {
@@ -275,6 +275,7 @@ model TripPlanSts {
   time DateTime
   visited Boolean @default(false)
   visitedAt DateTime?
+  weiqht Float?
 }
 
 model TripPlanLandfill {
@@ -286,4 +287,5 @@ model TripPlanLandfill {
   time DateTime
   visited Boolean @default(false)
   visitedAt DateTime?
+  weiqht Float?
 }

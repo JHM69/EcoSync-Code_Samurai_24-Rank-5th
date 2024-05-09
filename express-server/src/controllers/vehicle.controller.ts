@@ -18,6 +18,18 @@ router.get('/vehicle', auth.required, async (req: Request, res: Response) => {
       : {};
     const vehicles = await prisma.vehicle.findMany({
       where: whereQuery,
+      include: {
+        drivers: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            image: true,
+            drivingLicense: true,
+          },
+        },
+      },
     });
 
     return res.json(vehicles);
@@ -35,6 +47,18 @@ router.get('/freevehicle', auth.required, async (req: Request, res: Response) =>
       : { stsId: null };
     const vehicles = await prisma.vehicle.findMany({
       where: whereQuery,
+      include: {
+        drivers: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            image: true,
+            drivingLicense: true,
+          },
+        },
+      },
     });
 
     return res.json(vehicles);
@@ -56,6 +80,18 @@ router.get('/stsvehicle/:id', auth.required, async (req: Request, res: Response)
       : { stsId: Number(id) };
     const vehicles = await prisma.vehicle.findMany({
       where: whereQuery,
+      include: {
+        drivers: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            image: true,
+            drivingLicense: true,
+          },
+        },
+      },
     });
 
     return res.json(vehicles);
@@ -71,6 +107,18 @@ router.get('/vehicle/:id', auth.required, async (req: Request, res: Response) =>
     const vehicle = await prisma.vehicle.findUnique({
       where: {
         id: Number(id),
+      },
+      include: {
+        drivers: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            image: true,
+            drivingLicense: true,
+          },
+        },
       },
     });
     if (!vehicle) {
@@ -130,7 +178,16 @@ router.post('/vehicle', auth.required, auth.isSystemAdmin, async (req: Request, 
         }
       },
       include: {
-        drivers: true,
+        drivers: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            image: true,
+            drivingLicense: true,
+        },
+      },
       },
     });
 
@@ -213,7 +270,16 @@ router.put(
           }
         },
         include: {
-          drivers: true,
+          drivers: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              image: true,
+              drivingLicense: true,
+          },
+        },
         },
       });
 
