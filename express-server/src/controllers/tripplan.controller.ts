@@ -378,4 +378,68 @@ router.get('/landfilltripplans/:landfillId', auth.required, async (req: Request,
   }
 });
 
+// create a endpoint that mark a sts as visited
+router.post('/tripplan/:id/visited', auth.required, async (req: Request, res: Response) => {
+  try {
+    // check is the user is the driver of the trip plan
+    const tripPlan = await prisma.tripPlan.findUnique({
+        where: { id: parseInt(req.params.id) },
+        include: {
+          vehicle: true,
+        },
+    });
+    if(tripPlan.driverId !== req.user.id){
+        return res.status(400).json({ message: 'You are not the driver of this trip plan' });
+    }
+
+     const {stsId, landfillId} = req.body;
+     if(stsId){
+          const tripPlanSts = await prisma.tripPlanSts.findFirst({
+              where: {
+                  tripPlanId: parseInt(req.params.id),
+                  stsId: parseInt(stsId),
+              },
+          });
+          if(!tripPlanSts){
+              return res.status(400).json({ message: 'Sts not found in this trip plan' });
+          }
+          const updatedTripPlanSts = await prisma.tripPlanSts.update({
+              where: {
+                  id: tripPlanSts.id,
+              },
+              data: {
+                visited: true,
+                visitedAt: new Date(),
+                weiqht: tripPlan.vehicle.capacity-tripPlan.vehicle.remainingCapacity,
+            },
+          });
+          return res.json(updatedTripPlanSts);
+      }
+      if(landfillId){
+          const tripPlanLandfill = await prisma.tripPlanLandfill.findFirst({
+              where: {
+                  tripPlanId: parseInt(req.params.id),
+                  landfillId: parseInt(landfillId),
+              },
+          });
+          if(!tripPlanLandfill){
+              return res.status(400).json({ message: 'Landfill not found in this trip plan' });
+          }
+          const updatedTripPlanLandfill = await prisma.tripPlanLandfill.update({
+              where: {
+                  id: tripPlanLandfill.id,
+              },
+              data: {
+                visited: true,
+                visitedAt: new Date(),
+                weiqht: tripPlan.vehicle.capacity-tripPlan.vehicle.remainingCapacity,
+            },
+          });
+          return res.json(updatedTripPlanLandfill);
+      }
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+});
+
 export default router;
