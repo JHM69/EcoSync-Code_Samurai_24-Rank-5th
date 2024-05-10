@@ -34,7 +34,7 @@ function ContractorControl() {
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(getBaseUrl() + '/contractors/' + contractorId, {
+        .get(getBaseUrl() + '/contractor/' + contractorId, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,7 +57,7 @@ function ContractorControl() {
     const token = localStorage.getItem('token')
     if (token.length > 0) {
       axios
-        .get(getBaseUrl() + `/contractors/${contractorId}/entry`, {
+        .get(getBaseUrl() + `/contractor/${contractorId}/entry`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -92,15 +92,15 @@ function ContractorControl() {
               <div className="flex  flex-row ">
                 <div className="w-1/2 gap-4 px-4">
                   <p className="text-md my-2 font-semibold">
-                    Name: {contractor.name}
+                    Name: {contractor.companyName}
                   </p>
-                  <p className="text-md  my-2">Address: {contractor.address}</p>
-                  <ProgressBar
+                  <p className="text-md  my-2">Registration Number: {contractor.registrationId}</p>
+                  {/* <ProgressBar
                     currentWasteVolume={contractor?.currentWasteVolume}
                     capacity={contractor?.capacity}
-                  />
+                  /> */}
                 </div>
-                <div className="w-1/2">
+                {/* <div className="w-1/2">
                   <MapView
                     lat={contractor.lat}
                     lon={contractor.lon}
@@ -109,7 +109,7 @@ function ContractorControl() {
                     height="200px"
                     vehicles={contractor.vehicles}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           )}
@@ -119,7 +119,7 @@ function ContractorControl() {
           <div className="flex w-full   flex-col">
             <div className="mt-3 flex items-center justify-between">
               <h1 className="text-2xl font-bold text-gray-700">
-                Truck Dump Entries{' '}
+                Employee Entries{' '}
               </h1>
               <div className="flex items-center space-x-2">
                 {contractorId && <AddContractorEntry contractorId={contractorId} />}
@@ -140,5 +140,5 @@ function ContractorControl() {
 export default ContractorControl
 
 ContractorControl.getLayout = function getLayout(page) {
-  return <Layout meta={{ name: 'Truck Dump Entries' }}>{page}</Layout>
+  return <Layout meta={{ name: 'Employee Entries' }}>{page}</Layout>
 }
