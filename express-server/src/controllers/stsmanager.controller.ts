@@ -9,6 +9,7 @@ import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import { createSTS, updateSTS } from '../services/stsmanager.service';
 import { latLonDistance } from '../services/billing.service';
+import { sendSMS } from '../services/sms.service';
 
 const router = Router();
 
@@ -388,6 +389,7 @@ router.post(
         },
       });
 
+      await sendSMS(wasteEntry.contractor.phone, `Waste of ${wasteEntry.volumeOfWaste} kg added to STS ${stsId}`)
       res.status(201).json(wasteEntry);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
