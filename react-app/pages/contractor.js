@@ -17,7 +17,7 @@ function Contractors() {
     const token = localStorage.getItem('token')
     if (token.length > 0) {
       axios
-        .get(getBaseUrl() + '/contractors', {
+        .get(getBaseUrl() + '/contractor', {
           headers: {
             Authorization: `Bearer ${token}`,
           }
@@ -50,7 +50,7 @@ function Contractors() {
           {loading ? (
             <ContractorItemsSkeleton />
           ) : (
-            <ContractorItems contractors={contractors} />
+            <ContractorItems contractors={contractors} reload={reload} setReload={setReload} />
           )}
         </div>
       </div>

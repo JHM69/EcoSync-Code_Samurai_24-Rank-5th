@@ -10,7 +10,7 @@ const DeleteContractor = ({ contractorId, ...props }) => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token')
-      await fetch(getBaseUrl() + `/contractors/${contractorId}`, {
+      await fetch(getBaseUrl() + `/contractor/${contractorId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ const DeleteContractor = ({ contractorId, ...props }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} variant="text" type="button" {...props}>
+      <Button className="bg-red-700 text-white hover:bg-red-500" onClick={handleOpen} variant="text" type="button" {...props}>
         Delete
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
