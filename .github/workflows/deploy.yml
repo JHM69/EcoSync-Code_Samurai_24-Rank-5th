@@ -31,4 +31,4 @@ jobs:
           port: 22
           script: |
             cd ~/CS24-p2-quantum_guys
-            bash setup.sh
+            bash deploy.sh
