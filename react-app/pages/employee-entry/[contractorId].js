@@ -26,6 +26,7 @@ function ContractorControl() {
 
   useEffect(() => {
     setContractorId(router.query.contractorId)
+    console.log(router.query.contractorId)
   }, [router.query.contractorId])
 
   useEffect(() => {

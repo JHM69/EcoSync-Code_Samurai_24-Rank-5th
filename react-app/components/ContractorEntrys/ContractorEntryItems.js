@@ -10,7 +10,7 @@ const ContractorEntryItems = ({ contractorEntries }) => {
           )
         : (
         <div className="h-[100px] w-full text-center font-bold text-gray-300">
-          Add some worker entries of contractor
+          Add some employee entries of contractor
         </div>
           )}
     </div>

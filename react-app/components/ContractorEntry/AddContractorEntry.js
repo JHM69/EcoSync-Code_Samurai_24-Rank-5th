@@ -93,7 +93,7 @@ const AddContractorEntry = ({ props, contractorId }) => {
     <>
       <Toaster />
       <Button onClick={handleOpen} type="button" {...props}>
-        Add Worker Entry
+        Add employee Entry
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>

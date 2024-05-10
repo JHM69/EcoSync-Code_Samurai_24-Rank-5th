@@ -265,7 +265,7 @@ const Sidebar = () => {
               </>
             )}
 
-{type === 'ContractorManager' && (
+            {type === 'ContractorManager' && (
               <>
                 {loading ? (
                   <p className=" w-full text-center font-bold text-red-600   ">
@@ -276,7 +276,7 @@ const Sidebar = () => {
                     <Item
                       key={index}
                       text={contractor.companyName}
-                      subtitle={contractor.tin}
+                      subtitle={contractor.registrationId}
                       icon="contractor"
                       href={`/contractor/${contractor.id}`}
                       isActive={
@@ -286,7 +286,7 @@ const Sidebar = () => {
                   ))
                 ) : (
                   <p className=" w-full text-center font-bold text-red-600   ">
-                    No ContractorManager found
+                    No Contractor Manager found
                   </p>
                 )}
               </>
