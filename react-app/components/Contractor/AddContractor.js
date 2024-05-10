@@ -28,7 +28,11 @@ const AddContractor = ({ reload, setReload, props }) => {
           handleClose()
           setReload(!reload)
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+          //toast.error('Error adding Contractor')
+          alert(error);
+          console.log(error)
+        })
     } catch (error) {
       console.log(error)
     }

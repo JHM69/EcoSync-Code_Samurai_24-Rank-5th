@@ -202,7 +202,7 @@ public class Home extends Fragment {
                 .limit(7)
                 .showCamera(true)
                 .enableLog(true)
-                .imageDirectory("ত্বারক")
+                .imageDirectory("স্বচ্ছ ঢাকা")
                 .start(123);
     }
 

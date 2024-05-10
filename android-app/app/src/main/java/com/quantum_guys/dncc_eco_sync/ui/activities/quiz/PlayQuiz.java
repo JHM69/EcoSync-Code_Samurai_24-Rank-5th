@@ -132,7 +132,7 @@ public class PlayQuiz extends Fragment {
                 int score = (int) user.getScore();
                 holder.level.setText(String.valueOf(score));
                 Glide.with(Objects.requireNonNull(getContext()))
-                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                         .load(user.getImage())
                         .into(holder.image);
 

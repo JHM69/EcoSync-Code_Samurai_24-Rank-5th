@@ -18,11 +18,11 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_logo"
+        android:icon="@drawable/logo_round"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/ic_logo"
+        android:roundIcon="@drawable/logo_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -66,9 +66,14 @@
         </activity>
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.ResultActivity" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.WhoLikedActivity" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.MapView" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.messege.activity.MessageActivity" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostImage" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.IssuesDetailsActivity" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.PostIssue" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.SingleIssueView" />
+
         <activity
             android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.QuizBattle"
             android:exported="true"
@@ -102,7 +107,7 @@
         <!--  ca-app-pub-1812307912459750~8721341741-->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_logo_icon" />
+            android:resource="@drawable/logo_round" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccentt" />

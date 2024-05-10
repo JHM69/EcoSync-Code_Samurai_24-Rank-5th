@@ -19,7 +19,7 @@ const ContractorInfo = ({ contractor, ...props }) => {
     setLoading(true)
     const token = localStorage.getItem('token')
     axios
-      .get(getBaseUrl() + '/contractors/' + contractor.id, {
+      .get(getBaseUrl() + '/contractor/' + contractor.id, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

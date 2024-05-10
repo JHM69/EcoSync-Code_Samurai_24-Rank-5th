@@ -90,7 +90,7 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
         // holder.institute.setText(usersList.get(position).getDept()+", "+usersList.get(position).getInstitute());
 
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                 .load(usersList.get(position).getImage())
                 .into(holder.image);
 
@@ -123,7 +123,7 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
                                 holder.institute.setText(usersList.get(position).getDept() + ", " + usersList.get(position).getInstitute());
 
                                 Glide.with(context)
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(holder.image);
 
@@ -165,7 +165,7 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
                                 holder.name.setText(documentSnapshot.getString("name"));
 
                                 Glide.with(context)
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(holder.image);
 
@@ -188,7 +188,7 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
                                 holder.institute.setText(usersList.get(position).getDept() + ", " + usersList.get(position).getInstitute());
 
                                 Glide.with(context)
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(holder.image);
 
@@ -224,7 +224,7 @@ public class ViewFriendAdapter extends RecyclerView.Adapter<ViewFriendAdapter.Vi
 
 
                                 Glide.with(context)
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(holder.image);
 

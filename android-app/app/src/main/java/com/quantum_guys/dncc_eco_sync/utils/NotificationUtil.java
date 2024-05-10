@@ -64,7 +64,7 @@ public class NotificationUtil {
             return;
 
         // notification icon
-        final int icon = R.drawable.ic_logo_icon;
+        final int icon = R.drawable.logo_round;
 
         int requestID = (int) System.currentTimeMillis();
 

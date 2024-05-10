@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF6D</color>
-    <color name="colorPrimaryDark">#30814B</color>
-    <color name="colorAccent">#36A65B</color>
-    <color name="colorAccentt">#3EA862</color>
+    <color name="colorPrimary">#2D8C4D</color>
+    <color name="colorPrimaryDark">#23773F</color>
+    <color name="colorAccent">#278C48</color>
+    <color name="colorAccentt">#228C46</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#B11C1C</color>
 
@@ -15,7 +15,7 @@
     <color name="stepview_text_selected">@android:color/white</color>
     <color name="stepview_circle_done">@android:color/white</color>
     <color name="stepview_circle_selected">@android:color/white</color>
-    <color name="stepview_selected_number">#7e57c2</color>
+    <color name="stepview_selected_number">#316762</color>
     <color name="stepview_mark">@color/stepview_selected_number</color>
     <color name="green">#21AA27</color>
     <color name="empty_back">#F7F7F7</color>

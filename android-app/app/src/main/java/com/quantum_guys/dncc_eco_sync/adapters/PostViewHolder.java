@@ -475,7 +475,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                                 user_name.setText(documentSnapshot.getString("name"));
 
                                 Glide.with(Home.context)
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(user_image);
                             } else if (!Objects.equals(documentSnapshot.getString("userId"), post.getUserId())) {
@@ -493,14 +493,13 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                                 Map<String, Object> postMap = new HashMap<>();
                                 postMap.put("userimage", documentSnapshot.getString("image"));
 
-                                postDb
-                                        .document(post.getPostId())
+                                postDb.document(post.getPostId())
                                         .update(postMap)
                                         .addOnSuccessListener(aVoid -> Log.i("post_update", "success"))
                                         .addOnFailureListener(e -> Log.i("post_update", "failure"));
 
                                 Glide.with(Home.context)
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(user_image);
 

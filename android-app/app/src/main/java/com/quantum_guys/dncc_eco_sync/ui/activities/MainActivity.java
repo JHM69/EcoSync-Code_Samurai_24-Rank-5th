@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,7 +59,6 @@ import com.quantum_guys.dncc_eco_sync.notification.Token;
 import com.quantum_guys.dncc_eco_sync.ui.activities.account.EditProfile;
 import com.quantum_guys.dncc_eco_sync.ui.activities.account.LoginActivity;
 import com.quantum_guys.dncc_eco_sync.ui.activities.friends.SearchUsersActivity;
-import com.quantum_guys.dncc_eco_sync.ui.activities.post.SinglePostView;
 import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.Ranking;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.Dashboard;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.FriendsFragment;
@@ -81,7 +82,7 @@ import es.dmoral.toasty.Toasty;
 /**
  * Created by jhm69
  */
-public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener, LocationListener  {
     private static final int POS_DASHBOARD = 0;
     private static final int RANKING = 1;
     private static final int POS_FRIENDS = 2;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     public static String userId;
     public static boolean inHome=true;
 
-    List<String> admins = Arrays.asList("admin1", "admin2", "admin3");
+    public static   List<String> ADMIN_UID_LIST = Arrays.asList("LTH3jvZ0JOcmirB3WxMP9tHz5eB3", "admin2", "admin3");
     public TextView username;
     public TextView rewardTv;
     private long rewardCount;
@@ -257,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                     .addOnCompleteListener(Task::isSuccessful);
         }
         askPermission();
+
         userId = currentuser.getUid();
         runOnUiThread(() -> {
             slidingRootNav = new SlidingRootNavBuilder(MainActivity.this)
@@ -269,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             screenIcons = loadScreenIcons();
             screenTitles = loadScreenTitles();
 
-            if (admins.contains(userId)) {
+            if (ADMIN_UID_LIST.contains(userId)) {
                 adapter = new DrawerAdapter(Arrays.asList(
                         createItemFor(POS_DASHBOARD).setChecked(true),
                         createItemFor(RANKING),
@@ -298,24 +300,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             list.setAdapter(adapter);
             adapter.setSelected(POS_DASHBOARD);
         });
-    }
-
-    private void askPermission() {
-        Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // Toasty.info(MainActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toasty.LENGTH_LONG,true).show();
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
     }
 
     public void logout() {
@@ -374,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 username.setText(nam);
                 rewardCount = me.getReward();
                 Glide.with(MainActivity.this)
-                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                         .load(imag)
                         .into(imageView);
                 rewardTv.setText(me.getReward() + " XP");
@@ -486,12 +470,12 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
             case ABOUT_APP:
                 inHome = false;
-                startActivity(new Intent(getApplicationContext(), SinglePostView.class).putExtra("post_id", "about_app"));
+                startActivity(new Intent(getApplicationContext(), MapView.class).putExtra("post_id", "about_app"));
                 return;
 
             case WEB:
                 inHome = true;
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://tarok.tech"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://3.208.28.247:3000"));
                 startActivity(browserIntent);
                 return;
 
@@ -502,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
           /*  case POS_SHARE:
                 try {
-                    doSocialShare("Share to get 20 XP", "Check out ত্বারক! Prove your skills by taking part in one to one battle of knowledge!", "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+                    doSocialShare("Share to get 20 XP", "Check out স্বচ্ছ ঢাকা! Prove your skills by taking part in one to one battle of knowledge!", "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
                     slidingRootNav.closeMenu(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -583,5 +567,50 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 .replace(R.id.container, fragment)
                 .commit();
         mCurrentFragment = fragment;
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        Toast.makeText(
+                this,
+                "Location Access Granted",
+                Toast.LENGTH_SHORT
+        ).show();
+
+        HashMap<String, Object> mapData = new HashMap<>();
+        mapData.put("lat", location.getLatitude());
+        mapData.put("lon", location.getLatitude());
+        mapData.put("bearing", location.getBearing());
+        firestore.collection("Users")
+                .document(userId)
+                .update(mapData).addOnSuccessListener(aVoid -> {
+                });
+
+    }
+
+
+
+    private void askPermission() {
+
+
+
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // Toasty.info(RegisterActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toasty.LENGTH_LONG, true).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
     }
 }

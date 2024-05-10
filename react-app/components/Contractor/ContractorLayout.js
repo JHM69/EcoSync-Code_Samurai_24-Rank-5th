@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 import React from 'react'
 import UpdateContractor from './UpdateContractor'
-import DeleteSong from './DeleteContractor'
+import DeleteContractor from './DeleteContractor'
 
 const Section = ({ title, children, ...props }) => (
   <section className="mb-3 rounded-md border px-3 py-4" {...props}>
@@ -17,34 +17,67 @@ const ContractorLayout = ({ contractor }) => {
       <div className="w-full">
 
         <Section title={'Contractor Information'}>
-        <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-end space-x-2">
             <UpdateContractor contractor={contractor} />
-            <DeleteSong
+            <DeleteContractor
               contractorId={contractor?.id}
             />
           </div>
           <section className="mb-3 rounded-md border px-3 py-4">
-            <div className="flex items-center space-x-4">
-              <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
-                <img src={contractor.image} alt={contractor.name} width={64} height={64} />
-              </div>
+            <div className="flex items-center space-x-4 py-2">
               <div className="flex flex-col">
-                <h3 className="text-xl font-semibold text-gray-500">
-                  {contractor.name}
+                <h3 className="text-xl font-semibold text-gray-800">
+                  Company: {contractor.companyName}
                 </h3>
-                <p className="text-gray-600">{contractor.email}</p>
+                <p className="text-gray-700">Registration Id: {contractor.registrationId}</p>
               </div>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-xl font-semibold text-gray-700">STS Assigned: {contractor.stsId}</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Registration Date: {contractor.registrationDate}</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">TIN Number: {contractor.tin}</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Phone Number: {contractor.phone}</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Payment Per Tonnage: {contractor.paymentPerTonnage} Ton</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Required Waste Per Day: {contractor.requiredWastePerDay} Ton</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Contract Start Date: {contractor.contractStartDate}</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Contract End Date: {contractor.contractEndDate}</p>
+            </div>
+
+            <div className="flex items-center space-x-4 py-2">
+              <p className="text-gray-700">Area of Collection: {contractor.areaOfCollection}</p>
             </div>
           </section>
         </Section>
 
-        <Section title={'Contractor Type'}>
+        {/* <Section title={'Contractor Type'}>
           <h3 className="font-bond text-xl text-gray-500">
             {contractor?.role?.type}
           </h3>
-        </Section>
+        </Section> */}
 
-        {contractor?.role?.type === 'STSManager' && (
+        {/* {contractor?.role?.type === 'STSManager' && (
           <Section title={'STS Info'}>
             {
               contractor.sts.map((sts) => (
@@ -65,7 +98,7 @@ const ContractorLayout = ({ contractor }) => {
               ))
             }
           </Section>
-        )}
+        )} */}
       </div>
     </div>
   )

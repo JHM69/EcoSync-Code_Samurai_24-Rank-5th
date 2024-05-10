@@ -309,7 +309,7 @@ public class FriendProfile extends AppCompatActivity {
                             }
 
                             Glide.with(requireActivity())
-                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                     .load(friend_image)
                                     .into(profile_pic);
                         } catch (NullPointerException ignored) {
@@ -971,7 +971,7 @@ public class FriendProfile extends AppCompatActivity {
             }
         }else if(item.getItemId() == R.id.copy){
             if(id!=null && namee != null && imagee != null) {
-                String text = "https://tarok.tech/user/"+id;
+                String text = "http://3.208.28.247:3000/user/"+id;
                 setClipboard(getApplicationContext(), text);
             }
         }

@@ -199,12 +199,12 @@ public class MessageActivity extends AppCompatActivity {
         try {
             username.setText(name);
             if (Objects.equals(image, "")) {
-                profile_image.setImageResource(R.drawable.ic_logo);
+                profile_image.setImageResource(R.drawable.logo_round);
             } else {
                 try {
-                    Glide.with(getApplicationContext()).load(image).placeholder(R.drawable.ic_logo).into(profile_image);
+                    Glide.with(getApplicationContext()).load(image).placeholder(R.drawable.logo_round).into(profile_image);
                 } catch (ArrayIndexOutOfBoundsException ignored) {
-                    profile_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_logo));
+                    profile_image.setImageDrawable(getResources().getDrawable(R.drawable.logo_round));
                 }
             }
             readMesagges(fuser, userid, image);

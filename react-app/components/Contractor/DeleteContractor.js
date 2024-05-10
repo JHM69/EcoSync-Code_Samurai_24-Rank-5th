@@ -2,24 +2,27 @@ import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 import { getBaseUrl } from '../../utils/url'
 import Button from '../common/Button'
+import axios from 'axios'
 const DeleteContractor = ({ contractorId, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
 
+
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token')
-      await fetch(getBaseUrl() + `/contractors/${contractorId}`, {
-        method: 'DELETE',
+      await axios.delete(getBaseUrl() + `/contractor/${contractorId}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ id: contractorId }),
-      }).then(() => {
+      }).then((res) => {
+        console.log(res)
         handleClose()
         window.location.replace('/contractor')
+      }).catch((error) => {
+        console.log('Error Deleting User:',error)
       })
     } catch (error) {
       console.log(error)
@@ -28,7 +31,7 @@ const DeleteContractor = ({ contractorId, ...props }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} variant="text" type="button" {...props}>
+      <Button className="bg-red-700 text-white hover:bg-red-500" onClick={handleOpen} variant="text" type="button" {...props}>
         Delete
       </Button>
       <Transition appear show={isOpen} as={Fragment}>

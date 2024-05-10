@@ -58,12 +58,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         final Users user = mUsers.get(position);
         holder.username.setText(user.getName());
         if (user.getImage().equals("default")) {
-            holder.profile_image.setImageResource(R.drawable.ic_logo);
+            holder.profile_image.setImageResource(R.drawable.logo_round);
         } else {
             try {
-                Glide.with(mContext).load(user.getImage()).placeholder(R.drawable.ic_logo).into(holder.profile_image);
+                Glide.with(mContext).load(user.getImage()).placeholder(R.drawable.logo_round).into(holder.profile_image);
             } catch (ArrayIndexOutOfBoundsException ignored) {
-                holder.profile_image.setImageDrawable(mContext.getDrawable(R.drawable.ic_logo));
+                holder.profile_image.setImageDrawable(mContext.getDrawable(R.drawable.logo_round));
             }
         }
 

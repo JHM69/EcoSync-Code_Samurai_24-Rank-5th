@@ -81,7 +81,7 @@ public class SearchFriendAdapter extends RecyclerView.Adapter<SearchFriendAdapte
 
         try {
             Glide.with(context)
-                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                     .load(friends.getImage())
                     .into(holder.image);
         } catch (NullPointerException ignored) {
