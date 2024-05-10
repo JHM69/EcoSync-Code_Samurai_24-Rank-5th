@@ -146,7 +146,8 @@ router.get('/employee/:id', auth.required, async (req: Request, res: Response) =
                 id: Number(req.params.id),
             },
             include: {
-                contractor: true
+                contractor: true,
+                employeeLatLons: true
             }
         });
         return res.json(employee);
@@ -183,6 +184,45 @@ router.delete('/employee/:id', auth.required, auth.isContractorManager, async (r
             },
         });
         return res.json({ message: 'Employee deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// create employeeLatLons for employee
+router.post('/tracker/:id', auth.required, async (req: Request, res: Response) => {
+    try {
+        const {lat, lon} = req.body;
+        const employeeLatLon = await prisma.employeeLatLon.create({
+            data: {
+                employee: {
+                    connect: {
+                        id: parseInt(req.params.id)
+                    }
+                },
+                lat: parseFloat(lat),
+                lon: parseFloat(lon)
+            }
+        });
+        return res.json(employeeLatLon);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// get all employeeLatLons for employee of today
+router.get('/tracker/:id', auth.required, async (req: Request, res: Response) => {
+    try {
+        const employeeLatLons = await prisma.employeeLatLon.findMany({
+            where: {
+                employeeId: parseInt(req.params.id),
+                timestamp: {
+                    gte: new Date(new Date().setHours(0o0, 0o0, 0o0)),
+                    lte: new Date(new Date().setHours(23, 59, 59))
+                }
+            }
+        });
+        return res.json(employeeLatLons);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

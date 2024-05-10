@@ -12,6 +12,8 @@ import tripController from '../controllers/trip.controller';
 import tripPlanController from '../controllers/tripplan.controller';
 import contractorController from '../controllers/contractor.controller';
 import employeeController from '../controllers/employee.controller';
+import monitoringController from '../controllers/monitoring.controller';
+import collectionPlanController from "../controllers/collectionPlan.controller"
 
 const api = Router() 
   .use(usersController) 
@@ -25,6 +27,8 @@ const api = Router()
   .use(tripController)
   .use(tripPlanController)
   .use(contractorController)
-  .use(employeeController);
+  .use(employeeController)
+  .use(monitoringController)
+  .use(collectionPlanController);
 
 export default Router().use('/', api);

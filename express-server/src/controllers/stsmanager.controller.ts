@@ -8,6 +8,8 @@ import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import { createSTS, updateSTS } from '../services/stsmanager.service';
+import { latLonDistance } from '../services/billing.service';
+import { sendSMS } from '../services/sms.service';
 
 const router = Router();
 
@@ -387,11 +389,32 @@ router.post(
         },
       });
 
+      await sendSMS(wasteEntry.contractor.phone, `Waste of ${wasteEntry.volumeOfWaste} kg added to STS ${stsId}`)
       res.status(201).json(wasteEntry);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
   },
 );
+
+router.get('/nearbysts', async (req: Request, res: Response) => {
+  try {
+    const { lat, lon } = req.query;
+    // get all sts and run a loop to calculate the distance and find the sts within 10km
+    const sts = await prisma.sTS.findMany();
+    const nearbySts = sts.filter(sts => {
+      const distance = latLonDistance(
+        Number(lat),
+        Number(lon),
+        sts.lat,
+        sts.lon,
+      );
+      return distance <= 10;
+    });
+    res.status(200).json(nearbySts);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 export default router;

@@ -322,6 +322,8 @@ model Contractor {
   sts                   STS      @relation(fields: [stsId], references: [id])
   managers              User[]
   wasteEntries          WasteEntry[]
+  bills                 ContractorBill[]
+  collectionPlans       CollectionPlan[]
 }
 
 model Employee {
@@ -335,4 +337,41 @@ model Employee {
   paymentRatePerHour    Float
   phone                 String
   assignedCollectionRoute String //comma separated roads
+  employeeLatLons       EmployeeLatLon[]
+}
+
+model ContractorBill {
+  id              Int      @id @default(autoincrement())
+  paid            Boolean @default(false)
+  verified        Boolean @default(false)
+  createdAt       DateTime @default(now())
+  contractorId    Int     
+  contractor      Contractor @relation(fields: [contractorId], references: [id])
+  collectedWaste  Float
+  requiredWaste   Float
+  fine            Float @default(0)
+  baseAmount      Float
+  totalAmount     Float
+}
+
+model CollectionPlan {
+  id            Int      @id @default(autoincrement())
+  contractorId  Int
+  contractor    Contractor @relation(fields: [contractorId], references: [id])
+  area          String //comma separated ward numbers
+  startTime     DateTime
+  endTime       DateTime
+  laborers      Int
+  vans          Int
+  expectedWaste Float
+  completed     Boolean @default(false)
+}
+
+model EmployeeLatLon{
+  id Int @id @default(autoincrement())
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+  lat Float
+  lon Float
+  timestamp DateTime @default(now())
 }

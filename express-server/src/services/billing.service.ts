@@ -111,7 +111,7 @@ export const createBill = async (tripId:number)=>{
 }
 
 //create a function that will calculate the distance between two lat lon mathematically
-const latLonDistance = (lat1:number, lon1:number, lat2:number, lon2:number)=>{
+export const latLonDistance = (lat1:number, lon1:number, lat2:number, lon2:number)=>{
     const R = 6371e3; // metres
     const φ1 = lat1 * Math.PI/180; // φ, λ in radians
     const φ2 = lat2 * Math.PI/180;
@@ -128,3 +128,60 @@ const latLonDistance = (lat1:number, lon1:number, lat2:number, lon2:number)=>{
 const getAmount = (distance:number, unloadedFuelCost:number, loaddedFuelCost:number, volumeOfWaste:number, capacity:number)=>{
     return (unloadedFuelCost + (volumeOfWaste / capacity) * (loaddedFuelCost - unloadedFuelCost))*distance;
 }
+
+export const createContractorBill = async (contractorId: number) => {
+  try{
+    // get the contractor
+  const contractor = await prisma.contractor.findUnique({
+    where: {
+      id: contractorId,
+    },
+    include: {
+      sts: true,
+    }
+  });
+  // get todays waste entries for the contractor
+  const wasteEntries = await prisma.wasteEntry.findMany({
+    where: {
+      contractorId: contractorId,
+      createdAt: {
+        gte: new Date(new Date().setHours(0o0, 0o0, 0o0)),
+        lte: new Date(new Date().setHours(23, 59, 59))
+      }
+    },
+  });
+
+  let totalWaste = 0;
+  for (let i = 0; i < wasteEntries.length; i++) {
+    totalWaste += wasteEntries[i].volumeOfWaste;
+  }
+  totalWaste/=1000; //to ton
+  
+  const baseAmount = totalWaste * contractor.paymentPerTonnage;
+  let deficit = 0;
+  if (totalWaste < contractor.requiredWastePerDay) {
+    deficit = (contractor.requiredWastePerDay - totalWaste);
+  }
+  const fine = deficit *contractor.sts.fine;
+  const totalAmount = baseAmount - fine;
+
+  // create the contractor bill
+  const bill = await prisma.contractorBill.create({
+    data: {
+      contractor: {
+        connect: {
+          id: contractorId,
+        },
+      },
+      baseAmount: baseAmount,
+      totalAmount: totalAmount,
+      fine: fine,
+      collectedWaste: totalWaste,
+      requiredWaste: contractor.requiredWastePerDay,
+    },
+  });
+  return bill;
+  }catch(error){
+      throw new Error(error.message);
+  }
+};
