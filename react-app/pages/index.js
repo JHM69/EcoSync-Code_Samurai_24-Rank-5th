@@ -6,9 +6,9 @@ import { useState } from 'react'
 import Layout from '../components/layout'
 import Dashboard from '../components/Dashboard/Admin'
 import { NoSSR } from '../components/common/NoSSR'
-import { getToken,getMessaging } from 'firebase/messaging'
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from '../firebase'
+// import { getToken,getMessaging } from 'firebase/messaging'
+// import { initializeApp } from "firebase/app";
+// import { firebaseConfig } from '../firebase'
 
 
 function Index() {
@@ -19,10 +19,10 @@ function Index() {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       console.log('Notification permission granted.');
-      const app = initializeApp(firebaseConfig);
-      const messaging = getMessaging(app);
-      const token = await getToken(messaging, { vapidKey: 'BD-sZ1qm1L6xGXotL17_bw6Awo8gwL4ttD0redOqz2Cch4Ik0W5XgzLBRHBWYWjQ3bEDxD5xiOnuxjhhNHopcJs' });
-      console.log("fcm token ",token);
+      // const app = initializeApp(firebaseConfig);
+      // const messaging = getMessaging(app);
+      // const token = await getToken(messaging, { vapidKey: 'BD-sZ1qm1L6xGXotL17_bw6Awo8gwL4ttD0redOqz2Cch4Ik0W5XgzLBRHBWYWjQ3bEDxD5xiOnuxjhhNHopcJs' });
+      // console.log("fcm token ",token);
     } else {
       alert('Enable Notification Permission to get the important updates.');
       console.log('Unable to get permission to notify.');

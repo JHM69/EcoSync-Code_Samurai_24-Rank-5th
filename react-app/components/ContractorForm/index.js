@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import Select from '../common/Select'
+import axios from 'axios'
+import { getBaseUrl } from '../../utils/url'
+
 const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   const {
     register,
@@ -11,6 +14,8 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     reset,
     setValue
   } = useForm()
+
+  const [sts, setSts] = useState([])
 
   useEffect(() => {
     if (defaultValues) {
@@ -27,6 +32,21 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
       setValue('areaOfCollection', defaultValues.areaOfCollection)
     }
   }, [defaultValues, setValue])
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      axios
+        .get(`${getBaseUrl()}/sts`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then((res) => {
+          setSts(res.data)
+        })
+    }
+  }, [sts])
 
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
@@ -161,7 +181,21 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           })}
         />
 
-        <Select
+        <Input
+          name="areaOfCollection"
+          label="Area Of Collection"
+          placeholder="Area Of Collection..."
+          type="text"
+          error={errors.areaOfCollection ? errors.areaOfCollection.message : false}
+          register={register('areaOfCollection', {
+            required: {
+              value: true,
+              message: 'You must add the area of collection of the contractor.'
+            }
+          })}
+        />
+
+        {/* <Select
           name="areaOfCollection"
           label="Area Of Collection"
           placeholder="Area Of Collection..."
@@ -182,7 +216,7 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           <option value="4">Ward 4</option>
           <option value="5">Ward 5</option>
           <option value="6">Ward 6</option>
-        </Select>
+        </Select> */}
 
         <Select
           name="stsId"
@@ -196,17 +230,11 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           })}
         >
           <option value="" selected>Select a STS</option>
-          {/* {sts.map((sts) => (
+          {sts.map((sts) => (
               <option key={sts.id} value={sts.id}>
                 {sts.name}
               </option>
-            ))} */}
-          <option value="1">STS 1</option>
-          <option value="2">STS 2</option>
-          <option value="3">STS 3</option>
-          <option value="4">STS 4</option>
-          <option value="5">STS 5</option>
-          <option value="6">STS 6</option>
+          ))}
         </Select>
       </div>
 
