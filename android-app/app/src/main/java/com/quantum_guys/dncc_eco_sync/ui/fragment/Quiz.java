@@ -289,7 +289,7 @@ public class Quiz extends Fragment {
                     //  setUpChartData(pieChart, win, lose, draw);
                     nameTV.setText(name);
                     Glide.with(requireActivity())
-                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                             .load(image)
                             .into(pro_pic);
                     scoreTV.setText("Score: " + score);

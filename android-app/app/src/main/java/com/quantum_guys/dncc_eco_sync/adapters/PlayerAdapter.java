@@ -74,7 +74,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
         int score = (int) users.getScore();
         holder.level.setText(String.valueOf(getLevelNum(score)));
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                 .load(users.getImage())
                 .into(holder.image);
         final String userid = users.getId();

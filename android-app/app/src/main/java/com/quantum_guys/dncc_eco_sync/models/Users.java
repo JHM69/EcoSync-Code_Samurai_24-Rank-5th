@@ -16,13 +16,15 @@ public class Users implements Serializable {
     @PrimaryKey()
     @NonNull
     String id;
-    long score, lastTimestamp, win, lose, draw, reward, type;
-    private String name, image, institute, dept, email, bio, username, location;
+    long score, lastTimestamp, win, lose, draw, reward, type, lat, lon;
+    private String name, image, institute, dept, email, bio, username, location, ward, gender, address, number;
+
+
 
     @Ignore
     public Users() {
     }
-
+    @Ignore
     public Users(@NonNull String id, long score, long lastTimestamp, long win, long lose, long draw, long reward, long type, String name, String image, String institute, String dept, String email, String bio, String username, String location) {
         this.id = id;
         this.score = score;
@@ -40,6 +42,32 @@ public class Users implements Serializable {
         this.bio = bio;
         this.username = username;
         this.location = location;
+    }
+
+
+    public Users(@NonNull String id, long score, long lastTimestamp, long win, long lose, long draw, long reward, long type, long lat, long lon, String name, String image, String institute, String dept, String email, String bio, String username, String location, String ward, String gender, String address, String number) {
+        this.id = id;
+        this.score = score;
+        this.lastTimestamp = lastTimestamp;
+        this.win = win;
+        this.lose = lose;
+        this.draw = draw;
+        this.reward = reward;
+        this.type = type;
+        this.lat = lat;
+        this.lon = lon;
+        this.name = name;
+        this.image = image;
+        this.institute = institute;
+        this.dept = dept;
+        this.email = email;
+        this.bio = bio;
+        this.username = username;
+        this.location = location;
+        this.ward = ward;
+        this.gender = gender;
+        this.address = address;
+        this.number = number;
     }
 
     @NonNull
@@ -169,5 +197,54 @@ public class Users implements Serializable {
 
     public void setType(long type) {
         this.type = type;
+    }
+
+
+    public long getLat() {
+        return lat;
+    }
+
+    public void setLat(long lat) {
+        this.lat = lat;
+    }
+
+    public long getLon() {
+        return lon;
+    }
+
+    public void setLon(long lon) {
+        this.lon = lon;
+    }
+
+    public String getWard() {
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

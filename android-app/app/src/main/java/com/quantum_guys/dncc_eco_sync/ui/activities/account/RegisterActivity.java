@@ -22,7 +22,6 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,10 +33,9 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.yalantis.ucrop.UCrop;
-
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.utils.AnimationUtil;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.Arrays;
@@ -54,12 +52,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
     public int type = -1;
-    public Uri imageUri = Uri.parse("android.resource://com.quantum_guys.dncc_eco_sync/" + R.drawable.ic_logo);
+    public Uri imageUri = Uri.parse("android.resource://com.quantum_guys.dncc_eco_sync/" + R.drawable.logo);
     public StorageReference storageReference;
     public ProgressDialog mDialog;
-    public String name_, pass_, email_, institute_, dept_, location_;
+    public String name_, pass_, mobile_, email_, address_, ward_, gender_;
+    
     TextInputLayout deptT;
-    private EditText name, email, institute, dept, password;
+    private EditText name, email, institute, password, number, address;
     private CircleImageView profile_image;
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -124,72 +123,48 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
-        institute = findViewById(R.id.institute_name);
-        dept = findViewById(R.id.dept_name);
+        number = findViewById(R.id.number);
+        address = findViewById(R.id.address); 
         password = findViewById(R.id.password);
-        deptT = findViewById(R.id.deptName);
-        ConstraintLayout groupL = findViewById(R.id.lyGiftList);
-
-        List<String> levels = Arrays.asList(getResources().getStringArray(R.array.class_level));
-        List<String> groups = Arrays.asList(getResources().getStringArray(R.array.hsc_group));
-        List<String> zila = Arrays.asList(getResources().getStringArray(R.array.bd_districts));
+         
+        List<String> wards = Arrays.asList(getResources().getStringArray(R.array.wards));
+        List<String> genders = Arrays.asList(getResources().getStringArray(R.array.genders));
 
 
         Spinner spinner_class = findViewById(R.id.spinner_class_level);
-        Spinner spinner_groups = findViewById(R.id.spinner_group);
-        Spinner spinner_zila = findViewById(R.id.spinner_zila);
-
+        Spinner spinner_groups = findViewById(R.id.spinner_group); 
+        
         ArrayAdapter<String> spinnerArrayAdapter_type = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, levels);
+                android.R.layout.simple_spinner_dropdown_item, wards);
         spinner_class.setAdapter(spinnerArrayAdapter_type);
 
 
         ArrayAdapter<String> spinnerArrayAdapter_groups = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, groups);
+                android.R.layout.simple_spinner_dropdown_item, genders);
         spinner_groups.setAdapter(spinnerArrayAdapter_groups);
 
-        ArrayAdapter<String> spinnerArrayAdapter_zila = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, zila);
-        spinner_zila.setAdapter(spinnerArrayAdapter_zila);
+       
+  
 
-
-        spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                type = position;
-                if (position == 0) {
-                    deptT.setVisibility(View.VISIBLE);
-                    groupL.setVisibility(View.GONE);
-                } else if (position == 1 || position == 2) {
-                    deptT.setVisibility(View.GONE);
-                    groupL.setVisibility(View.VISIBLE);
-                } else {
-                    deptT.setVisibility(View.GONE);
-                    groupL.setVisibility(View.GONE);
-                }
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-                type = -1;
-            }
-        });
-
-        spinner_zila.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                location_ = zila.get(position);
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-                location_ = "";
-            }
-        });
+      
 
         spinner_groups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                dept_ = groups.get(position);
+                gender_ = genders.get(position);
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
-                dept_ = "";
+                gender_ = "";
+            }
+        });
+
+        spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ward_ = wards.get(position);
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                ward_ = "";
             }
         });
 
@@ -215,8 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         register.setOnClickListener(view -> {
             name_ = name.getText().toString();
-            institute_ = institute.getText().toString();
-            dept_ = dept.getText().toString();
+            address_ = institute.getText().toString(); 
             email_ = email.getText().toString();
             pass_ = password.getText().toString();
             mDialog.show();
@@ -279,14 +253,14 @@ public class RegisterActivity extends AppCompatActivity {
                                         Map<String, Object> userMap = new HashMap<>();
                                         userMap.put("id", userUid);
                                         userMap.put("name", name_);
-                                        userMap.put("institute", institute_);
-                                        userMap.put("dept", dept_);
+                                        userMap.put("address", address_); 
                                         userMap.put("image", uri.toString());
                                         userMap.put("email", email_);
+                                        userMap.put("gender", gender_);
+                                        userMap.put("ward", ward_);
                                         userMap.put("bio", getString(R.string.default_bio));
                                         userMap.put("username", getNickName(name_));
-                                        userMap.put("location", location_);
-                                        userMap.put("score", 500);
+                                        userMap.put("score", 100);
                                         userMap.put("win", 0);
                                         userMap.put("lose", 0);
                                         userMap.put("draw", 0);
@@ -333,7 +307,7 @@ public class RegisterActivity extends AppCompatActivity {
                 options.setCompressionQuality(70);
                 options.setShowCropGrid(true);
 
-                UCrop.of(imageUri, Uri.fromFile(new File(getCacheDir(), "study_forum_user_profile_picture.png")))
+                UCrop.of(imageUri, Uri.fromFile(new File(getCacheDir(), "dncc_user_profile_picture.png")))
                         .withAspectRatio(1, 1)
                         .withOptions(options)
                         .start(this);

@@ -87,7 +87,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         Notification notification = notificationsList.get(position);
 
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                 .load(notification.getImage())
                 .into(holder.image);
 
@@ -122,7 +122,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.type_image.setImageResource(R.drawable.ic_image_post_black);
                 break;
             default:
-                holder.type_image.setImageResource(R.drawable.ic_logo);
+                holder.type_image.setImageResource(R.drawable.logo_round);
                 break;
         }
 

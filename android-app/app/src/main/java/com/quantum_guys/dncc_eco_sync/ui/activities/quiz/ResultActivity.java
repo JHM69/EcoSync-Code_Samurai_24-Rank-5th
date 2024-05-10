@@ -191,7 +191,7 @@ public class ResultActivity extends AppCompatActivity {
                     name.setText(me1.getUsername());
                     setLevelByScore(level, (int) me1.getScore());
                     Glide.with(getApplicationContext())
-                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                             .load(me1.getImage())
                             .into(proPic);
                 });
@@ -204,7 +204,7 @@ public class ResultActivity extends AppCompatActivity {
                             try {
                                 setLevelByScore(level, Integer.parseInt(String.valueOf(documentSnapshot.getLong("score"))));
                                 Glide.with(getApplicationContext())
-                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(proPic);
                             }catch (Exception ignored){

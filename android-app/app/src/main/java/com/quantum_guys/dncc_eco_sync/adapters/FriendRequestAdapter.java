@@ -71,7 +71,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         holder.name.setText(usersList.get(position).getName());
 
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                 .load(usersList.get(position).getImage())
                 .into(holder.image);
 
@@ -109,7 +109,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                             holder.name.setText(documentSnapshot.getString("name"));
 
                             Glide.with(context)
-                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                     .load(documentSnapshot.getString("image"))
                                     .into(holder.image);
 
@@ -155,7 +155,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
 
                             Glide.with(context)
-                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                     .load(documentSnapshot.getString("image"))
                                     .into(holder.image);
 
