@@ -21,8 +21,8 @@ const BillLayout = ({
 }) => {
   const downloadBill = () => {
     console.log('Downloading Bill')
-    // create a new window and open the pdf 10.33.27.140:3000/bill/:id/download
-    window.open(`http://10.33.27.140:5000/bill/${id}/download`, '_blank')
+    // create a new window and open the pdf 3.208.28.247:3000/bill/:id/download
+    window.open(`http://3.208.28.247:5000/bill/${id}/download`, '_blank')
   }
 
   return (

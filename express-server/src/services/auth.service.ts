@@ -19,7 +19,7 @@ const sendResetPasswordEmail = async (email: string, token: string) => {
     subject: 'Someone requested a password reset for your DNCC EcoSync account',
     html: `
       <h1>Click this url if you want to reset your password. If you don't want to reset, you can ignore this email.</h1>
-      <a href="http://10.33.27.140:3000/forgot-password-confirm?token=${token}">http://10.33.27.140:3000/forgot-password-confirm?token=${token}</a>
+      <a href="http://3.208.28.247:3000/forgot-password-confirm?token=${token}">http://3.208.28.247:3000/forgot-password-confirm?token=${token}</a>
     `,
   });
   console.log(data);
@@ -75,7 +75,7 @@ const createUser = async (userData: any) => {
       <p>-------------------------------------------------</p>
 
       <b>
-      Click here to Change your password: <a href="http://10.33.27.140:3000/reset-password?token=${token}">Change Password</a>
+      Click here to Change your password: <a href="http://3.208.28.247:3000/reset-password?token=${token}">Change Password</a>
       </b>
       <p>Use this password to login and change your password</p>
       <p>Thank you for joining us!</p>

@@ -1,4 +1,3 @@
-git pull
 cd express-server
 docker build -t cs_backend .
 docker stop cs_backend || true

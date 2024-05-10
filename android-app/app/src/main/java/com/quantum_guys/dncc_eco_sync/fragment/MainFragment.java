@@ -3,7 +3,6 @@ package com.quantum_guys.dncc_eco_sync.fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +18,16 @@ import com.quantum_guys.dncc_eco_sync.model.User;
 import com.quantum_guys.dncc_eco_sync.retrofit.ApiUtils;
 import com.quantum_guys.dncc_eco_sync.retrofit.TripService;
 
-import org.jetbrains.annotations.NotNull;
-
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainFragment extends Fragment {
 
     User user;
+
+    String TAG = "MainFragmentView";
 
     TripPlanResponse tripPlanResponse = new TripPlanResponse();
 
@@ -55,19 +56,25 @@ public class MainFragment extends Fragment {
 
         TripService tripService = ApiUtils.getTripService(getContext());
 
-        tripService.getTripPlan(user.getToken()).enqueue( new retrofit2.Callback() {
+        tripService.getTripPlan("Bearer " + user.getToken()).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) {
-                if(response.isSuccessful()) {
-                    tripPlanResponse = (TripPlanResponse) response.body();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Request successful
+                    System.out.println("Request successful");
+                } else {
+                    // Request failed
+                    System.out.println("Request failed: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(@NotNull Call call, @NotNull Throwable t) {
-                Log.e("TripPlan", "onFailure: ", t);
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Request failed due to network failure or other reasons
+                System.out.println("Request failed: " + t.getMessage());
             }
         });
+
 
 
     }

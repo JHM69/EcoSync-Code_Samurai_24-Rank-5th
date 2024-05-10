@@ -14,5 +14,5 @@ services:
     ports:
       - "3000:3000"
     environment: 
-      API: 'http://10.33.27.140:5000'
+      API: 'http://3.208.28.247:5000'
       GOOGLE_API_KEY: 'AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI'
