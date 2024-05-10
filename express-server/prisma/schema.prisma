@@ -124,8 +124,8 @@ model STS {  // 54 STS
   tripPlanStss        TripPlanSts[]
   contractors         Contractor[]
   fine                Float @default(100)
-  startTime           BigInt @default(480) //time in mins 8am
-  endTime             BigInt @default(1200) //8 pm
+  startTime           Int @default(480) //time in mins 8am
+  endTime             Int @default(1200) //8 pm
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
 }
