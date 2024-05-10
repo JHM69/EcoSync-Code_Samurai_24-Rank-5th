@@ -33,10 +33,10 @@ private Double lat;
 private Double lon;
 @SerializedName("address")
 @Expose
-private Object address;
+private String address;
 @SerializedName("logo")
 @Expose
-private Object logo;
+private String logo;
 @SerializedName("fine")
 @Expose
 private Integer fine;
@@ -104,19 +104,19 @@ public void setLon(Double lon) {
 this.lon = lon;
 }
 
-public Object getAddress() {
+public String getAddress() {
 return address;
 }
 
-public void setAddress(Object address) {
+public void setAddress(String address) {
 this.address = address;
 }
 
-public Object getLogo() {
+public String getLogo() {
 return logo;
 }
 
-public void setLogo(Object logo) {
+public void setLogo(String logo) {
 this.logo = logo;
 }
 

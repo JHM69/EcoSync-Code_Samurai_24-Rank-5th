@@ -33,14 +33,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.quantum_guys.dncc_eco_sync.R;
-import com.quantum_guys.dncc_eco_sync.adapters.PostViewHolder;
+import com.quantum_guys.dncc_eco_sync.adapters.IssueViewHolder;
 import com.quantum_guys.dncc_eco_sync.models.Images;
-import com.quantum_guys.dncc_eco_sync.models.Post;
-import com.quantum_guys.dncc_eco_sync.ui.activities.post.PostImage;
+import com.quantum_guys.dncc_eco_sync.ui.activities.issue.PostIssue;
 import com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText;
 
 import java.util.ArrayList;
@@ -124,27 +124,25 @@ public class Issue extends Fragment {
                 .setPageSize(15)
                 .build();
         Query mQuery;
-        if (tag.equals("All")) {
-            mQuery = mFirestore.collection("Issues").orderBy("timestamp", Query.Direction.DESCENDING);
-        } else {
-            mQuery = mFirestore.collection("Issues").orderBy("timestamp", Query.Direction.DESCENDING).whereEqualTo("tag", tag);
-        }
+
+        mQuery = mFirestore.collection("Issues").orderBy("timestamp", Query.Direction.DESCENDING).whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
 
         FirestorePagingOptions<com.quantum_guys.dncc_eco_sync.models.Issue> options = new FirestorePagingOptions.Builder<com.quantum_guys.dncc_eco_sync.models.Issue>()
                 .setLifecycleOwner(this)
                 .setQuery(mQuery, config, com.quantum_guys.dncc_eco_sync.models.Issue.class)
                 .build();
 
-        FirestorePagingAdapter<com.quantum_guys.dncc_eco_sync.models.Issue, PostViewHolder> mAdapter = new FirestorePagingAdapter<com.quantum_guys.dncc_eco_sync.models.Issue, PostViewHolder>(options) {
+        FirestorePagingAdapter<com.quantum_guys.dncc_eco_sync.models.Issue, IssueViewHolder> mAdapter = new FirestorePagingAdapter<com.quantum_guys.dncc_eco_sync.models.Issue, IssueViewHolder>(options) {
             @NonNull
             @Override
-            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = getLayoutInflater().inflate(R.layout.item_feed_post, parent, false);
-                return new PostViewHolder(view);
+            public IssueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = getLayoutInflater().inflate(R.layout.item_issue, parent, false);
+                return new IssueViewHolder(view);
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull com.quantum_guys.dncc_eco_sync.models.Issue post) {
+            protected void onBindViewHolder(@NonNull IssueViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull com.quantum_guys.dncc_eco_sync.models.Issue post) {
                 Animation animation = AnimationUtils.loadAnimation(getActivity(),
                         (position > lastPosition) ? R.anim.up_from_bottom
                                 : R.anim.down_from_top);
@@ -217,7 +215,7 @@ public class Issue extends Fragment {
                 for (Image image : pickedImages) {
                     imagesList.add(new Images(image.getName(), image.getPath(), image.getPath(), image.getId()));
                 }
-                Intent intent = new Intent(getActivity(), PostImage.class);
+                Intent intent = new Intent(getActivity(), PostIssue.class);
                 intent.putParcelableArrayListExtra("imagesList", (ArrayList<? extends Parcelable>) imagesList);
                 startActivity(intent);
             }

@@ -1,4 +1,4 @@
-package com.quantum_guys.dncc_eco_sync.ui.activities;
+package com.quantum_guys.dncc_eco_sync.ui.activities.nearbysts;
 
 
 import android.Manifest;
@@ -78,6 +78,10 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
     GoogleMap map;
     Marker busLocation;
     private List<Polyline> polyLines = new ArrayList<>();
+
+
+    private static final String BASE_URL = "http://3.12.32.123:5000/";
+    private NearbyStsService nearbyStsService;
 
 
     Trip trip = new Trip();

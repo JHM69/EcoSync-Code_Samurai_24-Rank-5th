@@ -65,7 +65,7 @@ import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
 import com.quantum_guys.dncc_eco_sync.notification.NotificationSender;
 import com.quantum_guys.dncc_eco_sync.repository.UserRepository;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.Home;
 import com.quantum_guys.dncc_eco_sync.utils.AnimationUtil;
 import com.quantum_guys.dncc_eco_sync.utils.MathView;
@@ -76,7 +76,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -55,7 +55,7 @@ import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
 import com.quantum_guys.dncc_eco_sync.notification.NotificationSender;
 import com.quantum_guys.dncc_eco_sync.service.UploadService;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.SelectTopic;
 import com.quantum_guys.dncc_eco_sync.viewmodel.MessageViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;

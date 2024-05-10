@@ -4,17 +4,15 @@
 
     <string-array name="ld_activityScreenTitles">
         <item>Home</item>
-        <item>Volunteer</item>
-        <item>STS</item>
-        <item>Offline Post</item>
-        <item>Visit DNCC Web</item>
+        <item>Volunteer Rank</item>
         <item>Nearby STS</item>
+        <item>Call DNCC Helpline</item>
         <item>Theme</item>
         <item>Log Out</item>
         <item>Admin</item>
     </string-array>
 
-    <string-array name="item_type_x" translatable="false">
+    <string-array name="item_type_x" translatable="true">
         <item>Idea</item>
         <item>Guideline</item>
         <item>Event</item>
@@ -24,13 +22,19 @@
         <item>Infographic</item>
     </string-array>
 
+
+    <string-array name="issues" translatable="true">
+        <item>Illegal Dumping</item>
+        <item>Overflow Bil</item>
+        <item>Damaged Infrastructure</item>
+        <item>Littering</item>
+    </string-array>
+
     <array name="ld_activityScreenIcons">
         <item>@drawable/ic_baseline_home_24</item>
-        <item>@drawable/ic_person_add_yellow_24dp</item>
         <item>@drawable/ic_baseline_people_outline_24</item>
-        <item>@drawable/ic_baseline_bookmark_border_24</item>
+        <item>@drawable/ic_outline_nature_people_24</item>
         <item>@drawable/ic_open_in_new_black_24dp</item>
-        <item>@drawable/ic_code_black_24dp</item>
         <item>@drawable/ic_palette_black_24dp</item>
         <item>@drawable/ic_exit_to_app_black_24dp</item>
         <item>@drawable/user_icon</item>
@@ -149,6 +153,15 @@
         <item>Female</item>
         <item>I don\'t want to Mention</item>
         <item>Others</item>
+
+    </string-array>
+
+
+    <string-array name="states">
+        <item>Pending</item>
+        <item>Processing</item>
+        <item>Resolved</item>
+        <item>Declined</item>
 
     </string-array>
 

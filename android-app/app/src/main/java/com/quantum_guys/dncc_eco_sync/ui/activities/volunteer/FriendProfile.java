@@ -1,4 +1,4 @@
-package com.quantum_guys.dncc_eco_sync.ui.activities.friends;
+package com.quantum_guys.dncc_eco_sync.ui.activities.volunteer;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.userId;

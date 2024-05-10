@@ -11,6 +11,10 @@ public class Issue extends Post{
     String address;
 
 
+
+    public Issue() {
+    }
+
     public Issue(String postId, String userId, String name, String timestamp, String likes, String favourites, String description, String username, String institute, String dept, String userimage, int image_count, String image_url_0, String image_url_1, String image_url_2, String image_url_3, String image_url_4, String image_url_5, String image_url_6, int liked_count, int comment_count, String states, String issueType, boolean isAnonymous, float lat, float lon, String address) {
         super(postId, userId, name, timestamp, likes, favourites, description, username, institute, dept, userimage, image_count, image_url_0, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5, image_url_6, liked_count, comment_count);
         this.states = states;

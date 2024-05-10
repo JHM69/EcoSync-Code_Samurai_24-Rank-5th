@@ -2,12 +2,15 @@ package com.quantum_guys.dncc_eco_sync.ui.activities.issue;
 
 import static android.view.View.GONE;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +42,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.marcoscg.dialogsheet.DialogSheet;
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.adapters.PagerPhotosAdapter;
@@ -50,6 +58,7 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -58,7 +67,7 @@ import java.util.Random;
 import es.dmoral.toasty.Toasty;
 
 @SuppressWarnings("UnusedAssignment")
-public class PostIssue extends AppCompatActivity {
+public class PostIssue extends AppCompatActivity implements LocationListener {
 
     List<Images> imagesList;
     ViewPager pager;
@@ -67,6 +76,7 @@ public class PostIssue extends AppCompatActivity {
     final ArrayList<String> uploadedImagesUrl = new ArrayList<>();
     String tag;
     RichEditor mRichEd;
+    String address;
     private FirebaseUser mCurrentUser;
     private DotsIndicator indicator;
     private RelativeLayout indicator_holder;
@@ -75,6 +85,9 @@ public class PostIssue extends AppCompatActivity {
     private int serviceCount;
     private ConstraintLayout codeLayout;
     EditText latexText, codeText;
+    EditText addressView;
+
+    double lat, lon;
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, PostIssue.class);
         context.startActivity(intent);
@@ -126,7 +139,7 @@ public class PostIssue extends AppCompatActivity {
     }
 
     Switch postAnnounimasentSwitch;
-    
+
     Boolean isAnonymous;
 
     @Override
@@ -135,6 +148,9 @@ public class PostIssue extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_issue_image);
         imagesList = getIntent().getParcelableArrayListExtra("imagesList");
+
+        askPermission();
+
         if (imagesList.isEmpty()) {
             finish();
         }
@@ -148,8 +164,9 @@ public class PostIssue extends AppCompatActivity {
         latexText = findViewById(R.id.latex_equation);
         codeText = findViewById(R.id.code);
         type = findViewById(R.id.spinner_type);
+        addressView = findViewById(R.id.address);
         postAnnounimasentSwitch = findViewById(R.id.switch1);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.item_type_x));
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.issues));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_expandable_list_item_1);
         type.setAdapter(arrayAdapter);
         type.setOnItemSelectedListener(new TypeXSpinnerClass());
@@ -293,9 +310,6 @@ public class PostIssue extends AppCompatActivity {
                 isChanged = !isChanged;
             }
         });
-
-
-
 
 
         findViewById(R.id.action_heading1).setOnClickListener(v ->{
@@ -617,6 +631,13 @@ public class PostIssue extends AppCompatActivity {
                             intent.putParcelableArrayListExtra("imagesList", (ArrayList<? extends Parcelable>) imagesList);
                             intent.putExtra("notification_id", (int) System.currentTimeMillis());
                             intent.putExtra("current_id", mCurrentUser.getUid());
+                            intent.putExtra("isAnonymous", isAnonymous);
+                            intent.putExtra("address", addressView.getText().toString());
+                            intent.putExtra("lat", lat);
+                            intent.putExtra("lon", lon);
+
+                            intent.putExtra("posttype", "issue");
+
                             try {
                                 intent.putExtra("description", mRichEd.getHtml());
                             } catch (NullPointerException h) {
@@ -766,6 +787,32 @@ public class PostIssue extends AppCompatActivity {
                 .start(this);
     }
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        Toast.makeText(this, "Fetching Location...", Toast.LENGTH_SHORT).show();
+        lat = location.getLatitude();
+        lon = location.getLongitude();
+
+
+        OpenMapsApiClient client = new OpenMapsApiClient();
+        String latlng = lat  + ", " + lon; // "40.714224,-73.961452"; // Sample latitude and longitude la
+        String apiKey = getString(R.string.google_api_key);
+
+        try {
+            address = client.reverseGeocode(String.valueOf(lat), String.valueOf(lon) , "663e63f38c3ea151466018jwcc4155c");
+            System.out.println("Address: " + address);
+
+            addressView.setText(address);
+        } catch (IOException e) {
+            addressView.setText(e.toString());
+            e.printStackTrace();
+        }
+
+
+
+//        call place api to get Place
+    }
+
 
     class TypeXSpinnerClass implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -782,5 +829,29 @@ public class PostIssue extends AppCompatActivity {
         int end = Math.max(codeText.getSelectionEnd(), 0);
         codeText.getText().replace(Math.min(start, end), Math.max(start, end),
                 "    ", 0, "    ".length());
+    }
+
+    private void askPermission() {
+
+
+
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // Toasty.info(RegisterActivity.this, "You have denied some permissions permanently, if the app force close try granting permission from settings.", Toasty.LENGTH_LONG, true).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
     }
 }

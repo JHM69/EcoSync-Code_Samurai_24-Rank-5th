@@ -182,11 +182,11 @@ public class Dashboard extends Fragment {
                                }
                            }
                        }
-                       if(count!=0) {
-                           TabLayout.Tab tab = tabLayout.getTabAt(3);
-                           Objects.requireNonNull(tab).setCustomView(null);
-                           tab.setCustomView(adapter.setNotifications(count/2));
-                       }
+//                       if(count!=0) {
+//                           TabLayout.Tab tab = tabLayout.getTabAt(0);
+//                           tab.setCustomView(null);
+//                           tab.setCustomView(adapter.setNotifications(count/2));
+//                       }
                    }
                }));
    }

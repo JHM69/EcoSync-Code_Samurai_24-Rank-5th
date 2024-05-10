@@ -14,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -58,12 +57,11 @@ import com.quantum_guys.dncc_eco_sync.models.SimpleItem;
 import com.quantum_guys.dncc_eco_sync.notification.Token;
 import com.quantum_guys.dncc_eco_sync.ui.activities.account.EditProfile;
 import com.quantum_guys.dncc_eco_sync.ui.activities.account.LoginActivity;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.SearchUsersActivity;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.Ranking;
+import com.quantum_guys.dncc_eco_sync.ui.activities.nearbysts.MapView;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.SearchUsersActivity;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.Ranking;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.Dashboard;
-import com.quantum_guys.dncc_eco_sync.ui.fragment.FriendsFragment;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.ProfileFragment;
-import com.quantum_guys.dncc_eco_sync.ui.fragment.SavedFragment;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.ThemeBottomSheetDialog;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.admin.AdminFragment;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;
@@ -85,13 +83,13 @@ import es.dmoral.toasty.Toasty;
 public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener, LocationListener  {
     private static final int POS_DASHBOARD = 0;
     private static final int RANKING = 1;
-    private static final int POS_FRIENDS = 2;
-    private static final int SAVED_POST = 3;
-    private static final int WEB = 4;
-    private static final int ABOUT_APP = 5;
-    private static final int THEME = 6;
-    private static final int POS_LOGOUT = 7;
-    private static final int ADMIN = 8;
+    private static final int STS = 2;
+
+    private static final int WEB = 3;
+
+    private static final int THEME = 4;
+    private static final int POS_LOGOUT = 5;
+    private static final int ADMIN = 6;
     public static String userId;
     public static boolean inHome=true;
 
@@ -119,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             public void run() {
                 try {
                     synchronized (this) {
-                        wait(10000);
+                        wait(1000);
                         try {
                             String refreshToken = FirebaseInstanceId.getInstance().getToken();
                             Token token = new Token(refreshToken);
@@ -132,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                                     .update(scoreMap).addOnSuccessListener(aVoid -> {
                             });
                         } catch (NullPointerException ignored) {
-
+                            Log.d("FCMERROR", "run: FCM Token "+ ignored.getLocalizedMessage());
                         }
                     }
                 } catch (InterruptedException e) {
@@ -275,10 +273,8 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 adapter = new DrawerAdapter(Arrays.asList(
                         createItemFor(POS_DASHBOARD).setChecked(true),
                         createItemFor(RANKING),
-                        createItemFor(POS_FRIENDS),
-                        createItemFor(SAVED_POST),
+                        createItemFor(STS),
                         createItemFor(WEB),
-                        createItemFor(ABOUT_APP),
                         createItemFor(THEME),
                         createItemFor(POS_LOGOUT),
                         createItemFor(ADMIN)));
@@ -286,10 +282,8 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 adapter = new DrawerAdapter(Arrays.asList(
                         createItemFor(POS_DASHBOARD).setChecked(true),
                         createItemFor(RANKING),
-                        createItemFor(POS_FRIENDS),
-                        createItemFor(SAVED_POST),
+                        createItemFor(STS),
                         createItemFor(WEB),
-                        createItemFor(ABOUT_APP),
                         createItemFor(THEME),
                         createItemFor(POS_LOGOUT)));
             }
@@ -444,39 +438,26 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 slidingRootNav.closeMenu(true);
                 return;
 
-            case POS_FRIENDS:
-                inHome = false;
-                mainToolbar.setSubtitle("Friends");
-                selectedScreen = new FriendsFragment();
-                showFragment(selectedScreen);
-                slidingRootNav.closeMenu(true);
-                return;
-
             case RANKING:
                 inHome = false;
-                mainToolbar.setSubtitle("Ranking");
+                mainToolbar.setSubtitle("Volunteer Ranking");
                 selectedScreen = new Ranking();
                 showFragment(selectedScreen);
                 slidingRootNav.closeMenu(true);
                 return;
 
-            case SAVED_POST:
-                inHome = false;
-                mainToolbar.setSubtitle("Offlined Post");
-                selectedScreen = new SavedFragment();
-                showFragment(selectedScreen);
-                slidingRootNav.closeMenu(true);
-                return;
-
-            case ABOUT_APP:
-                inHome = false;
-                startActivity(new Intent(getApplicationContext(), MapView.class).putExtra("post_id", "about_app"));
-                return;
-
             case WEB:
                 inHome = true;
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://3.208.28.247:3000"));
-                startActivity(browserIntent);
+//               Call to helpline number
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(android.net.Uri.parse("tel:999"));
+                return;
+
+            case STS:
+                inHome = false;
+//                go to MapView
+                startActivity(new Intent(MainActivity.this, MapView.class));
+
                 return;
 
             case THEME:

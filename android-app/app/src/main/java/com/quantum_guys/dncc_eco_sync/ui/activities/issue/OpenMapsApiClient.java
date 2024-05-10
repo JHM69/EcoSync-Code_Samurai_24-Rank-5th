@@ -6,25 +6,25 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GoogleMapsApiClient {
-    private static final String BASE_URL = "https://maps.googleapis.com/";
-    private GoogleMapsApiService service;
+public class OpenMapsApiClient {
+    private static final String BASE_URL = "https://geocode.maps.co/";
+    private OpenMapsApiService service;
 
-    public GoogleMapsApiClient() {
+    public OpenMapsApiClient() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        service = retrofit.create(GoogleMapsApiService.class);
+        service = retrofit.create(OpenMapsApiService.class);
     }
 
-    public String reverseGeocode(String latlng, String apiKey) throws IOException {
-        Call<GeocodingResponse> call = service.reverseGeocode(latlng, apiKey);
-        GeocodingResponse response = call.execute().body();
+    public String reverseGeocode(String lat, String lon, String apiKey) throws IOException {
+        Call<Address> call = service.reverseGeocode(lat, lon, apiKey);
+        Address response = call.execute().body();
 
-        if (response != null && response.getResults().size() > 0) {
-            return response.getResults().get(0).getFormattedAddress();
+        if (response != null) {
+            return response.getAdditionalProperties().get("display_name").toString();
         } else {
             return "No results found";
         }
