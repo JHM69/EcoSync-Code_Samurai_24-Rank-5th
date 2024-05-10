@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.quantum_guys.dncc_eco_sync.ui.extras.Weather.ui.activity.widget.CreateWidgetDayActivity"
+    android:initialLayout="@layout/widget_day_symmetry"
+    android:minHeight="@dimen/widget_grid_1"
+    android:minResizeHeight="@dimen/widget_grid_1"
+    android:minResizeWidth="@dimen/widget_grid_1"
+    android:minWidth="@dimen/widget_grid_3"
+    android:previewImage="@drawable/widget_day"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen|keyguard" />

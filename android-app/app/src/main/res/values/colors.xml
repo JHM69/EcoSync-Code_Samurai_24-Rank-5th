@@ -40,4 +40,17 @@
     <color name="camera_overlay">#FFFFFF</color>
 
 
+
+
+
+    <color name="colorPrimaryy">#FFFFFF</color>
+    <color name="statusBar">#9362C8</color>
+    <color name="colorSec">#CC488F</color>
+
+
+    <color name="Timewhite">#80FFFFFF</color>
+    <color name="selectted">#52000000</color>
+    <color name="backG">#CEA2FF</color>
+
+
 </resources>

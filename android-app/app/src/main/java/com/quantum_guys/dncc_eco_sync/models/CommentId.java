@@ -1,0 +1,1 @@
+package com.quantum_guys.dncc_eco_sync.models;import androidx.annotation.NonNull;/** * Created by Jahangir . */public class CommentId {    public String commentId;    @SuppressWarnings("unchecked")    public <T extends CommentId> T withId(@NonNull final String id) {        this.commentId = id;        return (T) this;    }}

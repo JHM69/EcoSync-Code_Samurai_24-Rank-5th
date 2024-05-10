@@ -1,138 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout5"
-            android:layout_width="match_parent"
-            android:layout_height="95dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/userName2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/regular"
-                android:text="Jahnangir Hossain"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/textView60"
-                app:layout_constraintTop_toBottomOf="@+id/textView60" />
-
-            <TextView
-                android:id="@+id/textView60"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="14dp"
-                android:fontFamily="@font/regular"
-                android:text="DNCC EcoSync"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:alpha="0.9"
-                android:scaleType="centerCrop"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/textView60"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/userName2"
-                app:srcCompat="@drawable/logo_round" />
-
-            <TextView
-                android:id="@+id/textView69"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoText="true"
-                android:text="Driver"
-                android:textColor="@color/colorAccentt"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                app:layout_constraintStart_toStartOf="@+id/userName2"
-                app:layout_constraintTop_toBottomOf="@+id/userName2" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewVerify"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="30dp"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="30dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:text="You are not a Driver yet. Please Contact with Admin."
-                    android:textAlignment="center"
-                    android:textColor="@android:color/holo_red_light"
-                    android:textSize="25sp"
-                    tools:ignore="HardcodedText" />
-
-                <Button
-                    android:id="@+id/sentEmailBt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/edit_text_custom1"
-                    android:backgroundTint="@color/colorAccentt"
-                    android:text="Contact Admin"
-                    android:textColor="#ffffff"
-                    tools:ignore="HardcodedText" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
-            app:tabIndicatorColor="@color/colorAccentt"
-            app:tabMode="fixed"
-            app:titleTextColor="@color/white" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"    xmlns:app="http://schemas.android.com/apk/res-auto"    xmlns:tools="http://schemas.android.com/tools"    android:layout_width="match_parent"    android:layout_height="match_parent"    android:orientation="vertical">    <com.google.android.material.appbar.AppBarLayout        android:id="@+id/top"        android:layout_width="match_parent"        android:layout_height="wrap_content"        android:layout_alignParentTop="true"        android:backgroundTint="?colorPrimary"        android:elevation="0dp"        android:gravity="center"        app:elevation="0dp">        <androidx.appcompat.widget.Toolbar            android:id="@+id/my_toolbar"            android:layout_width="match_parent"            android:layout_height="wrap_content"            android:alpha="0.9"            android:gravity="center"            android:paddingStart="2dp"            android:paddingBottom="7dp"            app:elevation="0dp"            app:layout_collapseMode="pin"            app:layout_scrollFlags="scroll|snap"            app:popupTheme="@style/AppTheme"            app:subtitleTextColor="#E6E1E1"            app:theme="@style/ToolbarColoredBackArrow"            app:title="@string/app_name"            app:titleTextColor="@color/white"            tools:ignore="RtlSymmetry">        </androidx.appcompat.widget.Toolbar>    </com.google.android.material.appbar.AppBarLayout>    <FrameLayout        android:layout_width="match_parent"        android:layout_height="match_parent"        android:layout_below="@+id/top">        <FrameLayout            android:id="@+id/container"            android:layout_width="match_parent"            android:layout_height="match_parent" />        <FrameLayout            android:layout_width="match_parent"            android:layout_height="match_parent"            android:visibility="gone">            <androidx.recyclerview.widget.RecyclerView                android:layout_width="match_parent"                android:layout_height="match_parent" />        </FrameLayout>    </FrameLayout></RelativeLayout>
