@@ -70,6 +70,10 @@
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.messege.activity.MessageActivity" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostImage" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.IssuesDetailsActivity" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.PostIssue" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.SingleIssueView" />
+
         <activity
             android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.QuizBattle"
             android:exported="true"
