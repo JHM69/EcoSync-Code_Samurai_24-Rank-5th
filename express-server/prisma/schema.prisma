@@ -337,6 +337,7 @@ model Employee {
   paymentRatePerHour    Float
   phone                 String
   assignedCollectionRoute String //comma separated roads
+  employeeLatLons       EmployeeLatLon[]
 }
 
 model ContractorBill {
@@ -364,4 +365,13 @@ model CollectionPlan {
   vans          Int
   expectedWaste Float
   completed     Boolean @default(false)
+}
+
+model EmployeeLatLon{
+  id Int @id @default(autoincrement())
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+  lat Float
+  lon Float
+  timestamp DateTime @default(now())
 }
