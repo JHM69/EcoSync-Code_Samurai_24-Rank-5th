@@ -15,7 +15,7 @@ const UpdateContractor = ({ contractor, ...props }) => {
     const token = localStorage.getItem('token')
     console.log(contractor)
     await axios
-      .put(getBaseUrl() + `/contractors/${contractor.id}`, data, {
+      .put(getBaseUrl() + `/contractor/${contractor.id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,6 +74,7 @@ const UpdateContractor = ({ contractor, ...props }) => {
                     defaultValues={contractor}
                     type={'Update'}
                     onFormSubmit={onFormSubmit}
+                    handleClose={handleClose}
                   />
                 </Dialog.Panel>
               </Transition.Child>

@@ -16,26 +16,44 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   } = useForm()
 
   const [sts, setSts] = useState([])
-
   useEffect(() => {
     if (defaultValues) {
       setValue('companyName', defaultValues.companyName)
-      setValue('stsId', defaultValues.stsId)
+      if (sts) {
+        setValue('stsId', defaultValues?.sts?.map((item) => item.id.toString()))
+      }
       setValue('registrationId', defaultValues.registrationId)
-      setValue('registrationDate', defaultValues.registrationDate)
+      // Format date strings to yyyy-MM-dd
+      setValue('registrationDate', formatDate(defaultValues.registrationDate))
       setValue('tin', defaultValues.tin)
       setValue('phone', defaultValues.phone)
       setValue('paymentPerTonnage', defaultValues.paymentPerTonnage)
       setValue('requiredWastePerDay', defaultValues.requiredWastePerDay)
-      setValue('contractStartDate', defaultValues.contractStartDate)
-      setValue('contractEndDate', defaultValues.contractEndDate)
+      setValue('contractStartDate', formatDate(defaultValues.contractStartDate))
+      setValue('contractEndDate', formatDate(defaultValues.contractEndDate))
       setValue('areaOfCollection', defaultValues.areaOfCollection)
     }
-  }, [defaultValues, setValue])
+  }, [defaultValues, setValue, sts])
+  
+  // Function to format date strings to yyyy-MM-dd
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    const year = date.getFullYear()
+    let month = date.getMonth() + 1
+    if (month < 10) {
+      month = '0' + month
+    }
+    let day = date.getDate()
+    if (day < 10) {
+      day = '0' + day
+    }
+    return `${year}-${month}-${day}`
+  }
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (token) {
+    if (token && ! type) {
       axios
         .get(`${getBaseUrl()}/sts`, {
           headers: {
@@ -46,7 +64,7 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           setSts(res.data)
         })
     }
-  }, [sts])
+  }, [type, sts])
 
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
@@ -195,39 +213,18 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           })}
         />
 
-        {/* <Select
-          name="areaOfCollection"
-          label="Area Of Collection"
-          placeholder="Area Of Collection..."
-          type="text"
-          multiple
-          error={errors.areaOfCollection ? errors.areaOfCollection.message : false}
-          register={register('areaOfCollection', {
-            required: {
-              value: true,
-              message: 'You must add the area of collection of the contractor.'
-            }
-          })}
-        >
-          <option value="" selected>Select a Ward</option>
-          <option value="1">Ward 1</option>
-          <option value="2">Ward 2</option>
-          <option value="3">Ward 3</option>
-          <option value="4">Ward 4</option>
-          <option value="5">Ward 5</option>
-          <option value="6">Ward 6</option>
-        </Select> */}
-
+        
         <Select
           name="stsId"
           label="Select a Sts"
           error={errors.stsId ? errors.stsId.message : false}
-          register={register('stdId', {
+          register={register('stsId', {
             required: {
               value: true,
               message: 'You must select a STS.'
             }
           })}
+          value={defaultValues && defaultValues.stsId}
         >
           <option value="" selected>Select a STS</option>
           {sts.map((sts) => (

@@ -30,7 +30,7 @@ const AddContractor = ({ reload, setReload, props }) => {
         })
         .catch((error) => {
           //toast.error('Error adding Contractor')
-          alert(error)
+          alert(error);
           console.log(error)
         })
     } catch (error) {
