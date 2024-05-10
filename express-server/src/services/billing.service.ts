@@ -111,7 +111,7 @@ export const createBill = async (tripId:number)=>{
 }
 
 //create a function that will calculate the distance between two lat lon mathematically
-const latLonDistance = (lat1:number, lon1:number, lat2:number, lon2:number)=>{
+export const latLonDistance = (lat1:number, lon1:number, lat2:number, lon2:number)=>{
     const R = 6371e3; // metres
     const φ1 = lat1 * Math.PI/180; // φ, λ in radians
     const φ2 = lat2 * Math.PI/180;
