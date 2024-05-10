@@ -1,0 +1,31 @@
+img {
+   max-width:140% !important;
+   width:140% !important;
+}
+.code{
+       padding-left: 3px;
+       background: #F6EAF8;
+       border-left: 3px solid #8048be;
+       font-family: monospace;
+       font-size: 16px;
+       radius:2px;
+       max-width: 100%;
+ }
+.button {
+  background-color: #8048be;
+  border: none;
+  color: white;
+  padding: 4px 6px;
+  text-align: center;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.b2{
+ background-color: #CC488F;
+}
+
+

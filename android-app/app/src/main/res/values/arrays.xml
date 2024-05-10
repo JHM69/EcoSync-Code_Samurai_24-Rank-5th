@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="ld_activityScreenTitles">
+        <item>Home</item>
+        <item>Ranking</item>
+        <item>Friends</item>
+        <item>Offline Post</item>
+        <item>Visit tarok.tech</item>
+        <item>About App</item>
+        <item>Theme</item>
+        <item>Log Out</item>
+        <item>Admin</item>
+    </string-array>
+
+    <string-array name="item_type_x" translatable="false">
+        <item>General</item>
+        <item>Math</item>
+        <item>Physics</item>
+        <item>Chemistry</item>
+        <item>Programing</item>
+        <item>Meme</item>
+        <item>Biology</item>
+        <item>Others</item>
+        <item>Programing</item>
+        <item>GK</item>
+        <item>Astronomy</item>
+        <item>Motivational</item>
+        <item>Chemistry</item>
+        <item>Biology</item>
+    </string-array>
+
+    <array name="ld_activityScreenIcons">
+        <item>@drawable/ic_baseline_home_24</item>
+        <item>@drawable/ic_baseline_bar_chart_24</item>
+        <item>@drawable/ic_baseline_people_outline_24</item>
+        <item>@drawable/ic_baseline_bookmark_border_24</item>
+        <item>@drawable/ic_open_in_new_black_24dp</item>
+        <item>@drawable/ic_code_black_24dp</item>
+        <item>@drawable/ic_palette_black_24dp</item>
+        <item>@drawable/ic_exit_to_app_black_24dp</item>
+        <item>@drawable/user_icon</item>
+    </array>
+    <!--   <item>@drawable/ic_baseline_share_24</item>-->
+
+    <string-array name="bd_districts">
+        <item>Bagerhat</item>
+        <item>Bandarban</item>
+        <item>Barguna</item>
+        <item>Barishal</item>
+        <item>Bhola</item>
+        <item>Bogura</item>
+        <item>Brahmanbaria</item>
+        <item>Chandpur</item>
+        <item>Chattogram</item>
+        <item>Chuadanga</item>
+        <item>Comilla</item>
+        <item>Cox\'s Bazar</item>
+        <item>Dhaka</item>
+        <item>Dinajpur</item>
+        <item>Faridpur</item>
+        <item>Feni</item>
+        <item>Gaibandha</item>
+        <item>Gazipur</item>
+        <item>Gopalganj</item>
+        <item>Habiganj</item>
+        <item>Jamalpur</item>
+        <item>Jesshore</item>
+        <item>Jhalokati</item>
+        <item>Jhenaidah</item>
+        <item>Joypurhat</item>
+        <item>Khagrachari</item>
+        <item>Khulna</item>
+        <item>Kishoreganj</item>
+        <item>Kurigram</item>
+        <item>Kushtia</item>
+        <item>Lakshmipur</item>
+        <item>Lalmonirhat</item>
+        <item>Madaripur</item>
+        <item>Magura</item>
+        <item>Manikganj</item>
+        <item>Maulvibazar</item>
+        <item>Meherpur</item>
+        <item>Munshiganj</item>
+        <item>Mymensingh</item>
+        <item>Naogaon</item>
+        <item>Narail</item>
+        <item>Narayanganj</item>
+        <item>Narsingdi</item>
+        <item>Natore</item>
+        <item>Nawabganj</item>
+        <item>Netrokona</item>
+        <item>Nilphamari</item>
+        <item>Noakhali</item>
+        <item>Pabna</item>
+        <item>Panchagarh</item>
+        <item>Patuakhali</item>
+        <item>Pirojpur</item>
+        <item>Rajbari</item>
+        <item>Rajshahi</item>
+        <item>Rangamati</item>
+        <item>Rangpur</item>
+        <item>Satkhira</item>
+        <item>Shariatpur</item>
+        <item>Sherpur</item>
+        <item>Sirajgonj</item>
+        <item>Sunamganj</item>
+        <item>Sylhet</item>
+        <item>Tangail</item>
+        <item>Thakurgaon</item>
+    </string-array>
+
+
+    <string-array name="class_level">
+        <item>BSC</item>
+        <item>HSC</item>
+        <item>SSC</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="hsc_group">
+        <item>Science</item>
+        <item>Commerce</item>
+        <item>Humanity</item>
+    </string-array>
+
+</resources>

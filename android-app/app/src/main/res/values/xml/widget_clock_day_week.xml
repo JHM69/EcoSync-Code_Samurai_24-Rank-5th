@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="wangdaye.com.geometricweather.ui.activity.widget.CreateWidgetClockDayWeekActivity"
+    android:initialLayout="@layout/widget_clock_day_week"
+    android:minHeight="@dimen/widget_grid_2"
+    android:minResizeHeight="@dimen/widget_grid_1"
+    android:minResizeWidth="@dimen/widget_grid_3"
+    android:minWidth="@dimen/widget_grid_4"
+    android:previewImage="@drawable/widget_clock_day_week"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen|keyguard" />

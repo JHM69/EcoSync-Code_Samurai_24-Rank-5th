@@ -4,8 +4,6 @@ import { Request, Response, Router } from 'express';
 import auth from '../utils/auth';
 import prisma from '../../prisma/prisma-client';
 import { getHtml } from '../services/pdf.service';
-import { createBill } from '../services/billing.service';
-import { create } from 'domain';
  
 const puppeteer = require('puppeteer');
 

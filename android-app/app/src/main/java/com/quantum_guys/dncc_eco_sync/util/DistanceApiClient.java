@@ -1,1 +1,0 @@
-package com.quantum_guys.dncc_eco_sync.util;import java.util.Map;import retrofit2.Call;import retrofit2.http.GET;import retrofit2.http.QueryMap;public interface DistanceApiClient {    @GET("maps/api/distancematrix/json")    Call<DistanceResponse> getDistanceInfo(            @QueryMap Map<String, String> parameters    );}
