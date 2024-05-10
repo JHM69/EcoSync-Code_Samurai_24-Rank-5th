@@ -53,7 +53,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -216,13 +215,13 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         //   map.moveCamera(center);
         //   map.moveCamera(zoom);
 
-        Toast.makeText(this, "Route Success", Toast.LENGTH_SHORT).show();
-        if (polyLines.size() > 0) {
-            for (Polyline poly : polyLines) {
-                poly.remove();
-            }
-        }
-        polyLines = new ArrayList<>();
+//        Toast.makeText(this, "Route Success", Toast.LENGTH_SHORT).show();
+//        if (polyLines.size() > 0) {
+//            for (Polyline poly : polyLines) {
+//                poly.remove();
+//            }
+//        }
+//        polyLines = new ArrayList<>();
         //add route(s) to the map.
 
 
@@ -235,23 +234,23 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
             map.addMarker(options);
         }
 
-        try {
-            for (int i = 0; i < route.size(); i++) {
-                //In case of more than 5 alternative routes
-                PolylineOptions polyOptions = new PolylineOptions();
-                //polyOptions.color(getResources().getColor(R.color.addColor));
-                polyOptions.width(15 + i * 3);
-                polyOptions.addAll(route.get(i).getPoints());
-                Polyline polyline = map.addPolyline(polyOptions);
-                polyLines.add(polyline);
-            }
-        } catch (Exception f) {
-            Toast.makeText(
-                    this,
-                    f.getLocalizedMessage(),
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+//        try {
+//            for (int i = 0; i < route.size(); i++) {
+//                //In case of more than 5 alternative routes
+//                PolylineOptions polyOptions = new PolylineOptions();
+//                //polyOptions.color(getResources().getColor(R.color.addColor));
+//                polyOptions.width(15 + i * 3);
+//                polyOptions.addAll(route.get(i).getPoints());
+//                Polyline polyline = map.addPolyline(polyOptions);
+//                polyLines.add(polyline);
+//            }
+//        } catch (Exception f) {
+//            Toast.makeText(
+//                    this,
+//                    f.getLocalizedMessage(),
+//                    Toast.LENGTH_SHORT
+//            ).show();
+//        }
 
         for (int i = 0; i < trip.getVehicleEntries().size(); i++) {
             VehicleEntry vehicleEntry = trip.getVehicleEntries().get(i);
@@ -458,12 +457,20 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
 
 //                    Add Marker for each STS
                     for (NearbySts sts : response1.sts) {
+                        LatLng lt = new LatLng(sts.getLat(), sts.getLon());
                         stsList.add(new LatLng(sts.getLat(), sts.getLon()));
                         MarkerOptions options = new MarkerOptions();
-                        options.position(new LatLng(sts.getLat(), sts.getLon()) );
+                        options.position(lt);
                         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-//                        add a text to the marker
-                        options.title(sts.getName());
+                        map.addMarker(options);
+                    }
+
+
+
+                    for (LatLng lt : stsList) {
+                        MarkerOptions options = new MarkerOptions();
+                        options.position(lt);
+                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                         map.addMarker(options);
                     }
 
