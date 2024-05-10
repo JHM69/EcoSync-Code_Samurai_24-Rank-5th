@@ -42,8 +42,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.yalantis.ucrop.UCrop;
-
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.messege.Adapter.MessageAdapter;
 import com.quantum_guys.dncc_eco_sync.messege.model.Chat;
@@ -55,10 +53,11 @@ import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
 import com.quantum_guys.dncc_eco_sync.notification.NotificationSender;
 import com.quantum_guys.dncc_eco_sync.service.UploadService;
+import com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity;
 import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.SelectTopic;
 import com.quantum_guys.dncc_eco_sync.viewmodel.MessageViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.HashMap;
@@ -417,7 +416,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void playQuiz(String userid) {
-        Intent goBattle = new Intent(getApplicationContext(), SelectTopic.class);
+        Intent goBattle = new Intent(getApplicationContext(), MainActivity.class);
         goBattle.putExtra("otherUid", userid);
         startActivity(goBattle);
     }

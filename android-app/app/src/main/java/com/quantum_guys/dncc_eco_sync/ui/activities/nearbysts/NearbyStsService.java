@@ -6,7 +6,7 @@ import retrofit2.http.Query;
 
 public interface NearbyStsService {
     @GET("nearbysts")
-    Call<NearbySts> getNearbySts(
+    Call<STSResponse> getNearbySts(
         @Query("lat") String latitude,
         @Query("lon") String longitude
     );

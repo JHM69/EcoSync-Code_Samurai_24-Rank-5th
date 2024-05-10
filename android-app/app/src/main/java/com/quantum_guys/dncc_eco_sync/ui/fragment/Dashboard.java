@@ -1,21 +1,17 @@
 package com.quantum_guys.dncc_eco_sync.ui.fragment;
 
-import static com.quantum_guys.dncc_eco_sync.adapters.ResultAdapter.COMPLETED;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.inHome;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.userId;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
@@ -23,7 +19,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
@@ -33,13 +28,7 @@ import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.messege.model.Chat;
 import com.quantum_guys.dncc_eco_sync.models.Notification;
 import com.quantum_guys.dncc_eco_sync.ui.activities.notification.NotificationFragment;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.BattleModel;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.Result;
-import com.quantum_guys.dncc_eco_sync.viewmodel.BattleViewModel;
-import com.quantum_guys.dncc_eco_sync.viewmodel.ResultViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -57,8 +46,7 @@ public class Dashboard extends Fragment {
     };
     private TabAdapter adapter;
     private TabLayout tabLayout;
-    private BattleViewModel battleViewModel;
-    private ResultViewModel viewModel;
+
     private int nSize;
     private FirebaseFirestore firestore;
     int count = 0, chatCount=0;
@@ -113,8 +101,7 @@ public class Dashboard extends Fragment {
             }
         });
 
-        viewModel = ViewModelProviders.of(getActivity()).get(ResultViewModel.class);
-        battleViewModel = ViewModelProviders.of(getActivity()).get(BattleViewModel.class);
+
         firestore = FirebaseFirestore.getInstance();
 
         updateBattle();
@@ -171,15 +158,7 @@ public class Dashboard extends Fragment {
                                Notification notification = documentChange.getDocument().toObject(Notification.class).withId(documentChange.getDocument().getId());
                                if (!notification.isRead()) count++;
 
-                               if (notification.getType().equals("play")) {
-                                   if (!viewModel.resultExistsForSecondPlayer(notification.getAction_id())) {
-                                       new PlayAsyncTask(viewModel, battleViewModel, notification.getAction_id()).execute("play");
-                                   }
-                               } else if (notification.getType().equals("play_result")) {
-                                   if (!viewModel.resultExists(notification.getAction_id())) {
-                                       new PlayResultAsyncTask(viewModel, battleViewModel, notification.getAction_id()).execute("play_result");
-                                   }
-                               }
+
                            }
                        }
 //                       if(count!=0) {
@@ -236,107 +215,7 @@ public class Dashboard extends Fragment {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private static class PlayAsyncTask extends AsyncTask<String, Void, Void> {
-        final ResultViewModel viewModel;
-        final BattleViewModel battleViewModel;
-        final String id;
 
-        public PlayAsyncTask(ResultViewModel viewModel, BattleViewModel battleViewModel, String id) {
-            this.viewModel = viewModel;
-            this.battleViewModel = battleViewModel;
-            this.id = id;
-        }
-
-        @Override
-        protected Void doInBackground(String... type) {
-            final BattleModel[] battlep = {null};
-            DatabaseReference mDb = FirebaseDatabase.getInstance().getReference();
-            com.google.firebase.database.Query query = mDb.child("Play").orderByChild("battleId").equalTo(id);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot data : snapshot.getChildren()) {
-                        battlep[0] = data.getValue(BattleModel.class);
-                    }
-                    if (battlep[0] != null) {
-                        com.google.firebase.database.Query query = mDb.child("Result").child(userId).orderByChild("battleId").equalTo(id);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Result result = null;
-                                for (DataSnapshot data : snapshot.getChildren()) {
-                                    result = data.getValue(Result.class);
-                                }
-                                battleViewModel.insert(battlep[0]);
-                                viewModel.insert(result);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-            return null;
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class PlayResultAsyncTask extends AsyncTask<String, Void, Void> {
-        final ResultViewModel viewModel;
-        final BattleViewModel battleViewModel;
-        final String id;
-
-        public PlayResultAsyncTask(ResultViewModel viewModel, BattleViewModel battleViewModel, String id) {
-            this.viewModel = viewModel;
-            this.battleViewModel = battleViewModel;
-            this.id = id;
-        }
-
-        @Override
-        protected Void doInBackground(String... type) {
-            final BattleModel[] battlep = {null};
-            DatabaseReference mDb = FirebaseDatabase.getInstance().getReference();
-            com.google.firebase.database.Query query = mDb.child("Play").orderByChild("battleId").equalTo(id);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot data : snapshot.getChildren()) {
-                        battlep[0] = data.getValue(BattleModel.class);
-                    }
-                    Log.d("Reesult: ", "Downloaded Battle");
-                    if (battlep[0] != null) {
-                        try {
-                            Result result = new Result(battlep[0].getBattleId(), battlep[0].getSenderUid(), battlep[0].getReceiverUid(), getScoreCount(battlep[0].getSenderAnswerList()), getScoreCount(battlep[0].getReceiverList()), battlep[0].topic, battlep[0].getTimestamp(), COMPLETED);
-                            Log.d("Reesult: ", "Downloaded Result");
-                            battleViewModel.insert(battlep[0]);
-                            Log.d("Reesult: ", "Inserted Battle and Inserting Result also updating score");
-                            Log.d("Reesult: ", ReflectionToStringBuilder.toString(result));
-                            viewModel.insert(result);
-                            updateScore();
-                            Log.d("Reesult: ", "Score updated and inserting Result");
-                        }catch (Exception ignored){
-
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-            return null;
-        }
-    }
 
     @Override
     public void onDestroy() {
