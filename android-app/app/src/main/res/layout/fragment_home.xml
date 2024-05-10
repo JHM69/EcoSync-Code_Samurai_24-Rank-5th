@@ -7,37 +7,19 @@
     app:layoutDescription="@xml/activity_main_scene"
      >
 
-    <ImageView
-        android:id="@+id/animationView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
-        android:scaleX="1.1"
-        android:scaleY="1.1"
-        android:src="@drawable/logo_round"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
+        android:layout_height="wrap_content"
         android:drawableLeft="@drawable/baseline_arrow_circle_up_24"
         android:fontFamily="@font/regular"
         android:text="@string/play_quiz"
         android:textSize="15sp"
         android:textStyle="bold"
         app:cornerRadius="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/animationView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/animationView"
-        app:layout_constraintTop_toBottomOf="@+id/animationView"
-        tools:ignore="RtlHardcoded" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        tools:ignore="RtlHardcoded"
+        tools:layout_editor_absoluteX="131dp" />
 
     <TextView
         android:id="@+id/textView6"
@@ -51,6 +33,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Todays Trip Plan"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

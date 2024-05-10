@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.view_pager);
         adapter = new TabAdapter(getSupportFragmentManager(), getApplicationContext());
 
-        adapter.addFragment(new MainFragment(tabLayout, user.getId()), "Home", R.drawable.ic_home_white_24dp);
-        adapter.addFragment(new TripFragment(), "Trips", R.drawable.outline_cable_24);
-        adapter.addFragment(new NotificationFragment(), "Notification", R.drawable.ic_notifications_none_black_24dp);
+        adapter.addFragment(new MainFragment(user), "Home", R.drawable.ic_home_white_24dp);
+        adapter.addFragment(new TripFragment(user), "Trips", R.drawable.outline_cable_24);
+        adapter.addFragment(new NotificationFragment(user), "Notification", R.drawable.ic_notifications_none_black_24dp);
 
         viewPager.setAdapter(adapter);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {

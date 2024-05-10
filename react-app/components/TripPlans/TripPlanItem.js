@@ -1,12 +1,12 @@
 import React from 'react'
-import BillInfo from '../Bill/ViewBill'
+import TripPlanInfo from '../TripPlan/ViewTripPlan'
 import { BsClockHistory, BsTruck } from 'react-icons/bs'
 import { GiNuclearWaste, GiPathDistance } from 'react-icons/gi'
 import { BiBuildingHouse, BiDownload, BiLocationPlus, BiMoneyWithdraw } from 'react-icons/bi'
-import { FaMoneyBill, FaTimesCircle } from 'react-icons/fa'
+import { FaMoneyTripPlan, FaTimesCircle } from 'react-icons/fa'
 import { RxClock } from 'react-icons/rx'
  
-const BillItem = ({
+const TripPlanItem = ({
   id,
   vehicleEntryId,
   vehicleEntry,
@@ -62,7 +62,7 @@ const BillItem = ({
             <span className="text-green-600 font-semibold">  {amount.toFixed(2)} Tk</span>
           </div>
 
-          <BillInfo
+          <TripPlanInfo
             id={id}
           vehicleEntryId={vehicleEntryId}
           vehicleEntry={vehicleEntry}
@@ -72,7 +72,7 @@ const BillItem = ({
           distance={distance}
             duration={duration}
           />
-          <button onClick={() => window.open(`http://10.33.27.140:5000/bill/${id}/download`, '_blank')} className="flex items-center justify-center px-2 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition duration-150 ease-in-out">
+          <button onClick={() => window.open(`http://10.33.27.140:5000/tripplan/${id}/download`, '_blank')} className="flex items-center justify-center px-2 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition duration-150 ease-in-out">
             <BiDownload className="mr-1" />
           </button>
       </div>
@@ -80,4 +80,4 @@ const BillItem = ({
   )
 }
 
-export default BillItem
+export default TripPlanItem

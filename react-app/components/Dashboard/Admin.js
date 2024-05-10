@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { getBaseUrl } from '../../utils/url'
 import axios from 'axios'
-import StsVehiclesLandfillsMapView from './DashboardMapView'
-import BillItems from '../Bills/BillItems'
+import StsVehiclesLandfillsMapView from './DashboardMapView' 
 import Datepicker from 'react-tailwindcss-datepicker'
 
 const getQueryString = (params) => {
@@ -133,8 +132,7 @@ function Dashboard() {
         ) : (
           <div className="w-full">
             <div className="mb-3 w-full rounded   border-[1px] border-gray-300">
-              <Datepicker
-                primaryColor={'emerald'}
+              <Datepicker 
                 value={value}
                 onChange={handleValueChange}
                 showShortcuts={true}

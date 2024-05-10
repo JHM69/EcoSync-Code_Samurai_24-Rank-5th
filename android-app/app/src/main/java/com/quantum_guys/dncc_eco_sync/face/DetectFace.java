@@ -21,6 +21,7 @@ import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.util.Size;
 import android.view.View;
@@ -53,7 +54,6 @@ import com.quantum_guys.dncc_eco_sync.global.UserDB;
 import com.quantum_guys.dncc_eco_sync.model.Notification;
 import com.quantum_guys.dncc_eco_sync.retrofit.ApiUtils;
 import com.quantum_guys.dncc_eco_sync.retrofit.AuthService;
-import com.quantum_guys.dncc_eco_sync.util.IdGenerator;
 import com.quantum_guys.dncc_eco_sync.util.SendNotificationPack.APIService;
 import com.quantum_guys.dncc_eco_sync.util.SendNotificationPack.Client;
 import com.quantum_guys.dncc_eco_sync.util.SendNotificationPack.MyResponse;
@@ -79,7 +79,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.dmoral.toasty.Toasty;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,7 +102,7 @@ public class DetectFace extends AppCompatActivity {
     private ProcessCameraProvider cameraProvider;
     private String authorityId, routeId, tripId;
     private ProgressBar progressBar;
-    private int attempts = 7;
+    private int attempts = 30;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private HashMap<String, SimilarityClassifier.Recognition> registered = new HashMap<>(); //saved Faces
 
@@ -305,6 +304,7 @@ public class DetectFace extends AppCompatActivity {
         FileChannel fileChannel = inputStream.getChannel();
         long startOffset = fileDescriptor.getStartOffset();
         long declaredLength = fileDescriptor.getDeclaredLength();
+        Log.d("Detect", "loadModelFile");
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
@@ -345,7 +345,7 @@ public class DetectFace extends AppCompatActivity {
             InputImage image = null;
             @SuppressLint({"UnsafeExperimentalUsageError", "UnsafeOptInUsageError"})
             // Camera Feed-->Analyzer-->ImageProxy-->mediaImage-->InputImage(needed for ML kit face detection)
-                    Image mediaImage = imageProxy.getImage();
+            Image mediaImage = imageProxy.getImage();
             if (mediaImage != null) {
                 image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
                 System.out.println("Rotation " + imageProxy.getImageInfo().getRotationDegrees());
@@ -443,38 +443,30 @@ public class DetectFace extends AppCompatActivity {
 
         tfLite.runForMultipleInputsOutputs(inputArray, outputMap); //Run model
 
+        Log.d( "recognizeImage", "recognizeImage: ");
+
 
         if (attempts > 0) {
             float distance;
+            Log.d( "recognizeImage", "registered: " + registered.size());
+
             if (registered.size() > 0) {
+
+
                 final Pair<String, Float> nearest = findNearest(embeedings[0]);
                 if (nearest != null) {
-                    final String licenceNo = nearest.first;
+
+                    Log.d("Detected", "recognizeImage: "+ nearest.first + " " + nearest.second);
+
                     distance = nearest.second;
                     if (distance < 1.000f) {
-                        if (licenceNo.equals(driverLicenceNo)) {
-
-                                Toasty.success(this, "Verification Success", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), MapView.class)
-                                        .putExtra("tripId", tripId) );
+                            Toasty.success(this, "Verification Success", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MapView.class)
+                                    .putExtra("tripId", tripId));
                             executor.shutdownNow();
                             finish();
-
-                        }
                     } else {
                         attempts--;
-                        if ((endTrip || returnTrip)) {
-                            Notification notification = new Notification(IdGenerator.getRandomId(), "Driver's Ending Face doesn't matched", driverLicenceNo, 1, driverLicenceNo, routeId, "bus.getBusNo()", tripId, (-1 * System.currentTimeMillis()), "");
-                            new SendNotificationAsyncTask(notification, authorityId).execute();
-                            HashMap<String, Object> map = new HashMap<>();
-                            map.put("endTimestamp", (-1 * System.currentTimeMillis()));
-                            map.put("active", false);
-                            map.put("errorLastFace", true);
-                            //db.child("Bus").child(bus.getBusNo()).child("Trips").child(tripId).updateChildren(map);
-                            executor.shutdownNow();
-                            //startActivity(new Intent(getApplicationContext(), BusNoActivity.class));
-                            finish();
-                        }
                     }
                 }
             }
@@ -515,7 +507,7 @@ public class DetectFace extends AppCompatActivity {
 
                     }
                 });
-                  } catch (NullPointerException ignored) {
+            } catch (NullPointerException ignored) {
 
             }
             return null;
@@ -597,32 +589,26 @@ public class DetectFace extends AppCompatActivity {
 
     void initFace() {
         loading(true);
-                String faceData = UserDB.getFaceData(context);
-
-                if(faceData == null || faceData.isEmpty()) {
-                    AuthService authService = ApiUtils.getAuthService(this);
-                    authService.getFaceData("Bearer " + UserDB.getToken(context)).enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            try {
-                                if (response.body() != null) {
-                                    getRecognitionFromString(response.body().string());
-                                    loading(false);
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                            Toasty.error(context, "Failed to load face data", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-
-                    });
-
+        String faceData = UserDB.getFaceData(context);
+        if (faceData == null || faceData.isEmpty()) {
+            AuthService authService = ApiUtils.getAuthService(this);
+            authService.getFaceData(UserDB.getToken(getApplicationContext())).enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(@NotNull Call<String> call, @NotNull Response<String> response) {
+                    if (response.isSuccessful()) {
+                        getRecognitionFromString(Objects.requireNonNull(response.body()));
+                        loading(false);
+                    }
                 }
+
+                @Override
+                public void onFailure(@NotNull Call<String> call, @NotNull Throwable t) {
+                    loading(false);
+                }
+            });
+
+        }
+        loading(false);
     }
 
     private void getRecognitionFromString(String json) {

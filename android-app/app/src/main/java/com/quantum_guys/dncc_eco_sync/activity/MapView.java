@@ -445,10 +445,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
                 Toast.LENGTH_SHORT,
                 true
         ).show();
-
-        //We will Update the mapData object to the server
-
-//
+        //We will Update the mapMetaData object to the server
         if (!trip.getVehicleEntries().isEmpty()) {
             float[] results = new float[1];
             VehicleEntry lastEntry = trip.getVehicleEntries().get(trip.getVehicleEntries().size() - 1);
@@ -465,8 +462,6 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
                 ).show();
             }
         }
-
-
     }
 
 

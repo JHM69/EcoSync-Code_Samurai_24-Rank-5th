@@ -10,7 +10,7 @@ const Section = ({ title, children, ...props }) => (
   </section>
 )
 
-const BillLayout = ({
+const TripPlanLayout = ({
   id, 
   vehicleEntry,
   amount,
@@ -19,19 +19,19 @@ const BillLayout = ({
   distance,
   duration,
 }) => {
-  const downloadBill = () => {
-    console.log('Downloading Bill')
-    // create a new window and open the pdf 10.33.27.140:3000/bill/:id/download
-    window.open(`http://10.33.27.140:5000/bill/${id}/download`, '_blank')
+  const downloadTripPlan = () => {
+    console.log('Downloading TripPlan')
+    // create a new window and open the pdf 10.33.27.140:3000/tripplan/:id/download
+    window.open(`http://10.33.27.140:5000/tripplan/${id}/download`, '_blank')
   }
 
   return (
     <div className="mt-6 flex flex-col md:flex-row">
       <div className="w-full">
-        <Section title={'Download Bill'}>
+        <Section title={'Download TripPlan'}>
           <div className="flex items-center space-x-2">
             <Button
-              onClick={() => downloadBill()}
+              onClick={() => downloadTripPlan()}
               className="rounded-md bg-green-500 px-4 py-2 text-white flex flex-row items-center justify-center hover:bg-green-600"
             >
              <FaDownload/> Download
@@ -88,4 +88,4 @@ const BillLayout = ({
   )
 }
 
-export default BillLayout
+export default TripPlanLayout

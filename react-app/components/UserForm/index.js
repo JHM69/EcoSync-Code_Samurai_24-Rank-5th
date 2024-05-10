@@ -112,6 +112,7 @@ const UserForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
             <option value="1">System Admin</option>
             <option value="2">STS Manager</option>
             <option value="3">Landfill Manager</option>
+            <option value="5">Driver</option>
           </Select>
         )}
 

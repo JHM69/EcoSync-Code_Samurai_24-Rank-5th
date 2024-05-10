@@ -73,8 +73,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-
                             mDialog.dismiss();
                         }else{
                             mDialog.dismiss();

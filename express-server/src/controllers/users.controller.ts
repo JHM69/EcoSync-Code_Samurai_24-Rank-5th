@@ -1,7 +1,9 @@
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/first */
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import auth from '../utils/auth';
+import * as authService from '../services/auth.service';
+
 const router = Router();
 
 // eslint-disable-next-line import/no-unresolved
@@ -121,5 +123,35 @@ router.put('/profile', auth.required, async (req: Request, res: Response) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+
+
+
+router.post('/user/add-face-data', auth.required ,async (req: Request, res: Response, next: NextFunction) => {
+  console.log("add-face-data");
+  try {
+    console.log("add-face-data"+ req.body.faceData);
+    const {faceData } = req.body;
+    const {user} = req;
+    await authService.addFaceData(user.id, faceData);
+    res.status(200).json({ message: 'Error Adding Face' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+router.get('/user/face-auth',async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    
+    console.log("face-auth");
+    const {user} = req;
+    const faceData = await authService.getFaceData(user.id);
+    res.status(200).json(faceData);
+  } catch (error) {
+    next(error);
+  }
+});
+ 
 
 export default router;
