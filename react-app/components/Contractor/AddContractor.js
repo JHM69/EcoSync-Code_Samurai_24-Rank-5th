@@ -1,26 +1,34 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
-import { getBaseUrl } from '../../utils/url'
+
 import Button from '../common/Button'
-const DeleteUser = ({ userId, ...props }) => {
+import { Close } from '../common/icons/Close'
+
+import { getBaseUrl } from '../../utils/url'
+import axios from 'axios'
+import toast, { Toaster } from 'react-hot-toast'
+import ContractorForm from '../ContractorForm'
+const AddContractor = ({ reload, setReload, props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
-
-  const handleDelete = async () => {
+  const onFormSubmit = async (data) => {
     try {
+      console.log(data)
       const token = localStorage.getItem('token')
-      await fetch(getBaseUrl() + `/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ id: userId }),
-      }).then(() => {
-        handleClose()
-        window.location.replace('/user')
-      })
+      await axios
+        .post(getBaseUrl() + '/contractor', data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        .then((response) => {
+          console.log(response)
+          toast.success('Contractor added successfully')
+          handleClose()
+          setReload(!reload)
+        })
+        .catch((error) => console.log(error))
     } catch (error) {
       console.log(error)
     }
@@ -28,8 +36,9 @@ const DeleteUser = ({ userId, ...props }) => {
 
   return (
     <>
-      <Button onClick={handleOpen} variant="text" type="button" {...props}>
-        Delete
+      <Toaster />
+      <Button onClick={handleOpen} type="button" {...props}>
+        Add Contractor
       </Button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
@@ -56,31 +65,21 @@ const DeleteUser = ({ userId, ...props }) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-2xl transform overflow-y-auto rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
-                    as="h3"
-                    className="mb-5 text-lg font-semibold leading-6 text-gray-800"
+                    as="div"
+                    className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    Delete User
+                    <h3>Add Contractor</h3>
+                    <Close onClick={handleClose} />
                   </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Do you really want to delete this user?
-                    </p>
-                  </div>
 
-                  <div className="mt-4 flex w-full items-center space-x-4">
-                    <Button
-                      className="flex-1"
-                      variant="text"
-                      onClick={handleClose}
-                    >
-                      Cancel
-                    </Button>
-                    <Button className="flex-1" onClick={handleDelete}>
-                      Delete
-                    </Button>
-                  </div>
+                  <ContractorForm
+                    type={'Add'}
+                    onFormSubmit={onFormSubmit}
+                    reload={reload}
+                    setReload={setReload}
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -91,4 +90,4 @@ const DeleteUser = ({ userId, ...props }) => {
   )
 }
 
-export default DeleteUser
+export default AddContractor

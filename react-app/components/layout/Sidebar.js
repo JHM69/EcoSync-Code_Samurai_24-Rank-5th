@@ -47,6 +47,7 @@ const Sidebar = () => {
 
   const [managedSts, setManagedSts] = useState([])
   const [managedLandfills, setManagedLandfills] = useState([])
+  const [managedContractors, setManagedContractors] = useState([])
 
   useEffect(() => {
     setActivePath(router.pathname)
@@ -102,6 +103,30 @@ const Sidebar = () => {
             setLoading(false)
             console.log(response)
             router.push('/truck-dump-entry/' + response.data[0].id)
+          })
+          .catch((error) => {
+            setLoading(false)
+            console.log(error)
+          })
+        console.log({ res })
+      } else if (user?.role?.type === 'ContractorManager') {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        console.log({ token })
+        const res = axios
+          .get(getBaseUrl() + '/mycontractors', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            if(response.data.length > 0) {
+              response.data.sort((a, b) => a?.id - b?.id)
+            }
+            setManagedContractors(response.data)
+            setLoading(false)
+            console.log(response)
+            router.push('/employee-entry/' + response.data[0].id)
           })
           .catch((error) => {
             setLoading(false)
@@ -172,6 +197,13 @@ const Sidebar = () => {
                   icon="landfill"
                   href="/landfill"
                   isActive={router.pathname === '/landfill'}
+                />
+                <Item
+                  text="Contractor"
+                  subtitle="Contactor and its Managers"
+                  icon="contractor"
+                  href="/contractor"
+                  isActive={router.pathname === '/contractor'}
                 />
               </>
             )}

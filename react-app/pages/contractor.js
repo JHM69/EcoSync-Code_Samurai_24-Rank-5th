@@ -2,33 +2,32 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/react-in-jsx-scope */
 import Layout from '../components/layout'
+import ContractorItems from '../components/Contractors/ContractorItems'
 import { useEffect, useState } from 'react'
-import UserItemsSkeleton from '../components/Users/UserItemsSkeleton'
+import ContractorItemsSkeleton from '../components/Contractors/ContractorItemsSkeleton'
 import axios from 'axios'
 import { getBaseUrl } from '../utils/url'
-import AddSts from '../components/Sts/AddSts'
-import StsItems from '../components/Stss/StsItems'
- 
-function Stss() {
+import AddContractor from '../components/Contractor/AddContractor'
+function Contractors() {
   const [loading, setLoading] = useState(true)
-  const [stss, setSts] = useState([])
   const [reload, setReload] = useState(false)
+  const [contractors, setContractors] = useState([])
   useEffect(() => {
     setLoading(true)
     const token = localStorage.getItem('token')
     if (token.length > 0) {
       axios
-        .get(getBaseUrl() + '/sts', {
+        .get(getBaseUrl() + '/contractors', {
           headers: {
             Authorization: `Bearer ${token}`,
-          },
+          }
         })
         .then((res) => {
-          if(res.data.length > 0) {
+          if (res.data.length > 0) {
             res.data.sort((a, b) => a?.id - b?.id)
           }
           console.log(res.data)
-          setSts(res.data)
+          setContractors(res.data)
           setLoading(false)
         })
         .catch((err) => {
@@ -36,27 +35,33 @@ function Stss() {
           console.log(err)
         })
     }
-  }, [reload])
+  }, [])
 
   return (
     <div>
       <div className="flex flex-row gap-3 md:px-6">
         <div className="flex w-full flex-col">
           <div className="mt-3 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-700">STS</h1>
+            <h1 className="text-2xl font-bold text-gray-700">Contractors</h1>
             <div className="flex items-center space-x-2">
-              <AddSts reload={reload} setReload={setReload} />
+              <AddContractor reload={reload} setReload={setReload} />
             </div>
           </div>
-          {loading ? <UserItemsSkeleton /> : <StsItems stss={stss}  reload={reload} setReload={setReload}/>}
+          {loading ? (
+            <ContractorItemsSkeleton />
+          ) : (
+            <ContractorItems contractors={contractors} />
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-export default Stss
+export default Contractors
 
-Stss.getLayout = function getLayout(page) {
-  return <Layout meta={{ name: 'STS' }}>{page}</Layout>
+Contractors.getLayout = function getLayout(page) {
+  return (
+    <Layout meta={{ name: 'Contractor and Access Control' }}>{page}</Layout>
+  )
 }

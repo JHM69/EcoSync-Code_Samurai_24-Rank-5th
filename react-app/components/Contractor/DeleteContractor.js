@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment, useState } from 'react'
 import { getBaseUrl } from '../../utils/url'
 import Button from '../common/Button'
-const DeleteUser = ({ userId, ...props }) => {
+const DeleteContractor = ({ contractorId, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
   const handleOpen = () => setIsOpen(true)
@@ -10,16 +10,16 @@ const DeleteUser = ({ userId, ...props }) => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token')
-      await fetch(getBaseUrl() + `/users/${userId}`, {
+      await fetch(getBaseUrl() + `/contractors/${contractorId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ id: userId }),
+        body: JSON.stringify({ id: contractorId }),
       }).then(() => {
         handleClose()
-        window.location.replace('/user')
+        window.location.replace('/contractor')
       })
     } catch (error) {
       console.log(error)
@@ -61,11 +61,11 @@ const DeleteUser = ({ userId, ...props }) => {
                     as="h3"
                     className="mb-5 text-lg font-semibold leading-6 text-gray-800"
                   >
-                    Delete User
+                    Delete Contractor
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Do you really want to delete this user?
+                      Do you really want to delete this Contractor?
                     </p>
                   </div>
 
@@ -91,4 +91,4 @@ const DeleteUser = ({ userId, ...props }) => {
   )
 }
 
-export default DeleteUser
+export default DeleteContractor
