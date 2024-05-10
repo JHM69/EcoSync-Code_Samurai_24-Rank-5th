@@ -114,7 +114,7 @@ const Sidebar = () => {
         const token = localStorage.getItem('token')
         console.log({ token })
         const res = axios
-          .get(getBaseUrl() + '/mycontractors', {
+          .get(getBaseUrl() + '/myContractors', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -126,7 +126,7 @@ const Sidebar = () => {
             setManagedContractors(response.data)
             setLoading(false)
             console.log(response)
-            router.push('/employee-entry/' + response.data[0].id)
+            router.push('/contractor/' + response.data[0].id)
           })
           .catch((error) => {
             setLoading(false)
@@ -264,6 +264,34 @@ const Sidebar = () => {
                 )}
               </>
             )}
+
+{type === 'ContractorManager' && (
+              <>
+                {loading ? (
+                  <p className=" w-full text-center font-bold text-red-600   ">
+                    Loading Contractors...
+                  </p>
+                ) : managedContractors.length > 0 ? (
+                  managedContractors.map((contractor, index) => (
+                    <Item
+                      key={index}
+                      text={contractor.companyName}
+                      subtitle={contractor.tin}
+                      icon="contractor"
+                      href={`/contractor/${contractor.id}`}
+                      isActive={
+                        router.query.contractorId === contractor.id.toString()
+                      }
+                    />
+                  ))
+                ) : (
+                  <p className=" w-full text-center font-bold text-red-600   ">
+                    No ContractorManager found
+                  </p>
+                )}
+              </>
+            )}
+
           </div>
         </nav>
       </div>
