@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 import React from 'react'
-import UpdateUser from './UpdateUser'
-import DeleteUser from './DeleteUser'
+import UpdateContractor from './UpdateContractor'
+import DeleteSong from './DeleteContractor'
 
 const Section = ({ title, children, ...props }) => (
   <section className="mb-3 rounded-md border px-3 py-4" {...props}>
@@ -10,44 +10,44 @@ const Section = ({ title, children, ...props }) => (
   </section>
 )
 
-const UserLayout = ({ user }) => {
+const ContractorLayout = ({ contractor }) => {
   return (
     <div className="mt-6 flex flex-col md:flex-row">
      
       <div className="w-full">
 
-        <Section title={'User Information'}>
+        <Section title={'Contractor Information'}>
         <div className="flex items-center space-x-2">
-            <UpdateUser user={user} />
-            <DeleteUser
-              userId={user?.id}
+            <UpdateContractor contractor={contractor} />
+            <DeleteSong
+              contractorId={contractor?.id}
             />
           </div>
           <section className="mb-3 rounded-md border px-3 py-4">
             <div className="flex items-center space-x-4">
               <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
-                <img src={user.image} alt={user.name} width={64} height={64} />
+                <img src={contractor.image} alt={contractor.name} width={64} height={64} />
               </div>
               <div className="flex flex-col">
                 <h3 className="text-xl font-semibold text-gray-500">
-                  {user.name}
+                  {contractor.name}
                 </h3>
-                <p className="text-gray-600">{user.email}</p>
+                <p className="text-gray-600">{contractor.email}</p>
               </div>
             </div>
           </section>
         </Section>
 
-        <Section title={'User Type'}>
+        <Section title={'Contractor Type'}>
           <h3 className="font-bond text-xl text-gray-500">
-            {user?.role?.type}
+            {contractor?.role?.type}
           </h3>
         </Section>
 
-        {user?.role?.type === 'STSManager' && (
+        {contractor?.role?.type === 'STSManager' && (
           <Section title={'STS Info'}>
             {
-              user.sts.map((sts) => (
+              contractor.sts.map((sts) => (
                 <div key={sts.id} className="mb-3 rounded-md border px-3 py-4">
                   <p className="text-xl font-semibold text-gray-500">{sts.address || sts.wardNumber}</p>
                 </div>
@@ -55,10 +55,10 @@ const UserLayout = ({ user }) => {
             }
           </Section>
         )}
-        {user?.role?.type === 'LandfillManager' && (
+        {contractor?.role?.type === 'LandfillManager' && (
           <Section title={'Landfill Information'}>
             {
-              user?.landfill?.map((landfill) => (
+              contractor?.landfill?.map((landfill) => (
                 <div key={landfill.id} className="mb-3 rounded-md border px-3 py-4">
                   <p className="text-xl font-semibold text-gray-500">{landfill.name}</p>
                 </div>
@@ -71,4 +71,4 @@ const UserLayout = ({ user }) => {
   )
 }
 
-export default UserLayout
+export default ContractorLayout

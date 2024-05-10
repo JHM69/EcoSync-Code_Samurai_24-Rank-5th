@@ -91,7 +91,7 @@ function ProgressBar({ currentWasteVolume, capacity }) {
   }
 
   return (
-    <div className="w-[169px] border-[1px] dark:bg-[#e3ffda] relative h-6 overflow-hidden rounded-full border-green-500 bg-gray-200 text-gray-900">
+    <div className="w-full border-[1px] dark:bg-[#e3ffda] relative h-6 overflow-hidden rounded-full border-green-500 bg-gray-200 text-gray-900">
       {/* Filled part */}
       <div
         className="h-full rounded-l-full bg-green-500"
