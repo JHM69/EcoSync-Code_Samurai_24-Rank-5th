@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">DNCC EcoSync</string>
+    <string name="app_name">স্বচ্ছ ঢাকা</string>
     <string name="play_quiz">Start Trip</string>
     <string name="previous_quiz">Previous Quiz</string>
     <string name="hometask_by_jahangir_hossain">EcoSync by Quantum Guys</string>
@@ -33,14 +33,14 @@
 
     <string name="loading_name">Loading…</string>
 
-    <string name="default_bio" translatable="false">Hey there, I am a learner ত্বারক</string>
+    <string name="default_bio" translatable="false">Hey there, I am now স্বচ্ছ ঢাকা member</string>
     <string name="s_peopl_have_smiled_for_this_post" translatable="false"> %d </string>
     <string name="s_peopl_have_saved_this_post" translatable="false"> %d </string>
     <string name="s_peopl_have_commented_this_post" translatable="false"> %d </string>
     <string name="view_profile">View profile</string>
-    <string name="web_client_id" tools:ignore="TypographyDashes">482041872937-4fg8mk8lftghegpqlfmb447ip7kov06b.apps.googleusercontent.com</string>
-    <string name="group_or_subject">Group (Select Any)</string>
-    <string name="class_level">Class Level* (select any)</string>
+    <string name="web_client_id" tools:ignore="TypographyDashes">553141191660-b9vkolourdasb5rqad68bjgm8l4qvjhr.apps.googleusercontent.com</string>
+    <string name="group_or_subject">Gender (Select Any)</string>
+    <string name="class_level">Your Ward* (select any)</string>
     <string name="location">Location (Select Zila)</string>
     <string name="let_s_challenge_others_in_battle_of_quiz">Let\'s Challenge others in ত্বরণ. Currently no battle history found.</string>
     <string name="sdf">Type Latex Equation, eg x^2+3\\pi=b_5</string>

@@ -4,36 +4,29 @@
 
     <string-array name="ld_activityScreenTitles">
         <item>Home</item>
-        <item>Ranking</item>
-        <item>Friends</item>
+        <item>Volunteer</item>
+        <item>STS</item>
         <item>Offline Post</item>
-        <item>Visit tarok.tech</item>
-        <item>About App</item>
+        <item>Visit DNCC Web</item>
+        <item>Nearby STS</item>
         <item>Theme</item>
         <item>Log Out</item>
         <item>Admin</item>
     </string-array>
 
     <string-array name="item_type_x" translatable="false">
-        <item>General</item>
-        <item>Math</item>
-        <item>Physics</item>
-        <item>Chemistry</item>
-        <item>Programing</item>
-        <item>Meme</item>
-        <item>Biology</item>
-        <item>Others</item>
-        <item>Programing</item>
-        <item>GK</item>
-        <item>Astronomy</item>
-        <item>Motivational</item>
-        <item>Chemistry</item>
-        <item>Biology</item>
+        <item>Idea</item>
+        <item>Guideline</item>
+        <item>Event</item>
+        <item>Success Story</item>
+        <item>Tutorial</item>
+        <item>Awareness</item>
+        <item>Infographic</item>
     </string-array>
 
     <array name="ld_activityScreenIcons">
         <item>@drawable/ic_baseline_home_24</item>
-        <item>@drawable/ic_baseline_bar_chart_24</item>
+        <item>@drawable/ic_person_add_yellow_24dp</item>
         <item>@drawable/ic_baseline_people_outline_24</item>
         <item>@drawable/ic_baseline_bookmark_border_24</item>
         <item>@drawable/ic_open_in_new_black_24dp</item>
@@ -112,17 +105,51 @@
     </string-array>
 
 
-    <string-array name="class_level">
-        <item>BSC</item>
-        <item>HSC</item>
-        <item>SSC</item>
-        <item>Others</item>
+    <string-array name="wards">
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
     </string-array>
 
-    <string-array name="hsc_group">
-        <item>Science</item>
-        <item>Commerce</item>
-        <item>Humanity</item>
+    <string-array name="genders">
+        <item></item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>I don\'t want to Mention</item>
+        <item>Others</item>
+
     </string-array>
 
 </resources>

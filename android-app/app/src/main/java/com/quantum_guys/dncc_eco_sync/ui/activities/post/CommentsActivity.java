@@ -1,5 +1,6 @@
 package com.quantum_guys.dncc_eco_sync.ui.activities.post;
 
+import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.ADMIN_UID_LIST;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText.getSaltString;
 
 import android.annotation.SuppressLint;
@@ -88,10 +89,7 @@ import retrofit2.Response;
 
 @RequiresApi(api = Build.VERSION_CODES.R)
 public class CommentsActivity extends AppCompatActivity {
-    @SuppressLint("NewApi")
-    private final Set<String> ADMIN_UID_LIST = Set.of(
-            "0h9MvJiFvFWRBiOoHzUcGlqJe2m2", "eSW24hxmW6YmbaInd2OlrsWx0Rw1"
-    );
+
     String user_id, post_id;
     MathView post_desc;
     TextView likeCount, saveCount;
@@ -292,7 +290,7 @@ public class CommentsActivity extends AppCompatActivity {
         getComments(mProgress);
 
         Glide.with(getApplicationContext())
-                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                 .load(me.getImage())
                 .into(myImage);
     }
@@ -382,7 +380,7 @@ public class CommentsActivity extends AppCompatActivity {
                 .document(user_id)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> Glide.with(getApplicationContext())
-                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                         .load(documentSnapshot.getString("image"))
                         .into(user_image))
                 .addOnFailureListener(e -> Log.e("error", e.getLocalizedMessage()));

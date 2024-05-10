@@ -34,7 +34,7 @@
 
                 <ImageView
                     android:layout_marginBottom="5dp"
-                    app:srcCompat="@drawable/ic_main_logo_png"
+                    app:srcCompat="@drawable/logo_round"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:contentDescription="TODO"

@@ -1,5 +1,6 @@
 package com.quantum_guys.dncc_eco_sync.adapters;
 
+import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.ADMIN_UID_LIST;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.userId;
 
 import android.annotation.SuppressLint;
@@ -47,12 +48,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
-
 import com.quantum_guys.dncc_eco_sync.R;
+import com.quantum_guys.dncc_eco_sync.models.Issue;
 import com.quantum_guys.dncc_eco_sync.models.MultipleImage;
 import com.quantum_guys.dncc_eco_sync.models.Notification;
-import com.quantum_guys.dncc_eco_sync.models.Post;
 import com.quantum_guys.dncc_eco_sync.notification.APIService;
 import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
@@ -63,14 +62,13 @@ import com.quantum_guys.dncc_eco_sync.ui.activities.post.WhoLikedActivity;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.Home;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.PostMenu;
 import com.quantum_guys.dncc_eco_sync.utils.MathView;
-import com.quantum_guys.dncc_eco_sync.viewmodel.PostViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,19 +79,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @SuppressWarnings("ConstantConditions")
-public class PostViewHolder extends RecyclerView.ViewHolder {
+public class IssueViewHolder extends RecyclerView.ViewHolder {
     private final FirebaseFirestore mFirestore;
     private final FirebaseUser mCurrentUser;
     private final CircleImageView user_image;
     private final TextView user_name;
     private final TextView timestamp;
     private final TextView institute_dept, likes_count;
-    CollectionReference postDb = FirebaseFirestore.getInstance().collection("Posts");
-    private final MathView post_desc;
-    @SuppressLint("NewApi")
-    private final Set<String> ADMIN_UID_LIST = Set.of(
-            "0h9MvJiFvFWRBiOoHzUcGlqJe2m2", "eSW24hxmW6YmbaInd2OlrsWx0Rw1"
-    );
+    CollectionReference IssueDb = FirebaseFirestore.getInstance().collection("Issues");
+    private final MathView Issue_desc;
+
     private final MaterialFavoriteButton sav_button;
     private final MaterialFavoriteButton like_btn;
     private final MaterialFavoriteButton stat_btn;
@@ -105,15 +100,14 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     private final DotsIndicator indicator2;
     int position;
     final Button see_more;
-    PostViewModel postViewModel;
     private Context context;
     private boolean isOwner;
     private boolean alreadyLiked=false;
     private Activity activity;
     private View mView;
-    int postLikes;
+    int IssueLikes;
 
-    public PostViewHolder(@NonNull View holder) {
+    public IssueViewHolder(@NonNull View holder) {
         super(holder);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -125,7 +119,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         institute_dept = holder.findViewById(R.id.dept_institute);
         likes_count = holder.findViewById(R.id.like_count);
         timestamp = holder.findViewById(R.id.post_timestamp);
-        post_desc = holder.findViewById(R.id.post_desc);
+        Issue_desc = holder.findViewById(R.id.post_desc);
         pager = holder.findViewById(R.id.pager);
         pager_layout = holder.findViewById(R.id.pager_layout);
         see_more = holder.findViewById(R.id.share_button);
@@ -136,14 +130,14 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         menu = holder.findViewById(R.id.menu_button);
     }
 
-    private int updateLike(String postId, String posterId) {
+    private int updateLike(String IssueId, String IssueerId) {
         try {
             if(!alreadyLiked){
-                postLikes++;
+                IssueLikes++;
                 try {
                     Map<String, Boolean> likeMap = new HashMap<>();
                     likeMap.put("liked", true);
-                    postDb.document(postId)
+                    IssueDb.document(IssueId)
                             .collection("Liked_Users")
                             .document(mCurrentUser.getUid())
                             .set(likeMap)
@@ -151,75 +145,75 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                                 alreadyLiked=true;
                                 UserViewModel userViewModel = ViewModelProviders.of((FragmentActivity) context).get(UserViewModel.class);
                                 userViewModel.user.observe((LifecycleOwner) context, users -> {
-                                    Notification notification = new Notification(postId,
-                                            posterId,
+                                    Notification notification = new Notification(IssueId,
+                                            IssueerId,
                                             users.getUsername(),
                                             users.getImage(),
-                                            "Liked your post",
+                                            "Liked your Issue",
                                             String.valueOf(System.currentTimeMillis())
                                             , "like"
-                                            , postId, false
+                                            , IssueId, false
                                     );
-                                    addToNotification(posterId, notification);
+                                    addToNotification(IssueerId, notification);
                                 });
                             })
                             .addOnFailureListener(e -> Log.e("Error like", e.getMessage()));
                 } catch (Exception ignored) {
                 }
             }else{
-                postLikes--;
+                IssueLikes--;
                 try {
-                    mFirestore.collection("Posts")
-                            .document(postId)
+                    mFirestore.collection("Issues")
+                            .document(IssueId)
                             .collection("Liked_Users")
                             .document(mCurrentUser.getUid())
                             .delete()
                             .addOnSuccessListener(aVoid -> {
                                 alreadyLiked=false;
                                 //holder.like_count.setText(String.valueOf(Integer.parseInt(holder.like_count.getText().toString())-1));
-                                //Toast.makeText(context, "Unliked post '" + post.postId, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context, "Unliked Issue '" + Issue.IssueId, Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> Log.e("Error unlike", e.getMessage()));
                 } catch (Exception ignored) {
                 }
             }
-            likes_count.setText(String.valueOf(postLikes));
-            mFirestore.collection("Posts").document(postId).update("liked_count", postLikes).addOnSuccessListener(aVoid -> {
+            likes_count.setText(String.valueOf(IssueLikes));
+            mFirestore.collection("Issues").document(IssueId).update("liked_count", IssueLikes).addOnSuccessListener(aVoid -> {
             });
         } catch (NullPointerException ignored) {
 
         }
-        return postLikes;
+        return IssueLikes;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @SuppressLint({"ResourceType", "SetTextI18n"})
-    public void bind(Post post, final PostViewHolder holder, int position, BottomSheetDialog mmBottomSheetDialog, View statsheetView, boolean approved) {
+    public void bind(Issue Issue, final IssueViewHolder holder, int position, BottomSheetDialog mmBottomSheetDialog, View statsheetView, boolean approved) {
         Log.d("Approved", approved+" ");
         context = Home.context;
         this.position = position;
-        this.postLikes = post.getLiked_count();
-        getLikeandFav(post);
-        user_name.setText(post.getName());
+        this.IssueLikes = Issue.getLiked_count();
+        getLikeandFav(Issue);
+        user_name.setText(Issue.getName());
         user_name.setOnClickListener(v -> {
-            context.startActivity(new Intent(context, FriendProfile.class).putExtra("f_id", post.getUserId()));
+            context.startActivity(new Intent(context, FriendProfile.class).putExtra("f_id", Issue.getUserId()));
         });
 
-        likes_count.setText(String.valueOf(post.getLiked_count()));
+        likes_count.setText(String.valueOf(Issue.getLiked_count()));
 
         try {
-            if (post.getInstitute() == null) {
-                holder.institute_dept.setText(post.getDept());
-            } else if (post.getDept() == null) {
-                holder.institute_dept.setText(post.getInstitute());
+            if (Issue.getInstitute() == null) {
+                holder.institute_dept.setText(Issue.getDept());
+            } else if (Issue.getDept() == null) {
+                holder.institute_dept.setText(Issue.getInstitute());
             } else {
-                holder.institute_dept.setText(post.getDept() + ", " + post.getInstitute());
+                holder.institute_dept.setText(Issue.getDept() + ", " + Issue.getInstitute());
             }
         }catch (Exception j){
-            holder.institute_dept.setText(post.getDept());
+            holder.institute_dept.setText(Issue.getDept());
         }
 
-        //post_desc.setDisplayText(post.getDescription());
+        //Issue_desc.setDisplayText(Issue.getDescription());
         stat_btn.setOnFavoriteChangeListener((buttonView, favorite) -> {
 
             mmBottomSheetDialog.show();
@@ -234,27 +228,27 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
             pbar.setVisibility(View.VISIBLE);
             main.setVisibility(View.GONE);
-            postDb.document(post.getPostId())
+            IssueDb.document(Issue.getPostId())
                     .collection("Liked_Users")
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
 
                         smile.setText(String.format(Home.context.getString(R.string.s_peopl_have_smiled_for_this_post), queryDocumentSnapshots.size()));
-                        loveL.setOnClickListener(view -> view.getContext().startActivity(new Intent(view.getContext(), WhoLikedActivity.class).putExtra("postId", post.getPostId()).putExtra("type", "Liked_Users")));
+                        loveL.setOnClickListener(view -> view.getContext().startActivity(new Intent(view.getContext(), WhoLikedActivity.class).putExtra("IssueId", Issue.getPostId()).putExtra("type", "Liked_Users")));
 
-                        postDb.document(post.getPostId())
+                        IssueDb.document(Issue.getPostId())
                                 .collection("Saved_Users")
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
                                     save.setText(String.format(Home.context.getString(R.string.s_peopl_have_saved_this_post), queryDocumentSnapshots1.size()));
-                                    saveL.setOnClickListener(view -> view.getContext().startActivity(new Intent(view.getContext(), WhoLikedActivity.class).putExtra("postId", post.getPostId()).putExtra("type", "Saved_Users"),  ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle()));
+                                    saveL.setOnClickListener(view -> view.getContext().startActivity(new Intent(view.getContext(), WhoLikedActivity.class).putExtra("IssueId", Issue.getPostId()).putExtra("type", "Saved_Users"),  ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle()));
                                     pbar.setVisibility(View.GONE);
                                     main.setVisibility(View.VISIBLE);
 
                                 })
                                 .addOnFailureListener(Throwable::printStackTrace);
 
-                        postDb.document(post.getPostId())
+                        IssueDb.document(Issue.getPostId())
                                 .collection("Comments")
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots1 -> {
@@ -271,33 +265,33 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         });
         Glide.with(Home.context)
                 .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.placeholder))
-                .load(post.getUserimage())
+                .load(Issue.getUserimage())
                 .into(holder.user_image);
 
-        String timeAgo = TimeAgo.using(Long.parseLong(post.getTimestamp()));
+        String timeAgo = TimeAgo.using(Long.parseLong(Issue.getTimestamp()));
         timestamp.setText(timeAgo);
         try {
-            String descc = post.getDescription();
-            post_desc.setDisplayText((descc.length() > 597) ? descc.substring(0, 600) + "..." : descc);
+            String descc = Issue.getDescription();
+            Issue_desc.setDisplayText((descc.length() > 597) ? descc.substring(0, 600) + "..." : descc);
             if(descc.contains("video_loading_bg.svg")){
-                post_desc.setDisplayText((descc.length() > 1497) ? descc.substring(0, 1500) + "..." : descc);
+                Issue_desc.setDisplayText((descc.length() > 1497) ? descc.substring(0, 1500) + "..." : descc);
             }
-            if (post.getImage_count() == 0) {
+            if (Issue.getImage_count() == 0) {
                 pager_layout.setVisibility(View.GONE);
-            }  else if (post.getImage_count() == 1) {
+            }  else if (Issue.getImage_count() == 1) {
                 pager_layout.setVisibility(View.VISIBLE);
                 ArrayList<MultipleImage> multipleImages = new ArrayList<>();
-                PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, activity, multipleImages, false, post.getPostId(), like_btn, post.getUserId(), approved);
-                setUrls(multipleImages, photosAdapter, post);
+                PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, activity, multipleImages, false, Issue.getPostId(), like_btn, Issue.getUserId(), approved);
+                setUrls(multipleImages, photosAdapter, Issue);
                 pager.setAdapter(photosAdapter);
                 indicator_holder.setVisibility(View.GONE);
                 photosAdapter.notifyDataSetChanged();
                 pager_layout.setVisibility(View.VISIBLE);
-                post_desc.setVisibility(View.VISIBLE);
+                Issue_desc.setVisibility(View.VISIBLE);
             } else {
                 ArrayList<MultipleImage> multipleImages = new ArrayList<>();
-                PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, activity, multipleImages, false, post.getPostId(), like_btn, post.getUserId(), approved);
-                setUrls(multipleImages, photosAdapter, post);
+                PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, activity, multipleImages, false, Issue.getPostId(), like_btn, Issue.getUserId(), approved);
+                setUrls(multipleImages, photosAdapter, Issue);
 
                 pager.setAdapter(photosAdapter);
                 photosAdapter.notifyDataSetChanged();
@@ -328,21 +322,21 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
         }
         try {
-            setupViews(post);
+            setupViews(Issue);
         } catch (Exception ignored) {
         }
         menu.setOnClickListener(view -> {
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-            new PostMenu(post.getPostId(), post.getName()).show(fragmentManager, "");
+            new PostMenu(Issue.getPostId(), Issue.getName()).show(fragmentManager, "");
 
         });
 
-        if (post.getUserId().equals(mCurrentUser.getUid()) || ADMIN_UID_LIST.contains(mCurrentUser.getUid())) {
+        if (Issue.getUserId().equals(mCurrentUser.getUid()) || ADMIN_UID_LIST.contains(mCurrentUser.getUid())) {
             isOwner = true;
             delete.setVisibility(View.VISIBLE);
             delete.setOnClickListener(v -> new MaterialDialog.Builder(Home.context)
-                    .title("Delete post")
-                    .content("Are you sure do you want to delete this post?")
+                    .title("Delete Issue")
+                    .content("Are you sure do you want to delete this Issue?")
                     .positiveText("Yes")
                     .negativeText("No")
                     .onPositive((dialog, which) -> {
@@ -355,90 +349,90 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                         pdialog.show();
 
                         dialog.dismiss();
-                        postDb
-                                .document(post.getPostId())
+                        IssueDb
+                                .document(Issue.getPostId())
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
 
 
-                                    if (!TextUtils.isEmpty(post.getImage_url_0())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_0())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_0());
+                                                .getReferenceFromUrl(Issue.getImage_url_0());
                                         img.delete().addOnSuccessListener(aVoid1 ->
                                         {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
                                     pdialog.show();
-                                    if (!TextUtils.isEmpty(post.getImage_url_1())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_1())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_1());
+                                                .getReferenceFromUrl(Issue.getImage_url_1());
                                         img.delete().addOnSuccessListener(aVoid12 -> {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
                                     pdialog.show();
-                                    if (!TextUtils.isEmpty(post.getImage_url_2())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_2())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_2());
+                                                .getReferenceFromUrl(Issue.getImage_url_2());
                                         img.delete().addOnSuccessListener(aVoid13 -> {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
                                     pdialog.show();
-                                    if (!TextUtils.isEmpty(post.getImage_url_3())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_3())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_3());
+                                                .getReferenceFromUrl(Issue.getImage_url_3());
                                         img.delete().addOnSuccessListener(aVoid14 -> {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
                                     pdialog.show();
-                                    if (!TextUtils.isEmpty(post.getImage_url_4())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_4())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_4());
+                                                .getReferenceFromUrl(Issue.getImage_url_4());
                                         img.delete().addOnSuccessListener(aVoid15 -> {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
                                     pdialog.show();
-                                    if (!TextUtils.isEmpty(post.getImage_url_5())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_5())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_5());
+                                                .getReferenceFromUrl(Issue.getImage_url_5());
                                         img.delete().addOnSuccessListener(aVoid16 -> {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
                                     pdialog.show();
-                                    if (!TextUtils.isEmpty(post.getImage_url_6())) {
+                                    if (!TextUtils.isEmpty(Issue.getImage_url_6())) {
                                         StorageReference img = FirebaseStorage.getInstance()
-                                                .getReferenceFromUrl(post.getImage_url_6());
+                                                .getReferenceFromUrl(Issue.getImage_url_6());
                                         img.delete().addOnSuccessListener(aVoid17 -> {
                                             pdialog.dismiss();
-                                            Log.i("Post Image", "deleted");
+                                            Log.i("Issue Image", "deleted");
                                         })
-                                                .addOnFailureListener(e -> Log.e("Post Image", e.getLocalizedMessage()));
+                                                .addOnFailureListener(e -> Log.e("Issue Image", e.getLocalizedMessage()));
                                     }
 
-                                    Toasty.success(context, "Post deleted", Toasty.LENGTH_SHORT, true).show();
+                                    Toasty.success(context, "Issue deleted", Toasty.LENGTH_SHORT, true).show();
 
                                     pdialog.dismiss();
 
@@ -458,19 +452,19 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         }
         try {
             mFirestore.collection("Users")
-                    .document(post.getUserId())
+                    .document(Issue.getUserId())
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         try {
-                            if (!documentSnapshot.getString("image").equals(post.getUserimage())) {
-                                Map<String, Object> postMap = new HashMap<>();
-                                postMap.put("name", documentSnapshot.getString("name"));
-                                postMap.put("userimage", documentSnapshot.getString("image"));
+                            if (!documentSnapshot.getString("image").equals(Issue.getUserimage())) {
+                                Map<String, Object> IssueMap = new HashMap<>();
+                                IssueMap.put("name", documentSnapshot.getString("name"));
+                                IssueMap.put("userimage", documentSnapshot.getString("image"));
 
-                                postDb.document(post.getPostId())
-                                        .update(postMap)
-                                        .addOnSuccessListener(aVoid -> Log.i("post_update", "success"))
-                                        .addOnFailureListener(e -> Log.i("post_update", "failure"));
+                                IssueDb.document(Issue.getPostId())
+                                        .update(IssueMap)
+                                        .addOnSuccessListener(aVoid -> Log.i("Issue_update", "success"))
+                                        .addOnFailureListener(e -> Log.i("Issue_update", "failure"));
 
                                 user_name.setText(documentSnapshot.getString("name"));
 
@@ -478,25 +472,25 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                                         .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                         .load(documentSnapshot.getString("image"))
                                         .into(user_image);
-                            } else if (!Objects.equals(documentSnapshot.getString("userId"), post.getUserId())) {
-                                Map<String, Object> postMap = new HashMap<>();
-                                postMap.put("name", documentSnapshot.getString("name"));
-                                postDb.document(post.getPostId())
-                                        .update(postMap)
-                                        .addOnSuccessListener(aVoid -> Log.i("post_update", "success"))
-                                        .addOnFailureListener(e -> Log.i("post_update", "failure"));
+                            } else if (!Objects.equals(documentSnapshot.getString("userId"), Issue.getUserId())) {
+                                Map<String, Object> IssueMap = new HashMap<>();
+                                IssueMap.put("name", documentSnapshot.getString("name"));
+                                IssueDb.document(Issue.getPostId())
+                                        .update(IssueMap)
+                                        .addOnSuccessListener(aVoid -> Log.i("Issue_update", "success"))
+                                        .addOnFailureListener(e -> Log.i("Issue_update", "failure"));
 
                                 user_name.setText(documentSnapshot.getString("name"));
 
-                            } else if (!Objects.equals(documentSnapshot.getString("image"), post.getUserimage())) {
+                            } else if (!Objects.equals(documentSnapshot.getString("image"), Issue.getUserimage())) {
 
-                                Map<String, Object> postMap = new HashMap<>();
-                                postMap.put("userimage", documentSnapshot.getString("image"));
+                                Map<String, Object> IssueMap = new HashMap<>();
+                                IssueMap.put("userimage", documentSnapshot.getString("image"));
 
-                                postDb.document(post.getPostId())
-                                        .update(postMap)
-                                        .addOnSuccessListener(aVoid -> Log.i("post_update", "success"))
-                                        .addOnFailureListener(e -> Log.i("post_update", "failure"));
+                                IssueDb.document(Issue.getPostId())
+                                        .update(IssueMap)
+                                        .addOnSuccessListener(aVoid -> Log.i("Issue_update", "success"))
+                                        .addOnFailureListener(e -> Log.i("Issue_update", "failure"));
 
                                 Glide.with(Home.context)
                                         .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
@@ -504,7 +498,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                                         .into(user_image);
 
                             }
-
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -515,44 +508,44 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             Log.w("error", "fastscrolled", ex);
         }
 
-        see_more.setOnClickListener(view -> context.startActivity(new Intent(Home.context, CommentsActivity.class).putExtra("post", post).putExtra("owner", isOwner).putExtra("approveStatus", approved).putExtra("alreadyLiked", alreadyLiked) , ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle()));
+        see_more.setOnClickListener(view -> context.startActivity(new Intent(Home.context, CommentsActivity.class).putExtra("Issue", Issue).putExtra("owner", isOwner).putExtra("approveStatus", approved).putExtra("alreadyLiked", alreadyLiked) , ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle()));
 
-        holder.itemView.setOnClickListener(view -> context.startActivity(new Intent(Home.context, CommentsActivity.class).putExtra("post", post).putExtra("owner", isOwner).putExtra("approveStatus", approved).putExtra("alreadyLiked", alreadyLiked) , ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle()));
+        holder.itemView.setOnClickListener(view -> context.startActivity(new Intent(Home.context, CommentsActivity.class).putExtra("Issue", Issue).putExtra("owner", isOwner).putExtra("approveStatus", approved).putExtra("alreadyLiked", alreadyLiked) , ActivityOptions.makeSceneTransitionAnimation((Activity) context).toBundle()));
 
     }
 
     @SuppressLint("SetTextI18n")
-    private void setupViews(Post post) {
+    private void setupViews(Issue Issue) {
 
         try {
-            getLikeandFav(post);
+            getLikeandFav(Issue);
         } catch (NullPointerException ignored) {
 
         }
-        user_name.setText(post.getName());
+        user_name.setText(Issue.getName());
 
-        institute_dept.setText(post.getDept() + ", " + post.getInstitute());
+        institute_dept.setText(Issue.getDept() + ", " + Issue.getInstitute());
 
         Glide.with(Home.context)
                 .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.placeholder))
-                .load(post.getUserimage())
+                .load(Issue.getUserimage())
                 .into(user_image);
-        String timeAgo = TimeAgo.using(Long.parseLong(post.getTimestamp()));
+        String timeAgo = TimeAgo.using(Long.parseLong(Issue.getTimestamp()));
         timestamp.setText(timeAgo);
     }
 
     @SuppressLint("ClickableViewAccessibility")
 
 
-    private void setUrls(ArrayList<MultipleImage> multipleImages, PostPhotosAdapter photosAdapter, Post post) {
+    private void setUrls(ArrayList<MultipleImage> multipleImages, PostPhotosAdapter photosAdapter, Issue Issue) {
         String url0, url1, url2, url3, url4, url5, url6;
-        url0 = post.getImage_url_0();
-        url1 = post.getImage_url_1();
-        url2 = post.getImage_url_2();
-        url3 = post.getImage_url_3();
-        url4 = post.getImage_url_4();
-        url5 = post.getImage_url_5();
-        url6 = post.getImage_url_6();
+        url0 = Issue.getImage_url_0();
+        url1 = Issue.getImage_url_1();
+        url2 = Issue.getImage_url_2();
+        url3 = Issue.getImage_url_3();
+        url4 = Issue.getImage_url_4();
+        url5 = Issue.getImage_url_5();
+        url6 = Issue.getImage_url_6();
 
         if (!TextUtils.isEmpty(url0)) {
             MultipleImage image = new MultipleImage(url0);
@@ -617,9 +610,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void getLikeandFav(Post post) {
+    private void getLikeandFav(Issue Issue) {
         try {
-            postDb.document(post.getPostId())
+            IssueDb.document(Issue.getPostId())
                     .collection("Liked_Users")
                     .document(userId)
                     .get()
@@ -633,7 +626,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                             
                         }
                         like_btn.setOnFavoriteChangeListener((buttonView, favorite) -> {
-                            post.setLike_count(updateLike(post.getPostId(), post.getUserId()));
+                            Issue.setLike_count(updateLike(Issue.getPostId(), Issue.getUserId()));
                         });
                     })
                     .addOnFailureListener(e -> Log.e("Error Like", e.getMessage()));
@@ -642,7 +635,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         }
 
         try {
-            postDb.document(post.getPostId())
+            IssueDb.document(Issue.getPostId())
                     .collection("Saved_Users")
                     .document(mCurrentUser.getUid())
                     .get()
@@ -657,47 +650,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
                         }
 
-                        sav_button.setOnFavoriteChangeListener((buttonView, favorite) -> {
-                            postViewModel = ViewModelProviders.of((FragmentActivity) context).get(PostViewModel.class);
-                            postViewModel.insert(post);
-                            if (favorite) {
-                                Map<String, Object> favMap = new HashMap<>();
-                                favMap.put("Saved", true);
-                                try {
-                                    postDb
-                                            .document(post.getPostId())
-                                            .collection("Saved_Users")
-                                            .document(mCurrentUser.getUid())
-                                            .set(favMap)
-                                            .addOnSuccessListener(aVoid -> {
-
-                                            })
-                                            .addOnFailureListener(e -> Log.e("Error fav", e.getMessage()));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            } else {
-                                postViewModel.delete(post);
-                                Map<String, Object> favMap = new HashMap<>();
-                                favMap.put("Saved", false);
-
-                                try {
-                                    postDb.document(post.getPostId())
-                                            .collection("Saved_Users")
-                                            .document(mCurrentUser.getUid())
-                                            //.set(favMap)
-                                            .delete()
-                                            .addOnSuccessListener(aVoid -> {
-
-                                            })
-                                            .addOnFailureListener(e -> Log.e("Error fav", e.getMessage()));
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
                     })
                     .addOnFailureListener(e -> Log.e("Error Fav", e.getMessage()));
         } catch (NullPointerException ignored) {
@@ -724,6 +676,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
                     apiService.sendNotifcation(sender).enqueue(new Callback<MyResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<MyResponse> call, @NonNull Response<MyResponse> response) {
+
                         }
 
                         @Override

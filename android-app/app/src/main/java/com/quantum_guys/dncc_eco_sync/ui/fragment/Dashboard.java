@@ -29,8 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.messege.model.Chat;
 import com.quantum_guys.dncc_eco_sync.models.Notification;
@@ -40,6 +38,8 @@ import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.Result;
 import com.quantum_guys.dncc_eco_sync.viewmodel.BattleViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.ResultViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +51,7 @@ import java.util.Objects;
 public class Dashboard extends Fragment {
     private final int[] tabIcons = {
             R.drawable.ic_multiline_chart_black_24dp,
-            R.drawable.ic_flash_on_black_24dp,
+            R.drawable.ic_prop,
             R.drawable.ic_question_answer_black_24dp,
             R.drawable.ic_notifications_black_24dp
     };
@@ -73,14 +73,13 @@ public class Dashboard extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tabLayout = Objects.requireNonNull(getView()).findViewById(R.id.tabLayout);
+        tabLayout = requireView().findViewById(R.id.tabLayout);
         ViewPager viewPager = getView().findViewById(R.id.view_pager);
         adapter = new TabAdapter(requireActivity().getSupportFragmentManager(), getActivity());
 
         adapter.addFragment(new Home(), "Post", tabIcons[0]);
-        adapter.addFragment(new Quiz(), "Quiz", tabIcons[1]);
-        adapter.addFragment(new ChatsFragment(), "Chat", tabIcons[2]);
-        adapter.addFragment(new NotificationFragment(), "Notif", tabIcons[3]);
+        adapter.addFragment(new Issue(), "Issue", tabIcons[1]);
+        adapter.addFragment(new NotificationFragment(), "Notification", tabIcons[3]);
 
         viewPager.setAdapter(adapter);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {

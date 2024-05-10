@@ -181,7 +181,7 @@ public class QuizBattle extends AppCompatActivity {
             if (list.get(position).getImg().length() > 10) {
                 mcqImg.setVisibility(View.VISIBLE);
                 Glide.with(getApplicationContext())
-                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_main_logo_png))
+                        .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                         .load(list.get(position).getImg())
                         .into(mcqImg);
             } else {
@@ -949,7 +949,7 @@ public class QuizBattle extends AppCompatActivity {
                     name.setText(MyName);
                     setLevelByScore(level, (int) user.getScore());
                     Glide.with(getApplicationContext())
-                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                             .load(MyImage)
                             .into(proPic);
             } else {
@@ -962,7 +962,7 @@ public class QuizBattle extends AppCompatActivity {
                             setLevelByScore(level, Integer.parseInt(String.valueOf(documentSnapshot.getLong("score"))));
                             hisImage = documentSnapshot.getString("image");
                             Glide.with(getApplicationContext())
-                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo))
+                                    .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                                     .load(hisImage)
                                     .into(proPic);
                         });

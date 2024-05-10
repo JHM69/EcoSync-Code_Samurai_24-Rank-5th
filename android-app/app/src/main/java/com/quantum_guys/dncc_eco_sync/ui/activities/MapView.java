@@ -272,7 +272,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
             ).show();
             MarkerOptions options = new MarkerOptions();
             options.position(current);
-            options.icon(bitmapDescriptorFromVector(this, R.drawable.truck_small));
+            options.icon(bitmapDescriptorFromVector(this, R.drawable.ic_location_on_black_24dp));
 
             options.flat(true);
             options.anchor(0.5f, 0.5f);
@@ -334,7 +334,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         map = googleMap;
         map.setTrafficEnabled(false);
         map.setBuildingsEnabled(true);
-        updateCamera(new LatLng(23.7088742, 90.4111186), 0);
+        updateCamera(new LatLng(23.72866, 90.396453), 0);
     }
 
     @Override

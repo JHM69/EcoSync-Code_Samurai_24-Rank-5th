@@ -29,8 +29,8 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        int icon = R.drawable.ic_logo_icon;
-        String name = "ত্বারক";
+        int icon = R.drawable.logo_round;
+        String name = "স্বচ্ছ ঢাকা";
         String type = remoteMessage.getData().get("type");
         String title = remoteMessage.getData().get("username");
         String message = remoteMessage.getData().get("message");
@@ -64,13 +64,13 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
                 break;
             case "play_result":
                 name = "Battle Results";
-                icon = (R.drawable.ic_logo_icon);
+                icon = (R.drawable.logo_round);
                 break;
             case "post":
                 icon = (R.drawable.ic_image_post_black);
                 break;
             default:
-                icon = (R.drawable.ic_logo_icon);
+                icon = (R.drawable.logo_round);
                 break;
         }
 
@@ -85,7 +85,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(id,
                     name,
                     NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("ত্বারক notifications. Add friends, Lighting posts, Playing battle quiz etc");
+            channel.setDescription("স্বচ্ছ ঢাকা notifications. Add friends, Lighting posts, Playing battle quiz etc");
             mNotificationManager.createNotificationChannel(channel);
         }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), id)
@@ -96,7 +96,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSmallIcon(icon)
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_logo));
+                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.logo_round));
 
         if(type.equals("chat")){
             Intent intent = new Intent(getApplicationContext(), MessageActivity.class);

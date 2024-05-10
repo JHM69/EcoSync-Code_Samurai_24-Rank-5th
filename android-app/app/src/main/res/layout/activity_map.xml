@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -278,8 +279,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:subtitle="Trip to Aminbazar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -292,6 +292,7 @@
         android:focusable="true"
         android:foreground="?android:selectableItemBackground"
         android:padding="3dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_power_settings_new_black_24dp"
         app:tint="#EE3030"
@@ -306,7 +307,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ghjk"
+        app:layout_constraintTop_toTopOf="parent"
         tools:context=".activity.MapView" />
 
     <com.google.android.material.button.MaterialButton
@@ -317,7 +318,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="?colorPrimary"
-        android:text="Scan QR to Complete Trip"
+        android:text="BACK"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:cornerRadius="10dp"

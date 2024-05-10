@@ -149,7 +149,7 @@ public class ProfileFragment extends Fragment {
                     setLevelByScore(levelTv, (int) users.getScore());
                     setUpChartData(pieChart, users.getWin(), users.getLose(), users.getDraw());
                     Glide.with(rootView.getContext())
-                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.ic_logo_icon))
+                            .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.logo_round))
                             .load(users.getImage())
                             .into(profile_pic);
                     profile_pic.setOnClickListener(v -> rootView.getContext().startActivity(new Intent(rootView.getContext(), ImagePreviewSave.class)

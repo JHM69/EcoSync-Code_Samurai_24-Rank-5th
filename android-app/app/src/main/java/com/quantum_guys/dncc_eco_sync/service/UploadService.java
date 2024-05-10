@@ -179,7 +179,7 @@ public class UploadService extends Service {
 
                         notifyProgress(notification_id
                                 ,
-                                "ত্বারক"
+                                "স্বচ্ছ ঢাকা"
                                 , "Uploading " + count + " posts"
                                 , getApplicationContext()
                                 ,
@@ -199,7 +199,7 @@ public class UploadService extends Service {
             if (count == 1) {
                 notifyProgress(notification_id
                         ,
-                        "ত্বারক"
+                        "স্বচ্ছ ঢাকা"
                         , "Uploading post.."
                         , getApplicationContext()
                         ,
@@ -300,7 +300,7 @@ public class UploadService extends Service {
 
     public void sendMessage(int notification_id, String sender, final String receiver, Uri image, String userid, String fuser) {
         notifyProgress(notification_id,
-                "ত্বারক",
+                "স্বচ্ছ ঢাকা",
                 "Sending attachment..",
                 getApplicationContext(),
                 0,

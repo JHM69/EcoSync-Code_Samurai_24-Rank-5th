@@ -3,6 +3,7 @@ package com.quantum_guys.dncc_eco_sync.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -35,7 +36,6 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
-
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.adapters.PostViewHolder;
 import com.quantum_guys.dncc_eco_sync.models.Images;
@@ -45,9 +45,8 @@ import com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Home extends Fragment {
+public class Issue extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     public static Context context;
@@ -62,7 +61,7 @@ public class Home extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.frag_home, container, false);
+        return inflater.inflate(R.layout.frag_issue, container, false);
     }
 
     @SuppressLint("InflateParams")
@@ -126,17 +125,17 @@ public class Home extends Fragment {
                 .build();
         Query mQuery;
         if (tag.equals("All")) {
-            mQuery = mFirestore.collection("Posts").orderBy("timestamp", Query.Direction.DESCENDING);
+            mQuery = mFirestore.collection("Issues").orderBy("timestamp", Query.Direction.DESCENDING);
         } else {
-            mQuery = mFirestore.collection("Posts").orderBy("liked_count", Query.Direction.DESCENDING).whereEqualTo("tag", tag);
+            mQuery = mFirestore.collection("Issues").orderBy("timestamp", Query.Direction.DESCENDING).whereEqualTo("tag", tag);
         }
 
-        FirestorePagingOptions<Post> options = new FirestorePagingOptions.Builder<Post>()
+        FirestorePagingOptions<com.quantum_guys.dncc_eco_sync.models.Issue> options = new FirestorePagingOptions.Builder<com.quantum_guys.dncc_eco_sync.models.Issue>()
                 .setLifecycleOwner(this)
-                .setQuery(mQuery, config, Post.class)
+                .setQuery(mQuery, config, com.quantum_guys.dncc_eco_sync.models.Issue.class)
                 .build();
 
-        FirestorePagingAdapter<Post, PostViewHolder> mAdapter = new FirestorePagingAdapter<Post, PostViewHolder>(options) {
+        FirestorePagingAdapter<com.quantum_guys.dncc_eco_sync.models.Issue, PostViewHolder> mAdapter = new FirestorePagingAdapter<com.quantum_guys.dncc_eco_sync.models.Issue, PostViewHolder>(options) {
             @NonNull
             @Override
             public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -145,14 +144,16 @@ public class Home extends Fragment {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post post) {
+            protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull com.quantum_guys.dncc_eco_sync.models.Issue post) {
                 Animation animation = AnimationUtils.loadAnimation(getActivity(),
                         (position > lastPosition) ? R.anim.up_from_bottom
                                 : R.anim.down_from_top);
                 holder.itemView.startAnimation(animation);
                 lastPosition = position;
                 mSwipeRefreshLayout.setRefreshing(false);
-                holder.bind(post, holder, position, mmBottomSheetDialog, statsheetView, true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    holder.bind(post, holder, position, mmBottomSheetDialog, statsheetView, true);
+                }
             }
 
             @Override
@@ -203,14 +204,14 @@ public class Home extends Fragment {
                 .showCamera(true)
                 .enableLog(true)
                 .imageDirectory("স্বচ্ছ ঢাকা")
-                .start(123);
+                .start(456);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            if (requestCode == 123) {
+            if (requestCode == 456) {
                 imagesList.clear();
                 List<Image> pickedImages = ImagePicker.getImages(data);
                 for (Image image : pickedImages) {

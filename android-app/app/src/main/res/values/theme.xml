@@ -2,7 +2,7 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorAccentt</item>
-        <item name="colorPrimaryDark">#7C4EAE</item>
+        <item name="colorPrimaryDark">@color/button_pressed_color</item>
         <item name="colorAccent">@color/colorAccentt</item>
         <item name="dialogSheetAccent">@color/colorAccentt</item>
         <item name="actionBarPopupTheme">@style/AppTheme.PopupOverlay</item>

@@ -442,11 +442,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
         String dept = "";
         String location = "";
-        String bio = "Hi, I am a ত্বারক user";
-        Users user1 = new Users(user.getUid(), 500, System.currentTimeMillis(),
+        String bio = "";
+        Users user1 = new Users(user.getUid(), 100, System.currentTimeMillis(),
                 0, 0, 0, 100, 3,
                 name, Objects.requireNonNull(image),
                 institute, dept, email, bio, getNickName(name), location);
+        user1.setNumber(user.getPhoneNumber());
+        user1.setAddress("");
+        user1.setGender("");
+        user1.setWard("");
+        user1.setLat(0);
+        user1.setLon(0);
 
         FirebaseFirestore.getInstance().collection("Users").document(user.getUid()).set(user1).addOnCompleteListener(task -> {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class).putExtra("sss", "sss");
