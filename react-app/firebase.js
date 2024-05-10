@@ -7,7 +7,7 @@ import { getMessaging } from "firebase/messaging";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyBfb1NgeQStT4RGMqK0c_xoxKux9H_Y-BY",
   authDomain: "dncc-ecosync.firebaseapp.com",
   projectId: "dncc-ecosync",
@@ -19,5 +19,5 @@ const firebaseConfig = {
 
 // Initialize Firebase
 // export const app = initializeApp(firebaseConfig);
-// export const analytics = getAnalytics(app);
+// // export const analytics = getAnalytics(app);
 // export const messaging = getMessaging(app);
