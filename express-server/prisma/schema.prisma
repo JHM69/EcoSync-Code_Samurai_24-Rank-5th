@@ -22,6 +22,7 @@ enum RoleType {
   LandfillManager
   Unassigned
   Driver
+  ContractorManager
 }
 model User {
   id         Int       @id @default(autoincrement())
@@ -52,6 +53,8 @@ model User {
   deviceId String?
   fcmToken String?
   notifications         Notification[]
+  contractor            Contractor[]
+  accessLevel           String?
   @@index([roleId], name: "idx_user_role")
   @@index([name], name: "idx_user_name")
   @@index([email], name: "idx_user_email")
@@ -119,6 +122,7 @@ model STS {  // 54 STS
   wasteEntries        WasteEntry[]
   notifications         Notification[]
   tripPlanStss        TripPlanSts[]
+  contractors         Contractor[]
   @@index([wardNumber], name: "idx_sts_ward_number") 
   @@index([capacity], name: "idx_sts_capacity")
 }
@@ -161,6 +165,10 @@ model WasteEntry {  //StsManager can entry multiple vehicles enties
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
   createdAt       DateTime @default(now())
+  contractorId    Int
+  contractor      Contractor @relation(fields: [contractorId], references: [id])
+  wasteType       String @default("Domestic")
+  vehicleType     String @default("Van")
   @@index([stsId], name: "idx_waste_entry_sts")
   @@index([userId], name: "idx_waste_entry_user")
   @@index([timeOfArrival], name: "idx_waste_entry_time_of_arrival")
@@ -289,4 +297,39 @@ model TripPlanLandfill {
   visited Boolean @default(false)
   visitedAt DateTime?
   weiqht Float?
+}
+
+
+// final round
+
+model Contractor {
+  id                    Int      @id @default(autoincrement())
+  companyName           String
+  registrationId        String @unique
+  registrationDate      DateTime
+  tin                   String @unique
+  phone                 String
+  employees             Employee[]
+  paymentPerTonnage     Float
+  requiredWastePerDay   Float
+  contractStartDate     DateTime
+  contractEndDate       DateTime
+  areaOfCollection      String //comma separated ward numbers
+  stsId                 Int
+  sts                   STS      @relation(fields: [stsId], references: [id])
+  managers              User[]
+  wasteEntries          WasteEntry[]
+}
+
+model Employee {
+  id                    Int      @id @default(autoincrement())
+  contractorId          Int
+  contractor            Contractor @relation(fields: [contractorId], references: [id])
+  name                  String
+  dateOfBirth           DateTime
+  dateOfHire            DateTime
+  jobTitle              String
+  paymentRatePerHour    Float
+  phone                 String
+  assignedCollectionRoute String //comma separated roads
 }

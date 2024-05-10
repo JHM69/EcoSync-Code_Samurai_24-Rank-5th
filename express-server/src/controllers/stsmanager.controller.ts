@@ -309,6 +309,7 @@ router.get('/sts/:id/add', auth.required, async (req: Request, res: Response) =>
       },
       include: {
         sts: true,
+        contractor: true,
       },
     });
     res.status(200).json(entries);
@@ -325,6 +326,7 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const stsId = Number(req.params.id);
+      const { contractorId, wasteType, vehicleType} = req.body;
       // check if the user is a manager of the STS
       const sts = await prisma.sTS.findUnique({
         where: {
@@ -353,7 +355,7 @@ router.post(
           id: stsId,
         },
         data: {
-          currentWasteVolume: sts.currentWasteVolume + Number(req.body.weight),
+          currentWasteVolume: sts.currentWasteVolume + Number(req.body.weight)/1000,
         },
       });
 
@@ -371,9 +373,17 @@ router.post(
               id: req.user.id,
             },
           },
+          contractor: {
+            connect: {
+              id: Number(contractorId),
+            },
+          },
+          wasteType: wasteType,
+          vehicleType: vehicleType,
         },
         include: {
           sts: true,
+          contractor: true,
         },
       });
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="?android:windowBackground"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="15dp">
+
+    <FrameLayout
+        android:id="@+id/userimage_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userimage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_logo"
+            app:civ_border_color="@color/colorPrimaryy"
+            app:civ_border_width="0dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="15dp"
+        android:layout_toStartOf="@+id/timestamp"
+        android:layout_toEndOf="@+id/userimage_holder"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/regular"
+            android:text="Getting User..."
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

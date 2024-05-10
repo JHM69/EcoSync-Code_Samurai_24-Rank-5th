@@ -107,6 +107,18 @@ const auth = {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   },
+  isContractorManager: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      console.log(req.user);
+      if (req.user && req.user.role.type === 'ContractorManager') {
+        next();
+      } else {
+        res.status(403).json({ message: 'Forbidden: Contractor Manager access required.' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
 };
 
 export default auth;

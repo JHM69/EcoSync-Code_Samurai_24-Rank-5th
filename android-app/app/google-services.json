@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "553141191660",
+    "firebase_url": "https://dncc-ecosync-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dncc-ecosync",
+    "storage_bucket": "dncc-ecosync.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553141191660:android:b5359d4bae4ef5b2eef6c9",
+        "android_client_info": {
+          "package_name": "com.quantum_guys.dncc_eco_sync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553141191660-56hh9u9gssv14n8pjm3jdmiqj2tb1ekh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quantum_guys.dncc_eco_sync",
+            "certificate_hash": "68ef3752ae1ddbeaecc11cbce16bc8575073ed95"
+          }
+        },
+        {
+          "client_id": "553141191660-b9vkolourdasb5rqad68bjgm8l4qvjhr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzO-591i6eOwZsSa2Qv5NqTSl0NP6tYTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553141191660-b9vkolourdasb5rqad68bjgm8l4qvjhr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

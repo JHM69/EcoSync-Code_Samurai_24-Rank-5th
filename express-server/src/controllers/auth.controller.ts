@@ -67,30 +67,4 @@ router.post('/auth/change-password', auth.required, async (req: Request, res: Re
 
 
 
-router.post('/auth/add-face-data', auth.required ,async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    console.log("add-face-data"+ req.body.faceData);
-    const {faceData } = req.body;
-
-    const {user} = req;
-    await authService.addFaceData(user.id, faceData);
-    res.status(200).json({ message: 'Error Adding Face' });
-  } catch (error) {
-    next(error);
-  }
-});
-
-
-router.get('/auth/face-auth', auth.required, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    return res.status(200).json({ message: 'Face Auth' });
-    console.log("face-auth");
-    const {user} = req;
-    const faceData = await authService.getFaceData(user.id);
-    res.status(200).json(faceData);
-  } catch (error) {
-    next(error);
-  }
-});
- 
 export default router;

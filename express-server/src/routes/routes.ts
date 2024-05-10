@@ -10,6 +10,8 @@ import billController from '../controllers/bill.controller';
 import dashboardController from '../controllers/dashboard.controller';
 import tripController from '../controllers/trip.controller';
 import tripPlanController from '../controllers/tripplan.controller';
+import contractorController from '../controllers/contractor.controller';
+import employeeController from '../controllers/employee.controller';
 
 const api = Router() 
   .use(usersController) 
@@ -21,6 +23,8 @@ const api = Router()
   .use(billController)
   .use(dashboardController)
   .use(tripController)
-  .use(tripPlanController);
+  .use(tripPlanController)
+  .use(contractorController)
+  .use(employeeController);
 
 export default Router().use('/', api);

@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText">
+
+
+    <item
+        android:id="@+id/action_post"
+        android:icon="@drawable/ic_send_blue_24dp"
+        android:orderInCategory="200"
+        android:title="Post"
+        android:visible="true"
+        app:showAsAction="always"
+        tools:ignore="HardcodedText" />
+
+</menu>

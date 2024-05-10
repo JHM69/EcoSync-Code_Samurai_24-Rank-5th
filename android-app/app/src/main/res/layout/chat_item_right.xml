@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        tools:ignore="RtlHardcoded">
+
+        <TextView
+            android:id="@+id/show_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_right"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="5dp"
+            android:text="hello"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="300dp"
+            tools:ignore="HardcodedText" />
+
+        <com.quantum_guys.dncc_eco_sync.messege.util.RoundRectCornerImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="false"
+            android:elevation="10dp"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/show_message"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_message"
+            app:layout_constraintWidth_max="260dp"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:text="8 min ago"
+            android:textSize="10sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView14"
+            app:layout_constraintTop_toBottomOf="@+id/show_message"
+            tools:ignore="HardcodedText,SmallSp" />
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="9dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_message"
+            app:srcCompat="@drawable/ic_check_circle_outline_24px__1_"
+            app:tint="?customColorValue"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

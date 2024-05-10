@@ -170,7 +170,7 @@ export const listRoles = async () => {
 // Function to assign a role to a user
 export const assignUserRole = async (userId: string, roleId: string) => {
   if (!userId || !roleId) throw new HttpException(400, 'Missing required fields: userId, roleId');
-  if (Number(roleId) > 4 || Number(roleId) < 1) throw new HttpException(400, 'Invalid roleId');
+  // if (Number(roleId) > 4 || Number(roleId) < 1) throw new HttpException(400, 'Invalid roleId');
 
   // check if user exists
   const user = await prisma.user.findUnique({ where: { id: Number(userId) } });

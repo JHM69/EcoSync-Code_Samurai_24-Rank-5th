@@ -1,0 +1,200 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorAccentt</item>
+        <item name="colorPrimaryDark">#7C4EAE</item>
+        <item name="colorAccent">@color/colorAccentt</item>
+        <item name="dialogSheetAccent">@color/colorAccentt</item>
+        <item name="actionBarPopupTheme">@style/AppTheme.PopupOverlay</item>
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="customColorValue">@color/colorAccentt</item>
+        <item name="rippleColor">#CEBBFA</item>
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="SplashAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/colorAccentt</item>
+        <item name="dialogSheetAccent">@color/colorAccentt</item>
+        <item name="android:fontFamily">@font/regular</item>
+    </style>
+
+    <style name="StepView">
+        <item name="sv_selectedCircleColor">@color/stepview_circle_selected</item>
+        <item name="sv_selectedCircleRadius">14dp</item>
+        <item name="sv_selectedTextColor">@color/stepview_text_selected</item>
+        <item name="sv_selectedStepNumberColor">@color/stepview_selected_number</item>
+        <item name="sv_stepNumberTextSize">12sp</item>
+        <item name="sv_doneStepMarkColor">@color/stepview_mark</item>
+        <item name="sv_doneCircleColor">@color/stepview_circle_done</item>
+        <item name="sv_doneCircleRadius">14dp</item>
+        <item name="sv_doneTextColor">@color/stepview_text_done</item>
+        <item name="sv_nextTextColor">@color/stepview_text_next</item>
+        <item name="sv_nextStepLineColor">@color/stepview_line_next</item>
+        <item name="sv_doneStepLineColor">@color/stepview_line_done</item>
+        <item name="sv_stepPadding">12dp</item>
+        <item name="sv_textPadding">12dp</item>
+        <item name="sv_stepLineWidth">0.5dp</item>
+        <item name="sv_animationDuration">200</item>
+        <item name="sv_textSize">14sp</item>
+        <item name="sv_animationType">Line</item>
+    </style>
+
+    <style name="ToolbarColoredBackArrow" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
+    <style name="TealTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#218B82</item>
+        <item name="colorPrimaryDark">#207E76</item>
+        <item name="customColorValue">#218B82</item>
+        <item name="colorAccent">#11675D</item>
+        <item name="rippleColor">#EEFBFA</item>
+
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+
+    <style name="VioleteTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#227BD3</item>
+        <item name="colorPrimaryDark">#2076CA</item>
+        <item name="colorAccent">#227BD3</item>
+        <item name="customColorValue">#227BD3</item>
+        <item name="rippleColor">#C0E7FD</item>
+
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+
+    <style name="Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#222222</item>
+        <item name="colorPrimaryDark">#272727</item>
+        <item name="colorAccent">#D1D1D1</item>
+        <item name="customColorValue">#ffffff</item>
+        <item name="rippleColor">#818181</item>
+        <item name="badgeTextColor">#232323</item>
+
+
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+
+    <style name="DelRio" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#AE8A8C</item>
+        <item name="colorPrimaryDark">#AE8A8C</item>
+        <item name="colorAccent">#A65E7B</item>
+        <item name="rippleColor">#FDE3EE</item>
+        <item name="customColorValue">#AE8A8C</item>
+
+
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+    <style name="PinkTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#C35976</item>
+        <item name="colorPrimaryDark">#C54B6C</item>
+        <item name="colorAccent">#9E1A4E</item>
+        <item name="rippleColor">#FBE7EF</item>
+        <item name="customColorValue">#C35976</item>
+
+        <item name="android:fontFamily">@font/regular</item>
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+    <style name="Lynch" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#698396</item>
+        <item name="colorPrimaryDark">#698396</item>
+        <item name="colorAccent">#496C85</item>
+        <item name="rippleColor">#D8ECFA</item>
+        <item name="customColorValue">#698396</item>
+
+        <item name="android:fontFamily">@font/regular</item>
+
+        <item name="android:windowActivityTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">  @android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
+    </style>
+
+
+
+</resources>

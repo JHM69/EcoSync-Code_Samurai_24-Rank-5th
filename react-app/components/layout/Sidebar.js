@@ -164,6 +164,13 @@ const Sidebar = () => {
                   isActive={router.pathname === '/'}
                 />
                  <Item
+                  text="Trip Plans"
+                  subtitle="Plan or Auto Generate the Truck Trips"
+                  icon="tripplan"
+                  href="/tripplan"
+                  isActive={router.pathname === '/tripplan'}
+                />
+                 <Item
                   text="Bills"
                   subtitle="Manage Bills & Payments"
                   icon="bills"
