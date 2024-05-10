@@ -146,6 +146,23 @@ router.get('/contractor/:id', auth.required, async (req: Request, res: Response)
     }
 });
 
+router.get('/contractor2/:id', auth.required, async (req: Request, res: Response) => {
+    try {
+        const contractor = await prisma.contractor.findUnique({
+            where: {
+                id: Number(req.params.id)
+            },
+            include: {
+                managers: true,
+                employees: true,
+            }
+        });
+        res.status(200).json(contractor);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 // delete a contractor by id
 router.delete('/contractor/:id', auth.required,auth.isSystemAdmin, async (req: Request, res: Response) => {
     try {

@@ -1,4 +1,4 @@
-package com.quantum_guys.dncc_eco_sync.ui.activities.friends;
+package com.quantum_guys.dncc_eco_sync.ui.activities.volunteer;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.userId;
@@ -67,7 +67,7 @@ import com.quantum_guys.dncc_eco_sync.notification.APIService;
 import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
 import com.quantum_guys.dncc_eco_sync.notification.NotificationSender;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.SelectTopic;
+import com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -387,7 +387,7 @@ public class FriendProfile extends AppCompatActivity {
 
 
             playMatchs.setOnClickListener(view -> {
-                Intent goBattle = new Intent(getActivity(), SelectTopic.class);
+                Intent goBattle = new Intent(getActivity(), MainActivity.class);
                 goBattle.putExtra("otherUid", id);
                 goBattle.putExtra("type", type);
                 requireActivity().startActivity(goBattle);

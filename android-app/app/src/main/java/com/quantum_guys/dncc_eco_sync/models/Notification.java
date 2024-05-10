@@ -8,7 +8,7 @@ public class Notification extends DocumentID {
     public Notification() {
     }
 
-    public Notification(String id, String notifyTo, String username, String image, String message, String timestamp, String type, String action_id, Boolean read) {
+    public Notification(String id, String notifyTo, String username, String image, String message, String timestamp, String type, String action_id, boolean read) {
         this.id = id;
         this.notifyTo = notifyTo;
         this.username = username;
@@ -90,9 +90,5 @@ public class Notification extends DocumentID {
 
     public void setRead(boolean read) {
         this.read = read;
-    }
-
-    public long getTimeStamp() {
-        return Long.parseLong(timestamp);
     }
 }

@@ -92,7 +92,7 @@ public class Post implements Serializable {
     }
 
     public String getDept() {
-        return dept;
+        return institute;
     }
 
     public void setDept(String dept) {

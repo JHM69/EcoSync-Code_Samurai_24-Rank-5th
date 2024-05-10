@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">স্বচ্ছ ঢাকা</string>
+    <string name="app_name">স্বচ্ছ ঢাকা (クリーンダッカ)</string>
     <string name="play_quiz">Start Trip</string>
     <string name="previous_quiz">Previous Quiz</string>
     <string name="hometask_by_jahangir_hossain">EcoSync by Quantum Guys</string>
