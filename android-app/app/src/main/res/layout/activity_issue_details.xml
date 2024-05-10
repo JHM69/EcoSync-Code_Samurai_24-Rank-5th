@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+    android:orientation="vertical"
+    tools:context=".ui.activities.issue.IssuesDetailsActivity">
+
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/round_background"
+        android:onClick="finishThis"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ef_ic_arrow_back"
+        tools:ignore="ContentDescription" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/comment_admin"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/logo_round"
+        app:layout_constraintBottom_toTopOf="@+id/sdsw"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/post_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/regular"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="@+id/comment_admin"
+        app:layout_constraintStart_toEndOf="@+id/comment_admin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.913"
+        tools:ignore="HardcodedText,MissingPrefix" />
+
+    <ImageView
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_delete_black_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/post_timestamp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#989898"
+        android:contentDescription="TODO"
+        tools:ignore="ContentDescription,HardcodedText" />
+
+    <TextView
+        android:id="@+id/post_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/delete_button"
+        android:layout_toEndOf="@id/post_username"
+        android:gravity="end"
+        app:layout_constraintBottom_toTopOf="@+id/sdsw"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText,MissingPrefix" />
+
+    <TextView
+        android:id="@+id/dept_institute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/comment_admin"
+        app:layout_constraintStart_toEndOf="@+id/comment_admin"
+        app:layout_constraintTop_toBottomOf="@+id/post_username"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="SmallSp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sdsw"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/comment_section"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dept_institute">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/react_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/coments"
+                app:layout_constraintEnd_toEndOf="@+id/comment_post_desc"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/comment_post_desc"
+                app:layout_constraintTop_toBottomOf="@+id/divider">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/onushod"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:id="@+id/onu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:background="@drawable/edit_text_bg"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="UselessParent">
+
+                            <Spinner
+                                android:id="@+id/spinner_states"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:backgroundTint="#FFFFFF"
+                                android:overlapAnchor="false"
+                                android:spinnerMode="dropdown" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:background="?android:windowBackground"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:text="Status"
+                            android:textColor="?customColorValue"
+                            android:textCursorDrawable="?customColorValue"
+                            app:layout_constraintBottom_toTopOf="@+id/onu"
+                            app:layout_constraintStart_toStartOf="@+id/onu"
+                            app:layout_constraintTop_toTopOf="@+id/onu" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/coments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/react_layout" />
+
+            <com.quantum_guys.dncc_eco_sync.utils.MathView
+                android:id="@+id/comment_post_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                app:setTextSize="10sp"
+                android:focusable="true"
+                android:padding="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:setTextColor="?android:textColorSecondary">
+
+            </com.quantum_guys.dncc_eco_sync.utils.MathView>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center|top"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/bg_like_circle_background"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/image_holder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comment_post_desc" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:layout_marginBottom="32dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_batti"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/image_holder"
+                tools:ignore="ContentDescription" />
+
+
+            <FrameLayout
+                android:id="@+id/image_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comment_post_desc">
+
+                <FrameLayout
+                    android:id="@+id/pager_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:visibility="visible"
+                    tools:ignore="UselessParent">
+
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top">
+
+                    </androidx.viewpager.widget.ViewPager>
+
+                    <RelativeLayout
+                        android:id="@+id/indicator_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:background="#30000000"
+                        android:padding="9dp"
+                        android:visibility="visible">
+
+                        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                            android:id="@+id/indicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            app:dotsColor="@color/white"
+                            app:dotsCornerRadius="8dp"
+                            app:dotsSize="6dp"
+                            app:dotsSpacing="4dp"
+                            app:dotsWidthFactor="2.5" />
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/comment_post_desc"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="#777777"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_holder"
+                tools:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/progressBar5"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/coments" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/adminActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deletePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="#C84441"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="Delete"
+            android:textColor="#FCFCFC"
+            tools:ignore="HardcodedText" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/approvePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/colorAccentt"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="Approve"
+            android:textColor="#FCFCFC"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/comment_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/adminActivity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            tools:ignore="UnusedAttribute"
+            tools:targetApi="m">
+
+
+            <ImageView
+                android:id="@+id/send"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/grad_uu"
+                android:backgroundTint="@color/colorSec"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:src="@drawable/ic_send_blue_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <com.quantum_guys.dncc_eco_sync.utils.RichEditor
+                android:id="@+id/text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/send"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView7"
+                app:layout_constraintTop_toTopOf="@+id/imageView7"
+                tools:ignore="RtlSymmetry" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView7"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text"
+                android:src="@drawable/logo_round"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/logo_round" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

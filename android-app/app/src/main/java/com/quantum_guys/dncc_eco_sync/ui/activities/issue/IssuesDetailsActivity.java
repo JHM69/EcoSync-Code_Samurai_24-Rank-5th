@@ -19,11 +19,14 @@ import android.transition.Explode;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +41,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,17 +56,16 @@ import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.adapters.CommentsAdapter;
 import com.quantum_guys.dncc_eco_sync.adapters.PostPhotosAdapter;
 import com.quantum_guys.dncc_eco_sync.models.Comment;
+import com.quantum_guys.dncc_eco_sync.models.Issue;
 import com.quantum_guys.dncc_eco_sync.models.MultipleImage;
 import com.quantum_guys.dncc_eco_sync.models.Notification;
-import com.quantum_guys.dncc_eco_sync.models.Post;
 import com.quantum_guys.dncc_eco_sync.models.Users;
 import com.quantum_guys.dncc_eco_sync.notification.APIService;
 import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
 import com.quantum_guys.dncc_eco_sync.notification.NotificationSender;
 import com.quantum_guys.dncc_eco_sync.repository.UserRepository;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
-import com.quantum_guys.dncc_eco_sync.ui.activities.post.WhoLikedActivity;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.Home;
 import com.quantum_guys.dncc_eco_sync.utils.AnimationUtil;
 import com.quantum_guys.dncc_eco_sync.utils.MathView;
@@ -72,9 +73,9 @@ import com.quantum_guys.dncc_eco_sync.utils.RichEditor;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -92,21 +93,21 @@ public class IssuesDetailsActivity extends AppCompatActivity {
     String user_id, post_id;
     MathView post_desc;
     TextView likeCount, saveCount;
-    int likCo, saveCo, comCo;
+
     ProgressBar mProgress;
     String userId;
     boolean owner;
-    Post post;
+    Issue issue;
     CollectionReference postDb;
     Users me;
     ImageView myImage;
     List<Comment> commentList = new ArrayList<>();
-    TextView CommentCount;
+
     RecyclerView mCommentsRecycler;
     private FirebaseFirestore mFirestore;
     private FirebaseUser mCurrentUser;
     private CircleImageView user_image;
-    private MaterialFavoriteButton sav_button, like_btn;
+
     private FrameLayout pager_layout;
     private RelativeLayout indicator_holder;
     private ViewPager pager;
@@ -118,8 +119,7 @@ public class IssuesDetailsActivity extends AppCompatActivity {
     boolean alreadyLiked;
     FrameLayout mImageholder;
     LinearLayout adminActivity;
-    View vBgLike;
-    ImageView ivLike;
+
     @SuppressLint({"SetTextI18n", "RtlHardcoded"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,7 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         getWindow().setEnterTransition(new Explode());
         getWindow().setExitTransition(new Explode());
-
+        mFirestore = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("Theme", Context.MODE_PRIVATE);
         String themeName = sharedPreferences.getString("ThemeName", "Default");
@@ -147,8 +147,8 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         } else {
             setTheme(R.style.AppTheme);
         }
-        setContentView(R.layout.activity_post_comments);
-        mFirestore = FirebaseFirestore.getInstance();
+        setContentView(R.layout.activity_issue_details);
+
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         user_image = findViewById(R.id.comment_admin);
@@ -157,35 +157,71 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         p_instTV = findViewById(R.id.dept_institute);
         postDb = FirebaseFirestore.getInstance().collection("Issues");
         timestampTV = findViewById(R.id.post_timestamp);
-        likeCount = findViewById(R.id.like_count);
-        saveCount = findViewById(R.id.save_count);
-        CommentCount = findViewById(R.id.textView8);
+
         mCommentsRecycler = findViewById(R.id.coments);
         adminActivity = findViewById(R.id.adminActivity);
-        like_btn = findViewById(R.id.like_button);
-        vBgLike = findViewById(R.id.vBgLike);
-        ivLike = findViewById(R.id.ivLike);
+
         pager = findViewById(R.id.pager);
         pager_layout = findViewById(R.id.pager_layout);
-        sav_button = findViewById(R.id.save_button);
+
         me = new UserRepository(getApplication()).getStaticUser();
         mImageholder = findViewById(R.id.image_holder);
         indicator2 = findViewById(R.id.indicator);
         indicator_holder = findViewById(R.id.indicator_holder);
 
 
-        approved = getIntent().getBooleanExtra("approveStatus", true);
-        alreadyLiked = getIntent().getBooleanExtra("alreadyLiked", false);
+
+        List<String> states = Arrays.asList(getResources().getStringArray(R.array.states));
+
+
+        Spinner spinner_states = findViewById(R.id.spinner_states);
+
+        ArrayAdapter<String> spinnerArrayAdapter_type = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, states);
+        spinner_states.setAdapter(spinnerArrayAdapter_type);
+
+        spinner_states.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                issue.setStates(states.get(i));
+
+                FirebaseFirestore.getInstance().collection("Issues")
+                        .document(issue.getPostId())
+                        .update("states", states.get(i))
+                        .addOnSuccessListener(aVoid -> {
+                            Notification notification = new Notification(issue.getPostId(),issue.getUserId(), me.getName(), me.getImage(), "Your issue status has been changed to "+ states.get(i), String.valueOf(System.currentTimeMillis()), "issue", issue.getPostId(), false);
+                            mFirestore.collection("Users")
+                                    .document(issue.getUserId())
+                                    .collection("Info_Notifications")
+                                    .document(notification.getId()).set(notification)
+                                    .addOnSuccessListener(documentReference -> new SendNotificationAsyncTask(notification).execute())
+                                    .addOnFailureListener(e -> Log.e("Error", e.getLocalizedMessage()));
+
+                            Toast.makeText(getApplicationContext(), "State updated", Toast.LENGTH_SHORT).show();
+
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText( getApplicationContext(), "Error updating state", Toast.LENGTH_SHORT).show();
+                        });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        }
+        );
 
 
 
-        post = (Post) getIntent().getSerializableExtra("post");
+
+        issue = (Issue) getIntent().getSerializableExtra("issue");
         if(userId==null) finish();
-        if(post != null) {
-            setUpData(post);
+        if(issue != null) {
+            setUpData(issue);
         }else{
             ProgressDialog mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Please wait. Loading post...");
+            mDialog.setMessage("Please wait. Loading issue...");
             mDialog.setIndeterminate(true);
             mDialog.setCanceledOnTouchOutside(false);
             mDialog.setCancelable(false);
@@ -193,74 +229,73 @@ public class IssuesDetailsActivity extends AppCompatActivity {
             String link = getIntent().getData().toString();
             String id = link.substring(link.lastIndexOf("/") + 1);
 
-            FirebaseFirestore.getInstance().collection("Posts")
+            FirebaseFirestore.getInstance().collection("Issues")
                     .document(id)
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         mDialog.dismiss();
                         try {
-                            post = documentSnapshot.toObject(Post.class);
-                            if(post!=null) setUpData(post);
+                            issue = documentSnapshot.toObject(Issue.class);
+                            if(issue!=null) setUpData(issue);
                             else{
                                 Log.d("ErrorPost", id);
-                                Toast.makeText(this, "Error Post", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Error Issue", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         }catch (Exception a){
                             Log.d("ErrorPost", a.getLocalizedMessage());
-                            Toast.makeText(this, "Error Post", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Error Issue", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                 }).addOnFailureListener(e -> {
                 mDialog.dismiss();
-                    Toast.makeText(IssuesDetailsActivity.this, "Post not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(IssuesDetailsActivity.this, "Issue not found", Toast.LENGTH_SHORT).show();
                     finish();
                 });
+
         }
     }
 
     @SuppressLint("SetTextI18n")
-    void setUpData(Post post){
+    void setUpData(Issue issue){
         if (!approved && ADMIN_UID_LIST.contains(userId)) {
-            Toast.makeText(this, "Approve or Delete this Post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Approve or Delete this Issue", Toast.LENGTH_SHORT).show();
             adminActivity.setVisibility(View.VISIBLE);
-            findViewById(R.id.approvePost).setOnClickListener(view -> approvePost(post));
-            findViewById(R.id.deletePost).setOnClickListener(view -> deletePost(post.getPostId()));
+            findViewById(R.id.approvePost).setOnClickListener(view -> approvePost(issue));
+            findViewById(R.id.deletePost).setOnClickListener(view -> deletePost(issue.getPostId()));
         } else {
             adminActivity.setVisibility(View.GONE);
         }
 
-        if (post.getImage_count() > 0) {
+        if (issue.getImage_count() > 0) {
             mImageholder.setVisibility(View.VISIBLE);
         } else {
             mImageholder.setVisibility(View.GONE);
         }
 
 
-        user_id = post.getUserId();
-        post_desc.setDisplayText(post.getDescription());
-        // p_instTV.setText(post.getDept() + ", " + post.getInstitute());
+
+        user_id = issue.getUserId();
+        post_desc.setDisplayText(issue.getDescription());
+        // p_instTV.setText(issue.getDept() + ", " + issue.getInstitute());
 
 
         try {
-            if (post.getInstitute() == null) {
-                p_instTV.setText(post.getDept());
-            } else if (post.getDept() == null) {
-                p_instTV.setText(post.getInstitute());
+            if (issue.getInstitute() == null) {
+                p_instTV.setText(issue.getDept());
+            } else if (issue.getDept() == null) {
+                p_instTV.setText(issue.getInstitute());
             } else {
-                p_instTV.setText(post.getDept() + ", " + post.getInstitute());
+                p_instTV.setText(issue.getDept() + ", " + issue.getInstitute());
             }
         }catch (Exception j){
-            p_instTV.setText(post.getDept());
+            p_instTV.setText(issue.getDept());
         }
 
-        p_nameTV.setText(post.getName());
-        timestampTV.setText(TimeAgo.using(Long.parseLong(Objects.requireNonNull(post.getTimestamp()))));
+        p_nameTV.setText(issue.getName());
+        timestampTV.setText(TimeAgo.using(Long.parseLong(Objects.requireNonNull(issue.getTimestamp()))));
         setupCommentView();
-        getLikeandFav(post);
-        setStatData(post);
 
-        likeCount.setOnClickListener(view -> view.getContext().startActivity(new Intent(view.getContext(), WhoLikedActivity.class).putExtra("postId", post.getPostId()).putExtra("type", "Liked_Users")));
 
 
 
@@ -272,7 +307,7 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         myImage = findViewById(R.id.imageView7);
 
         commentList = new ArrayList<>();
-        mAdapter = new CommentsAdapter(commentList, this, owner, post.getComment_count());
+        mAdapter = new CommentsAdapter(commentList, this, owner, issue.getComment_count());
         mCommentsSend.setOnClickListener(view -> {
             String comment = mCommentText.getHtml();
             if (!TextUtils.isEmpty(comment))
@@ -294,8 +329,8 @@ public class IssuesDetailsActivity extends AppCompatActivity {
                 .into(myImage);
     }
 
-    private void approvePost(Post post) {
-        post.setLike_count(0);
+    private void approvePost(Issue issue) {
+        issue.setLike_count(0);
         final ProgressDialog mDialog = new ProgressDialog(this);
         mDialog.setMessage("Approving...");
         mDialog.setIndeterminate(true);
@@ -303,11 +338,11 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
         postDb
-                .document(post.getPostId())
-                .set(post).addOnSuccessListener(aVoid -> {
-            addToNotification("An Admin Approved Your Post", "post");
-            mFirestore.collection("PendingPosts")
-                    .document(post.getPostId()).delete();
+                .document(issue.getPostId())
+                .set(issue).addOnSuccessListener(aVoid -> {
+            addToNotification("An Admin Approved Your Issue", "issue");
+            mFirestore.collection("Issues")
+                    .document(issue.getPostId()).delete();
             mDialog.dismiss();
             Toasty.success(getApplicationContext(), "Approved", Toasty.LENGTH_SHORT, true).show();
             finish();
@@ -322,9 +357,9 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         mDialog.setCancelable(false);
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
-        mFirestore.collection("PendingPosts")
+        mFirestore.collection("Issues")
                 .document(Id).delete().addOnSuccessListener(aVoid -> {
-                    addToNotification("An Admin Deleted Your Post, Try posting good contents only.", "");
+                    addToNotification("An Admin Deleted Your Issue, Try posting good contents only.", "");
                     mDialog.dismiss();
                     Toasty.success(getApplicationContext(), "Done", Toasty.LENGTH_SHORT, true).show();
                     finish();
@@ -334,21 +369,21 @@ public class IssuesDetailsActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void setupCommentView() {
-        if (post.getImage_count() == 0) {
+        if (issue.getImage_count() == 0) {
             pager_layout.setVisibility(View.GONE);
-        } else if (post.getImage_count() == 1) {
+        } else if (issue.getImage_count() == 1) {
             pager_layout.setVisibility(View.VISIBLE);
             ArrayList<MultipleImage> multipleImages = new ArrayList<>();
-            PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, this, multipleImages, false, post.getPostId(), like_btn, post.getUserId(), true);
-            setUrls(multipleImages, photosAdapter, post);
+            PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, this, multipleImages, false, issue.getPostId(), null, issue.getUserId(), true);
+            setUrls(multipleImages, photosAdapter, issue);
             pager.setAdapter(photosAdapter);
             indicator_holder.setVisibility(View.GONE);
             photosAdapter.notifyDataSetChanged();
             pager_layout.setVisibility(View.VISIBLE);
         } else {
             ArrayList<MultipleImage> multipleImages = new ArrayList<>();
-            PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, this, multipleImages, false, post.getPostId(), like_btn, post.getUserId(), true);
-            setUrls(multipleImages, photosAdapter, post);
+            PostPhotosAdapter photosAdapter = new PostPhotosAdapter(Home.context, this, multipleImages, false, issue.getPostId(), null, issue.getUserId(), true);
+            setUrls(multipleImages, photosAdapter, issue);
 
             pager.setAdapter(photosAdapter);
             photosAdapter.notifyDataSetChanged();
@@ -384,10 +419,10 @@ public class IssuesDetailsActivity extends AppCompatActivity {
                         .into(user_image))
                 .addOnFailureListener(e -> Log.e("error", e.getLocalizedMessage()));
         p_nameTV.setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), FriendProfile.class).putExtra("f_id", post.getUserId()));
+            startActivity(new Intent(getApplicationContext(), FriendProfile.class).putExtra("f_id", issue.getUserId()));
         });
         p_instTV.setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), FriendProfile.class).putExtra("f_id", post.getUserId()));
+            startActivity(new Intent(getApplicationContext(), FriendProfile.class).putExtra("f_id", issue.getUserId()));
         });
 
     }
@@ -412,16 +447,16 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
-    private void setUrls(ArrayList<MultipleImage> multipleImages, PostPhotosAdapter photosAdapter, Post post) {
+    private void setUrls(ArrayList<MultipleImage> multipleImages, PostPhotosAdapter photosAdapter, Issue issue) {
         String url0, url1, url2, url3, url4, url5, url6;
 
-        url0 = post.getImage_url_0();
-        url1 = post.getImage_url_1();
-        url2 = post.getImage_url_2();
-        url3 = post.getImage_url_3();
-        url4 = post.getImage_url_4();
-        url5 = post.getImage_url_5();
-        url6 = post.getImage_url_6();
+        url0 = issue.getImage_url_0();
+        url1 = issue.getImage_url_1();
+        url2 = issue.getImage_url_2();
+        url3 = issue.getImage_url_3();
+        url4 = issue.getImage_url_4();
+        url5 = issue.getImage_url_5();
+        url6 = issue.getImage_url_6();
 
         if (!TextUtils.isEmpty(url0)) {
             MultipleImage image = new MultipleImage(url0);
@@ -482,215 +517,29 @@ public class IssuesDetailsActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    private void getLikeandFav(Post post) {
-        like_btn.setFavorite(alreadyLiked);
-        like_btn.setOnFavoriteChangeListener((buttonView, favorite) -> {
-            updateLike(post.getPostId());
-        });
+  
 
-
-        try {
-            postDb.document(post.getPostId())
-                    .collection("Saved_Users")
-                    .document(mCurrentUser.getUid())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-
-                        if (documentSnapshot.exists()) {
-                            boolean fav = documentSnapshot.getBoolean("Saved");
-
-                            sav_button.setFavorite(fav, false);
-                        } else {
-                            Log.e("Fav", "No document found");
-
-                        }
-
-                        if (isOnline()) {
-                            sav_button.setOnFavoriteChangeListener((buttonView, favorite) -> {
-                                Map<String, Object> favMap = new HashMap<>();
-                                if (favorite) {
-                                    favMap.put("Saved", true);
-
-                                    try {
-
-                                        mFirestore.collection("Posts")
-                                                .document(post.getPostId())
-                                                .collection("Saved_Users")
-                                                .document(mCurrentUser.getUid())
-                                                .set(favMap)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    saveCo++;
-                                                    saveCount.setText(String.valueOf(saveCo));
-
-                                                    Map<String, Object> postMap = new HashMap<>();
-                                                    postMap.put("postId", post.getPostId());
-                                                    postMap.put("userId", post.getUserId());
-                                                    postMap.put("name", post.getName());
-                                                    postMap.put("username", post.getUsername());
-                                                    postMap.put("institute", post.getInstitute());
-                                                    postMap.put("dept", post.getDept());
-                                                    postMap.put("timestamp", post.getTimestamp());
-                                                    postMap.put("image_count", post.getImage_count());
-                                                    postMap.put("description", post.getDescription());
-
-                                                    try {
-                                                        postMap.put("image_url_0", post.getImage_url_0());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        postMap.put("image_url_1", post.getImage_url_1());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        postMap.put("image_url_2", post.getImage_url_2());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        postMap.put("image_url_3", post.getImage_url_3());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        postMap.put("image_url_4", post.getImage_url_4());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        postMap.put("image_url_5", post.getImage_url_5());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        postMap.put("image_url_6", post.getImage_url_6());
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-
-                                                    mFirestore.collection("Users")
-                                                            .document(mCurrentUser.getUid())
-                                                            .collection("Saved_Posts")
-                                                            .document(post.getPostId())
-                                                            .set(postMap)
-                                                            .addOnSuccessListener(aVoid12 -> {
-                                                                // Toast.makeText(context, "Added to Saved_Posts, post '" + post.postId, Toast.LENGTH_SHORT).show();
-                                                            }).addOnFailureListener(e -> Log.e("Error add fav", e.getMessage()));
-                                                })
-                                                .addOnFailureListener(e -> Log.e("Error fav", e.getMessage()));
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    favMap.put("Saved", false);
-                                    try {
-                                        mFirestore.collection("Posts")
-                                                .document(post.getPostId())
-                                                .collection("Saved_Users")
-                                                .document(mCurrentUser.getUid())
-                                                //.set(favMap)
-                                                .delete()
-                                                .addOnSuccessListener(aVoid -> {
-                                                    saveCo--;
-                                                    saveCount.setText(String.valueOf(saveCo));
-                                                    mFirestore.collection("Users")
-                                                            .document(mCurrentUser.getUid())
-                                                            .collection("Saved_Posts")
-                                                            .document(post.getPostId())
-                                                            .delete()
-                                                            .addOnSuccessListener(aVoid1 -> {
-                                                                // Toast.makeText(context, "Removed from Saved_Posts, post '" + post.postId, Toast.LENGTH_SHORT).show();
-                                                            })
-                                                            .addOnFailureListener(e -> Log.e("Error remove fav", e.getMessage()));
-
-                                                })
-                                                .addOnFailureListener(e -> Log.e("Error fav", e.getMessage()));
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
-                    })
-                    .addOnFailureListener(e -> Log.e("Error Fav", e.getMessage()));
-        } catch (NullPointerException ignored) {
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    void setStatData(Post post) {
-        likeCount.setText(String.valueOf(post.getLiked_count()));
-    }
-
-    @SuppressLint("SetTextI18n")
-    public void updateLike(String postId) {
-        int postLikes = post.getLiked_count();
-        if(!alreadyLiked){
-            postLikes++;
-            try {
-                Map<String, Boolean> likeMap = new HashMap<>();
-                likeMap.put("liked", true);
-                postDb.document(postId)
-                        .collection("Liked_Users")
-                        .document(mCurrentUser.getUid())
-                        .set(likeMap)
-                        .addOnSuccessListener(aVoid -> {
-                            alreadyLiked=true;
-                                addToNotification("Liked your post", "like");
-                        })
-                        .addOnFailureListener(e -> Log.e("Error like", e.getMessage()));
-            } catch (Exception ignored) {
-            }
-        }else{
-            postLikes--;
-            try {
-                mFirestore.collection("Posts")
-                        .document(postId)
-                        .collection("Liked_Users")
-                        .document(mCurrentUser.getUid())
-                        //.set(likeMap)
-                        .delete()
-                        .addOnSuccessListener(aVoid -> {
-                            alreadyLiked=true;
-                            //holder.like_count.setText(String.valueOf(Integer.parseInt(holder.like_count.getText().toString())-1));
-                            //Toast.makeText(context, "Unliked post '" + post.postId, Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> Log.e("Error unlike", e.getMessage()));
-            } catch (Exception ignored) {
-            }
-        }
-        likeCount.setText(String.valueOf(postLikes));
-        HashMap<String, Object> scoreMap = new HashMap<>();
-        scoreMap.put("liked_count", postLikes);
-        mFirestore
-                .collection("Posts")
-                .document(postId)
-                .update(scoreMap).addOnSuccessListener(aVoid -> {
-        });
-    }
 
     @SuppressLint("SetTextI18n")
     public void updateComment() {
         try {
-            int com_count = post.getComment_count()+1;
+            int com_count = issue.getComment_count()+1;
             HashMap<String, Object> scoreMap = new HashMap<>();
             scoreMap.put("comment_count", com_count);
             mFirestore.collection("Posts")
-                    .document(post.getPostId())
+                    .document(issue.getPostId())
                     .update(scoreMap).addOnSuccessListener(aVoid -> {
-                        CommentCount.setText("   "+com_count);
+
             });
         } catch (NullPointerException ignored) {
 
         }
     }
     private void addToNotification(String message, String type) {
-        if (!post.getUserId().equals(me.getId())) {
-            Notification notification = new Notification(post.getPostId(),post.getUserId(), me.getName(), me.getImage(), message, String.valueOf(System.currentTimeMillis()), type, post.getPostId(), false);
+        if (!issue.getUserId().equals(me.getId())) {
+            Notification notification = new Notification(issue.getPostId(),issue.getUserId(), me.getName(), me.getImage(), message, String.valueOf(System.currentTimeMillis()), type, issue.getPostId(), false);
             mFirestore.collection("Users")
-                    .document(post.getUserId())
+                    .document(issue.getUserId())
                     .collection("Info_Notifications")
                     .document(notification.getId()).set(notification)
                     .addOnSuccessListener(documentReference -> new SendNotificationAsyncTask(notification).execute())
@@ -706,17 +555,17 @@ public class IssuesDetailsActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void sendComment(final String comment, final ProgressBar mProgress) {
         mProgress.setVisibility(View.VISIBLE);
-        String commentId = getSaltString();
-        Comment comment1 = new Comment(me.getId(), me.getName(), me.getImage(), post.getPostId(), comment, String.valueOf(System.currentTimeMillis()), commentId);
+        String commentId =  getSaltString();
+        Comment comment1 = new Comment(me.getId(), me.getName(), me.getImage(), issue.getPostId(), comment, String.valueOf(System.currentTimeMillis()), commentId);
         mCommentText.setHtml("");
         mFirestore.collection("Posts")
-                .document(post.getPostId())
+                .document(issue.getPostId())
                 .collection("Comments")
                 .document(commentId)
                 .set(comment1)
                 .addOnSuccessListener(documentReference -> {
                     mProgress.setVisibility(View.GONE);
-                    addToNotification("Commented on your post", "comment");
+                    addToNotification("Commented on your issue", "comment");
                     updateComment();
                     Toasty.success(IssuesDetailsActivity.this, "Comment added", Toasty.LENGTH_SHORT, true).show();
                     mAdapter.notifyDataSetChanged();
@@ -733,10 +582,10 @@ public class IssuesDetailsActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     private void getComments(final ProgressBar mProgress) {
-        CommentCount.setText("   " + post.getComment_count());
+
         mProgress.setVisibility(View.VISIBLE);
         mFirestore.collection("Posts")
-                .document(post.getPostId())
+                .document(issue.getPostId())
                 .collection("Comments")
                 .orderBy("timestamp", Query.Direction.DESCENDING).limit(15)
                 .addSnapshotListener(this, (querySnapshot, e) -> {

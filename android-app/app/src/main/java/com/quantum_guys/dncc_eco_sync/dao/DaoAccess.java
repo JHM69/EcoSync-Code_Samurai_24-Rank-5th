@@ -13,8 +13,6 @@ import com.quantum_guys.dncc_eco_sync.messege.model.Chat;
 import com.quantum_guys.dncc_eco_sync.messege.model.Chatlist;
 import com.quantum_guys.dncc_eco_sync.models.Post;
 import com.quantum_guys.dncc_eco_sync.models.Users;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.BattleModel;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.Result;
 
 import java.util.List;
 
@@ -78,45 +76,6 @@ public interface DaoAccess {
     @Query("UPDATE Users SET reward=:score WHERE id = :id")
     void setXp(int score, String id);
 
-    //------------Offline quize result handling
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertResult(BattleModel battleModel);
-
-    @Query("SELECT * FROM BattleModel WHERE battleId =:taskId")
-    LiveData<BattleModel> getResult(String taskId);
-
-
-    @Query("SELECT * FROM BattleModel WHERE battleId =:taskId")
-    BattleModel getBattleOffline(String taskId);
-
-
-    @Query("SELECT * FROM BattleModel ORDER BY timestamp")
-    LiveData<List<BattleModel>> getAllResult();
-
-    @Query("DELETE FROM BattleModel WHERE battleId = :result")
-    void deleteResult(String result);
-
-
-    //------------Offline quize result handling
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertBattleResult(Result result);
-
-    @Query("SELECT * FROM Result WHERE battleId =:taskId")
-    LiveData<Result> getResultOfBattle(String taskId);
-
-    @Query("SELECT * FROM Result ORDER BY timestamp")
-    LiveData<List<Result>> getAllResultOfBattle();
-
-    @Query("SELECT * FROM Result WHERE battleId =:id")
-    Result resultExists(String id);
-
-    @Delete
-    void deleteResultOfBattle(Result result);
-
-    @Update
-    void updateResultOfBattle(Result result);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPost(Post post);
@@ -130,10 +89,6 @@ public interface DaoAccess {
     @Delete
     void deletePost(Post result);
 
-    @Query("SELECT * FROM Result WHERE `action` =:x ORDER BY timestamp")
-    LiveData<List<Result>> getAllInvites(int x);
-    @Query("SELECT * FROM Result WHERE `battleId` =:battleIdNew")
-    Result getNewResult(String battleIdNew);
 
     @Query("SELECT * FROM Chatlist ORDER BY lastTimestamp DESC")
     LiveData<List<Chatlist>> getAllUser();

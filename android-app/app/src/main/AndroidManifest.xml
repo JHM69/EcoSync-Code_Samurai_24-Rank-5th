@@ -30,10 +30,8 @@
         tools:ignore="AllowBackup"
         tools:targetApi="m">
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.account.EditProfile" />
-        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.SelectTopic" />
-        <activity
-            android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.SubTopic"
-            android:noHistory="true" />
+
+
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.SinglePostView" />
 
 
@@ -64,9 +62,9 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.ResultActivity" />
+
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.WhoLikedActivity" />
-        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.MapView" />
+        <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.nearbysts.MapView" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostText" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.messege.activity.MessageActivity" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.post.PostImage" />
@@ -74,16 +72,7 @@
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.PostIssue" />
         <activity android:name="com.quantum_guys.dncc_eco_sync.ui.activities.issue.SingleIssueView" />
 
-        <activity
-            android:name="com.quantum_guys.dncc_eco_sync.ui.activities.quiz.QuizBattle"
-            android:exported="true"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="org.jhm69.battle_of_quiz.TARGET_PLAY" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+
         <activity
             android:name="com.quantum_guys.dncc_eco_sync.ui.activities.Splash"
             android:exported="true"
@@ -124,13 +113,13 @@
             android:name="com.quantum_guys.dncc_eco_sync.ui.activities.notification.ImagePreviewSave"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.quantum_guys.dncc_eco_sync.ui.activities.friends.SearchUsersActivity"
+            android:name="com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.SearchUsersActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile"
+            android:name="com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter android:label="View User Profile">

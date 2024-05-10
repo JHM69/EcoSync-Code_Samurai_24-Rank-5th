@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_search_users_scene"
-    tools:context="com.quantum_guys.dncc_eco_sync.ui.activities.friends.SearchUsersActivity">
+    tools:context="com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.SearchUsersActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/usersList"

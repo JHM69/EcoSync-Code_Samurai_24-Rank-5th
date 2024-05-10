@@ -58,53 +58,53 @@ export default function VehicleEntry () {
     }
   }, [contractorId])
 
-  // useEffect(() => {
-  //   if (contractorId === null) return
-  //   setLoading(true)
-  //   const token = localStorage.getItem('token')
-  //   if (token.length > 0) {
-  //     axios
-  //       .get(getBaseUrl() + `/contractor/${contractorId}/entry`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-  //       })
-  //       .then((res) => {
-  //         console.log(res.data)
-  //         res.data.sort((a, b) => b.id - a.id)
-  //         setContractorEntries(res.data)
-  //         setLoading(false)
-  //       })
-  //       .catch((err) => {
-  //         setLoading(false)
-  //         console.log(err)
-  //       })
-  //   }
-  // }, [contractorId])
+  useEffect(() => {
+    if (contractorId === null) return
+    setLoading(true)
+    const token = localStorage.getItem('token')
+    if (token.length > 0) {
+      axios
+        .get(getBaseUrl() + `/contractor/${contractorId}/employees`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          res.data.sort((a, b) => b.id - a.id)
+          setContractorEntries(res.data)
+          setLoading(false)
+        })
+        .catch((err) => {
+          setLoading(false)
+          console.log(err)
+        })
+    }
+  }, [contractorId])
 
-  // useEffect(() => {
-  //   if (contractorId === null) return
-  //   setLoading(true)
-  //   const token = localStorage.getItem('token')
-  //   if (token.length > 0) {
-  //     axios
-  //       .get(getBaseUrl() + `/contractor/${contractorId}/add`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-  //       })
-  //       .then((res) => {
-  //         console.log(res.data)
-  //         res.data.sort((a, b) => b.id - a.id)
-  //         setWasteEntries(res.data)
-  //         setLoading(false)
-  //       })
-  //       .catch((err) => {
-  //         setLoading(false)
-  //         console.log(err)
-  //       })
-  //   }
-  // }, [contractorId])
+  useEffect(() => {
+    if (contractorId === null) return
+    setLoading(true)
+    const token = localStorage.getItem('token')
+    if (token.length > 0) {
+      axios
+        .get(getBaseUrl() + `/contractor/${contractorId}/add`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          res.data.sort((a, b) => b.id - a.id)
+          setWasteEntries(res.data)
+          setLoading(false)
+        })
+        .catch((err) => {
+          setLoading(false)
+          console.log(err)
+        })
+    }
+  }, [contractorId])
 
   return (
     <NoSSR>
@@ -145,10 +145,10 @@ export default function VehicleEntry () {
       </div>
 
       <div className="flex flex-row gap-3 md:px-6">
-        <div className="flex w-2/3   flex-col">
+        <div className="flex w-full flex-col">
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">
-              Contractor Entries{' '}
+              Employee Entries{' '}
             </h1>
             <div className="flex items-center space-x-2">
                 {contractorId && <AddContractorEntry contractorId={contractorId} />}  
@@ -161,7 +161,7 @@ export default function VehicleEntry () {
           )}
         </div>
 
-        <div className="flex w-1/3   flex-col">
+        {/* <div className="flex w-1/3   flex-col">
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">
               Waste Entries
@@ -175,7 +175,7 @@ export default function VehicleEntry () {
           ) : (
             <WasteEntryItems wasteEntries={wasteEntries} />
           )}
-        </div>
+        </div> */}
       </div>
     </div>
     </NoSSR>

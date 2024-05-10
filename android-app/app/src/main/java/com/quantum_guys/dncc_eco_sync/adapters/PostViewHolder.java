@@ -1,5 +1,6 @@
 package com.quantum_guys.dncc_eco_sync.adapters;
 
+import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.ADMIN_UID_LIST;
 import static com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity.userId;
 
 import android.annotation.SuppressLint;
@@ -47,8 +48,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
-
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.models.MultipleImage;
 import com.quantum_guys.dncc_eco_sync.models.Notification;
@@ -57,7 +56,7 @@ import com.quantum_guys.dncc_eco_sync.notification.APIService;
 import com.quantum_guys.dncc_eco_sync.notification.Client;
 import com.quantum_guys.dncc_eco_sync.notification.MyResponse;
 import com.quantum_guys.dncc_eco_sync.notification.NotificationSender;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 import com.quantum_guys.dncc_eco_sync.ui.activities.post.CommentsActivity;
 import com.quantum_guys.dncc_eco_sync.ui.activities.post.WhoLikedActivity;
 import com.quantum_guys.dncc_eco_sync.ui.fragment.Home;
@@ -65,12 +64,12 @@ import com.quantum_guys.dncc_eco_sync.ui.fragment.PostMenu;
 import com.quantum_guys.dncc_eco_sync.utils.MathView;
 import com.quantum_guys.dncc_eco_sync.viewmodel.PostViewModel;
 import com.quantum_guys.dncc_eco_sync.viewmodel.UserViewModel;
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -91,9 +90,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     CollectionReference postDb = FirebaseFirestore.getInstance().collection("Posts");
     private final MathView post_desc;
     @SuppressLint("NewApi")
-    private final Set<String> ADMIN_UID_LIST = Set.of(
-            "0h9MvJiFvFWRBiOoHzUcGlqJe2m2", "eSW24hxmW6YmbaInd2OlrsWx0Rw1"
-    );
+
     private final MaterialFavoriteButton sav_button;
     private final MaterialFavoriteButton like_btn;
     private final MaterialFavoriteButton stat_btn;

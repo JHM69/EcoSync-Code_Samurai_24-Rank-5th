@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.models.FriendRequest;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 
 import java.util.HashMap;
 import java.util.List;

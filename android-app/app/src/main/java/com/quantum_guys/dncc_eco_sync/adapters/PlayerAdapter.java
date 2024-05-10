@@ -2,7 +2,6 @@ package com.quantum_guys.dncc_eco_sync.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.models.Player;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.SelectTopic;
 
 import java.util.List;
 
@@ -78,11 +75,11 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
                 .load(users.getImage())
                 .into(holder.image);
         final String userid = users.getId();
-        holder.mView.setOnClickListener(view -> {
-            Intent goBattle = new Intent(context, SelectTopic.class);
-            goBattle.putExtra("otherUid", userid);
-            context.startActivity(goBattle);
-        });
+//        holder.mView.setOnClickListener(view -> {
+//            Intent goBattle = new Intent(context, SelectTopic.class);
+//            goBattle.putExtra("otherUid", userid);
+//            context.startActivity(goBattle);
+//        });
     }
 
     @Override

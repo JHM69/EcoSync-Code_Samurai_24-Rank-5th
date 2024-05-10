@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
@@ -67,6 +66,15 @@ public class UploadService extends Service {
 
                 Uri myUri = intent.getParcelableExtra("image");
                 String userid = intent.getStringExtra("userid");
+
+                String posttype = intent.getStringExtra("posttype");
+                boolean isAnonymous = intent.getBooleanExtra("isAnonymous", false);
+                double lat = intent.getDoubleExtra("lat", 0);
+                double lon = intent.getDoubleExtra("lon", 0);
+                String address = intent.getStringExtra("address");
+
+
+
                 String fuserId = intent.getStringExtra("fuser");
                 Log.d("========", String.valueOf(myUri));
 
@@ -75,7 +83,7 @@ public class UploadService extends Service {
                     sendMessage((int) System.currentTimeMillis(), fuserId, userid, myUri, userid, fuserId);
                 } else if (tag != null && uploadedImagesUrl != null) {
                     Toast.makeText(this, "posting", Toast.LENGTH_SHORT).show();
-                    uploadImages(notification_id, 0, imagesList, current_id, description, uploadedImagesUrl, tag);
+                    uploadImages(notification_id, 0, imagesList, current_id, description, uploadedImagesUrl, tag, posttype, lat, lon, address, isAnonymous);
                 } else {
                     Toast.makeText(this, "not sending", Toast.LENGTH_SHORT).show();
                 }
@@ -126,7 +134,8 @@ public class UploadService extends Service {
         startForeground(id, builder.build());
     }
 
-    private void uploadImages(final int notification_id, final int index, final List<Images> imagesList, String currentUser_id, String description, ArrayList<String> uploadedImagesUrl, String tag) {
+    private void uploadImages(final int notification_id, final int index, final List<Images> imagesList, String currentUser_id, String description, ArrayList<String> uploadedImagesUrl, String tag,
+                              String posttype, double lat, double lon, String address, boolean isAnonymous) {
 
         int img_count = index + 1;
         Uri imageUri;
@@ -150,13 +159,13 @@ public class UploadService extends Service {
                             int next_index = index + 1;
                             try {
                                 if (!TextUtils.isEmpty(imagesList.get(index + 1).getOg_path())) {
-                                    uploadImages(notification_id, next_index, imagesList, currentUser_id, description, uploadedImagesUrl, tag);
+                                    uploadImages(notification_id, next_index, imagesList, currentUser_id, description, uploadedImagesUrl, tag , posttype, lat, lon, address, isAnonymous);
                                 } else {
-                                    uploadPost(notification_id, currentUser_id, description, uploadedImagesUrl, tag);
+                                    uploadPost(notification_id, currentUser_id, description, uploadedImagesUrl, tag, posttype, lat, lon, address, isAnonymous);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                uploadPost(notification_id, currentUser_id, description, uploadedImagesUrl, tag);
+                                uploadPost(notification_id, currentUser_id, description, uploadedImagesUrl, tag, posttype, lat, lon, address, isAnonymous);
                             }
 
                         })
@@ -192,7 +201,7 @@ public class UploadService extends Service {
 
     }
 
-    private void uploadPost(int notification_id, String currentUser_id, String description, ArrayList<String> uploadedImagesUrl, String tag) {
+    private void uploadPost(int notification_id, String currentUser_id, String description, ArrayList<String> uploadedImagesUrl, String tag, String posttype, double lat, double lon, String address, boolean isAnonymous) {
 
         if (!uploadedImagesUrl.isEmpty()) {
 
@@ -217,6 +226,7 @@ public class UploadService extends Service {
 
                         postMap.put("userId", documentSnapshot.getString("id"));
                         postMap.put("username", documentSnapshot.getString("username"));
+                        postMap.put("ward", documentSnapshot.getString("ward"));
                         postMap.put("institute", documentSnapshot.getString("institute"));
                         postMap.put("dept", documentSnapshot.getString("dept"));
                         postMap.put("name", documentSnapshot.getString("name"));
@@ -268,23 +278,56 @@ public class UploadService extends Service {
                         Map<String, Object> postMapFinal = new HashMap<>();
                         postMapFinal.put(getSaltString(), postMap);
 
-                        FirebaseFirestore.getInstance().collection("PendingPosts")
-                                .document(idll)
-                                .set(postMap)
-                                .addOnSuccessListener(documentReference -> {
-                                    getSharedPreferences("uploadservice", MODE_PRIVATE)
-                                            .edit()
-                                            .putInt("count", --count).apply();
-                                    // Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.study_forum))
-                                    Toasty.success(getApplicationContext(), "Post added for Review.", Toasty.LENGTH_SHORT, true).show();
-                                    stopForegroundService();
 
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toasty.error(getApplicationContext(), "Error :" + e.getMessage(), Toasty.LENGTH_SHORT, true).show();
-                                    stopForegroundService();
-                                    e.printStackTrace();
-                                });
+                        if(posttype.equals("issue")){
+                            postMapFinal.put("posttype", "issue");
+                            postMap.put("isAnonymous", isAnonymous);
+                            postMap.put("states", "Pending");
+                            postMap.put("lat", lat);
+                            postMap.put("lon", lon);
+                            postMap.put("address", address);
+
+
+                            FirebaseFirestore.getInstance().collection("Issues")
+                                    .document(idll)
+                                    .set(postMap)
+                                    .addOnSuccessListener(documentReference -> {
+                                        getSharedPreferences("uploadservice", MODE_PRIVATE)
+                                                .edit()
+                                                .putInt("count", --count).apply();
+                                        // Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.study_forum))
+                                        Toasty.success(getApplicationContext(), "Post added for Review.", Toasty.LENGTH_SHORT, true).show();
+                                        stopForegroundService();
+
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toasty.error(getApplicationContext(), "Error :" + e.getMessage(), Toasty.LENGTH_SHORT, true).show();
+                                        stopForegroundService();
+                                        e.printStackTrace();
+                                    });
+
+                        }else{
+
+                            FirebaseFirestore.getInstance().collection("PendingPosts")
+                                    .document(idll)
+                                    .set(postMap)
+                                    .addOnSuccessListener(documentReference -> {
+                                        getSharedPreferences("uploadservice", MODE_PRIVATE)
+                                                .edit()
+                                                .putInt("count", --count).apply();
+                                        // Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.study_forum))
+                                        Toasty.success(getApplicationContext(), "Post added for Review.", Toasty.LENGTH_SHORT, true).show();
+                                        stopForegroundService();
+
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toasty.error(getApplicationContext(), "Error :" + e.getMessage(), Toasty.LENGTH_SHORT, true).show();
+                                        stopForegroundService();
+                                        e.printStackTrace();
+                                    });
+                        }
+
+
 
                     }).addOnFailureListener(e -> {
                 Toasty.error(getApplicationContext(), "Error :" + e.getMessage(), Toasty.LENGTH_SHORT, true).show();

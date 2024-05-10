@@ -23,8 +23,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.ui.activities.MainActivity;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.QuizBattle;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -114,9 +113,7 @@ public class NotificationUtil {
             case "com.quantum_guys.dncc_eco_sync.TARGET_FORUM":
                 //resultIntent = new Intent(mContext, AnswersActivity.class);
                 break; //TARGET_COMMENT
-            case "com.quantum_guys.dncc_eco_sync.TARGET_PLAY":
-                resultIntent = new Intent(mContext, QuizBattle.class);
-                break; //TARGET_PLAY
+
             default:
                 resultIntent = new Intent(mContext, MainActivity.class);
                 break;

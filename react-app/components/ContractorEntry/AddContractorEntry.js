@@ -16,19 +16,23 @@ const AddContractorEntry = ({ props, contractorId }) => {
   const onFormSubmit = async (data) => {
     try {
       console.log(data)
+      const submitData = {
+        ...data,
+        contractorId,
+      }
       toast('Adding the entry!', {
         icon: '👏',
       })
       const token = localStorage.getItem('token')
       await axios
-        .post(getBaseUrl() + `/contractor/${contractorId}/entry`, data, {
+        .post(getBaseUrl() + `/employee`, submitData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
           console.log(response)
-          toast.success('Worker Entry added successfully')
+          toast.success('Employee Entry added successfully')
           // toast.custom((t) => (
           //   <div
           //     className={`${
@@ -125,7 +129,7 @@ const AddContractorEntry = ({ props, contractorId }) => {
                     as="div"
                     className="mb-5 flex items-center justify-between text-lg font-semibold leading-6 text-gray-800"
                   >
-                    <h3>Add Worker Entry</h3>
+                    <h3>Add Employee Entry</h3>
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 

@@ -26,10 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.quantum_guys.dncc_eco_sync.R;
 import com.quantum_guys.dncc_eco_sync.models.Notification;
-import com.quantum_guys.dncc_eco_sync.ui.activities.friends.FriendProfile;
+import com.quantum_guys.dncc_eco_sync.ui.activities.issue.SingleIssueView;
+import com.quantum_guys.dncc_eco_sync.ui.activities.volunteer.FriendProfile;
 import com.quantum_guys.dncc_eco_sync.ui.activities.post.SinglePostView;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.QuizBattle;
-import com.quantum_guys.dncc_eco_sync.ui.activities.quiz.ResultActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -133,17 +132,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 case "post":
                     context.startActivity(new Intent(context, SinglePostView.class).putExtra("post_id", notification.getAction_id()));
                     break;
+                case "issue":
+                    context.startActivity(new Intent(context, SingleIssueView.class).putExtra("post_id", notification.getAction_id()));
+                    break;
                 case "friend_req":
                 case "accept_friend_req":
                     FriendProfile.startActivity(context, notification.getAction_id());
                     break;
-                case "play":
-                    context.startActivity(new Intent(context, QuizBattle.class).putExtra("battleId", notification.getAction_id()),  ActivityOptions.makeSceneTransitionAnimation((Activity)context).toBundle());
-                    break;
-                case "play_result":
-                    //ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.image, "thumbnailTransition");
-                    context.startActivity(new Intent(context, ResultActivity.class).putExtra("resultId", notification.getAction_id()),  ActivityOptions.makeSceneTransitionAnimation((Activity)context).toBundle());
-                    break;
+
             }
             if(!notification.isRead()){
                 notification.setRead(true);

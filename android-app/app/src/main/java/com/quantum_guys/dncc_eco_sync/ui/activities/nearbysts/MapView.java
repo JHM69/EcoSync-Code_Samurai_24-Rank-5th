@@ -1,4 +1,4 @@
-package com.quantum_guys.dncc_eco_sync.ui.activities;
+package com.quantum_guys.dncc_eco_sync.ui.activities.nearbysts;
 
 
 import android.Manifest;
@@ -18,7 +18,6 @@ import android.transition.Explode;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,7 +53,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -70,6 +68,10 @@ import java.util.List;
 import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class MapView extends AppCompatActivity implements ConnectionCallbacks,
@@ -78,6 +80,10 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
     GoogleMap map;
     Marker busLocation;
     private List<Polyline> polyLines = new ArrayList<>();
+
+
+    private static final String BASE_URL = "http://3.12.32.123:5000/";
+    private NearbyStsService nearbyStsService;
 
 
     Trip trip = new Trip();
@@ -131,7 +137,9 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
                 new LatLng( 23.72866, 90.396453) // CSE DU
         );
 
-        Button qr_btn = findViewById(R.id.scan_button);
+
+
+
 
 
 
@@ -207,13 +215,13 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         //   map.moveCamera(center);
         //   map.moveCamera(zoom);
 
-        Toast.makeText(this, "Route Success", Toast.LENGTH_SHORT).show();
-        if (polyLines.size() > 0) {
-            for (Polyline poly : polyLines) {
-                poly.remove();
-            }
-        }
-        polyLines = new ArrayList<>();
+//        Toast.makeText(this, "Route Success", Toast.LENGTH_SHORT).show();
+//        if (polyLines.size() > 0) {
+//            for (Polyline poly : polyLines) {
+//                poly.remove();
+//            }
+//        }
+//        polyLines = new ArrayList<>();
         //add route(s) to the map.
 
 
@@ -226,23 +234,23 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
             map.addMarker(options);
         }
 
-        try {
-            for (int i = 0; i < route.size(); i++) {
-                //In case of more than 5 alternative routes
-                PolylineOptions polyOptions = new PolylineOptions();
-                //polyOptions.color(getResources().getColor(R.color.addColor));
-                polyOptions.width(15 + i * 3);
-                polyOptions.addAll(route.get(i).getPoints());
-                Polyline polyline = map.addPolyline(polyOptions);
-                polyLines.add(polyline);
-            }
-        } catch (Exception f) {
-            Toast.makeText(
-                    this,
-                    f.getLocalizedMessage(),
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+//        try {
+//            for (int i = 0; i < route.size(); i++) {
+//                //In case of more than 5 alternative routes
+//                PolylineOptions polyOptions = new PolylineOptions();
+//                //polyOptions.color(getResources().getColor(R.color.addColor));
+//                polyOptions.width(15 + i * 3);
+//                polyOptions.addAll(route.get(i).getPoints());
+//                Polyline polyline = map.addPolyline(polyOptions);
+//                polyLines.add(polyline);
+//            }
+//        } catch (Exception f) {
+//            Toast.makeText(
+//                    this,
+//                    f.getLocalizedMessage(),
+//                    Toast.LENGTH_SHORT
+//            ).show();
+//        }
 
         for (int i = 0; i < trip.getVehicleEntries().size(); i++) {
             VehicleEntry vehicleEntry = trip.getVehicleEntries().get(i);
@@ -334,7 +342,7 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         map = googleMap;
         map.setTrafficEnabled(false);
         map.setBuildingsEnabled(true);
-        updateCamera(new LatLng(23.72866, 90.396453), 0);
+//        updateCamera(new LatLng(23.72866, 90.396453), 0);
     }
 
     @Override
@@ -432,16 +440,50 @@ public class MapView extends AppCompatActivity implements ConnectionCallbacks,
         mapUpdate.put("velocity", velocity);
         mapUpdate.put("bearing", location.getBearing());
 
-        Toasty.info(
-                this,
-                "Location Updated:" +
-                        " Lat: " + lat
-                        + " Lon: " + lon
-                        + " Bearing: " + location.getBearing()
-                        + " Velocity: " + velocity,
-                Toast.LENGTH_SHORT,
-                true
-        ).show();
+        updateCamera(new LatLng(lat, lon), location.getBearing());
+
+        Retrofit retrofit = RetrofitClient.getClient(BASE_URL);
+
+        // Create an instance of the service
+        nearbyStsService = retrofit.create(NearbyStsService.class);
+
+        // Make the API call
+        Call<STSResponse> call = nearbyStsService.getNearbySts( String.valueOf(lat), String.valueOf(lon));
+        call.enqueue(new Callback<STSResponse>() {
+            @Override
+            public void onResponse(Call<STSResponse> call, Response<STSResponse> response) {
+                if (response.isSuccessful()) {
+                    STSResponse response1 = response.body();
+
+//                    Add Marker for each STS
+                    for (NearbySts sts : response1.sts) {
+                        LatLng lt = new LatLng(sts.getLat(), sts.getLon());
+                        stsList.add(new LatLng(sts.getLat(), sts.getLon()));
+                        MarkerOptions options = new MarkerOptions();
+                        options.position(lt);
+                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        map.addMarker(options);
+                    }
+
+
+
+                    for (LatLng lt : stsList) {
+                        MarkerOptions options = new MarkerOptions();
+                        options.position(lt);
+                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        map.addMarker(options);
+                    }
+
+                } else {
+                    // Handle error
+                }
+            }
+
+            @Override
+            public void onFailure(Call<STSResponse> call, Throwable t) {
+                // Handle failure
+            }
+        });
         //We will Update the mapMetaData object to the server
         if (!trip.getVehicleEntries().isEmpty()) {
             float[] results = new float[1];

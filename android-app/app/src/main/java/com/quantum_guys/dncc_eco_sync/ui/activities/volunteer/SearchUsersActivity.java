@@ -1,4 +1,4 @@
-package com.quantum_guys.dncc_eco_sync.ui.activities.friends;
+package com.quantum_guys.dncc_eco_sync.ui.activities.volunteer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
