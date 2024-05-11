@@ -5,6 +5,7 @@ import Input from '../common/Input'
 import Select from '../common/Select'
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
+import toast from 'react-hot-toast'
 
 const ContractorForm = ({ type, defaultValues, onFormSubmit, reload, setReload, ...props }) => {
   const {
@@ -19,10 +20,9 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, reload, setReload, 
   useEffect(() => {
     if (defaultValues) {
       setValue('companyName', defaultValues.companyName)
-      // if (sts) {
-      //   setValue('stsId', defaultValues?.sts?.map((item) => item.id.toString()))
-      // }
-      setValue('stsId', defaultValues.stsId)
+      if (sts) {
+        setValue('stsId', defaultValues?.sts?.map((item) => item.id.toString()) || [])
+      }
       setValue('registrationId', defaultValues.registrationId)
       // Format date strings to yyyy-MM-dd
       setValue('registrationDate', formatDate(defaultValues.registrationDate))
@@ -54,7 +54,7 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, reload, setReload, 
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (token && ! type) {
+    if (token) {
       axios
         .get(getBaseUrl() + '/sts', {
           headers: {
@@ -64,8 +64,11 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, reload, setReload, 
         .then((res) => {
           setSts(res.data)
         })
+        .catch((err) => {
+          console.log(err)
+        })
     }
-  }, [reload])
+  }, [defaultValues, sts, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
