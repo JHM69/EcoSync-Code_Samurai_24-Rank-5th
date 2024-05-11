@@ -279,7 +279,7 @@ public class UploadService extends Service {
                         postMapFinal.put(getSaltString(), postMap);
 
 
-                        if(posttype.equals("issue")){
+                        if(posttype != null && posttype.equals("issue")){
                             postMapFinal.put("posttype", "issue");
                             postMap.put("isAnonymous", isAnonymous);
                             postMap.put("states", "Pending");

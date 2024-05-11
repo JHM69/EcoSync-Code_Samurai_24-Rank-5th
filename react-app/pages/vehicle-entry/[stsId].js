@@ -140,8 +140,26 @@ export default function VehicleEntry () {
         )}
       </div>
 
-      <div className="flex flex-row gap-3 md:px-6">
-        <div className="flex w-2/3   flex-col">
+      <div className="flex flex-col gap-3 md:px-6">
+
+      <div className="flex w-full   flex-col">
+          <div className="mt-3 flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-700">
+              Waste Entries
+            </h1>
+            <div className="flex items-center space-x-2">
+              {stsId && <AddWasteEntry stsId={stsId} />}
+            </div>
+          </div>
+          {loading ? (
+            <WasteItemsSkeleton />
+          ) : (
+            <WasteEntryItems wasteEntries={wasteEntries} />
+          )}
+        </div>
+
+
+        <div className="flex  w-full   flex-col">
           <div className="mt-3 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-700">
               Vehicle Entries{' '}
@@ -157,21 +175,7 @@ export default function VehicleEntry () {
           )}
         </div>
 
-        <div className="flex w-1/3   flex-col">
-          <div className="mt-3 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-700">
-              Waste Entries
-            </h1>
-            <div className="flex items-center space-x-2">
-              {stsId && <AddWasteEntry stsId={stsId} />}
-            </div>
-          </div>
-          {loading ? (
-            <WasteItemsSkeleton />
-          ) : (
-            <WasteEntryItems wasteEntries={wasteEntries} />
-          )}
-        </div>
+       
       </div>
     </div>
     </NoSSR>
