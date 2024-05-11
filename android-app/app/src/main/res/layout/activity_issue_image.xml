@@ -88,7 +88,7 @@
                                 app:layout_constraintTop_toTopOf="parent">
 
                                 <Spinner
-                                    android:id="@+id/spinner_class_level"
+                                    android:id="@+id/spinner_type"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
                                     android:backgroundTint="#FFFFFF"

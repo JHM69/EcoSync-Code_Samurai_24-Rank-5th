@@ -113,7 +113,7 @@ public class Issue extends Fragment {
             }
         });
 
-        button.setOnClickListener(view12 -> mBottomSheetDialog.show());
+        button.setOnClickListener(view12 -> startPickImage());
     }
 
     private void setupAdapter(String tag) {

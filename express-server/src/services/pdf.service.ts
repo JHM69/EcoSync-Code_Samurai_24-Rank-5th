@@ -440,5 +440,5 @@ const getHtml = (
   </html>`;
   }
   
-  export { getHtml2};
+  export { getHtml, getHtml2};
   
