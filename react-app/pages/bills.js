@@ -82,44 +82,44 @@ function Bills() {
     setValue(newValue)
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token')
 
-    setLoadingBills(true)
-    if (token) {
-      const queryString = getQueryString({
-        ...value,
-        ...filters,
-      })
+  //   setLoadingBills(true)
+  //   if (token) {
+  //     const queryString = getQueryString({
+  //       ...value,
+  //       ...filters,
+  //     })
 
-      console.log('queryString:', queryString)
+  //     console.log('queryString:', queryString)
 
-      axios
-        .get(getBaseUrl() + queryString, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setBillData(res.data)
-          console.log(res.data)
-          setLoadingBills(false)
-          setErrorBills(null)
-        })
-        .catch((err) => {
-          setErrorBills(err)
-          console.log(err)
-          setLoadingBills(false)
-        })
-    }
-  }, [
-    value,
-    filters.isPaid,
-    filters.isVerified,
-    filters.landfillId,
-    filters.stsId,
-    filters.vehicleId,
-  ])
+  //     axios
+  //       .get(getBaseUrl() + queryString, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setBillData(res.data)
+  //         console.log(res.data)
+  //         setLoadingBills(false)
+  //         setErrorBills(null)
+  //       })
+  //       .catch((err) => {
+  //         setErrorBills(err)
+  //         console.log(err)
+  //         setLoadingBills(false)
+  //       })
+  //   }
+  // }, [
+  //   value,
+  //   filters.isPaid,
+  //   filters.isVerified,
+  //   filters.landfillId,
+  //   filters.stsId,
+  //   filters.vehicleId,
+  // ])
 
   const colors = [
     { b: 'bg-blue-100', c: 'text-blue-700' },
@@ -146,13 +146,32 @@ function Bills() {
           },
         })
         .then((res) => {
-          setValues(res.data)
+          setBillData(res.data)
         })
         .catch((err) => {
           console.log(err)
         })
     }
   }, [])
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    axios
+      .get(getBaseUrl() + '/bill', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setBillData(res.data)
+        console.log(res.data)
+        setLoadingBills(false)
+        setErrorBills(null)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, []);
 
   return (
     <NoSSR>
