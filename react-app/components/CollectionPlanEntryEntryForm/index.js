@@ -37,8 +37,7 @@ const CollectionPlanEntryEntryForm = ({
   const onSubmit = handleSubmit(async (data) => {
     console.log(data)
     setLoading(true)
-    // convert timeOfArrival to ISO string
-    data.dateOfBirth = new Date(data.dateOfBirth).toISOString()
+    // convert timeOfArrival to ISO string 
     await onFormSubmit(data)
     setLoading(false)
     reset()
