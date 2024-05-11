@@ -8,15 +8,7 @@ import { Close } from '../common/icons/Close'
 import { FaEye } from 'react-icons/fa'
 import TripPlanLayout from './TripPlanLayout'
 const TripPlanInfo = ({
-  id,
-  vehicleEntryId,
-  vehicleEntry,
-  amount,
-  paid,
-  createdAt,
-  distance,
-  duration,
-  ...props
+  tripplan
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => setIsOpen(false)
@@ -25,7 +17,7 @@ const TripPlanInfo = ({
     <>
       <div
         onClick={handleOpen}
-        {...props}
+        {...tripplan}
         className="smooth-effect m-3 rounded bg-yellow-300 p-2 text-yellow-800 shadow hover:bg-yellow-400"
       >
         <FaEye />
@@ -64,16 +56,15 @@ const TripPlanInfo = ({
                     <Close onClick={handleClose} />
                   </Dialog.Title>
 
-                  <TripPlanLayout
-                    id={id}
-                    vehicleEntryId={vehicleEntryId}
-                    vehicleEntry={vehicleEntry}
-                    amount={amount}
-                    paid={paid}
-                    createdAt={createdAt}
-                    distance={distance}
-                    duration={duration}
-                  />
+                  {/* <TripPlanLayout
+                    id={tripplan.id}
+                    vehicleId={tripplan.vehicleId}
+                    driverId={tripplan.driverId}
+                    driver={tripplan.driver}
+                    vehicle={tripplan.vehicle}
+                    tripPlanStss={tripplan.tripPlanStss}
+                    tripPlanLandfills={tripplan.tripPlanLandfills}
+                  /> */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>

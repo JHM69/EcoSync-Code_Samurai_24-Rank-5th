@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/layout'
 import { NoSSR } from '../components/common/NoSSR'
 import Datepicker from 'react-tailwindcss-datepicker'
-import BillItems from '../components/Bills/BillItems'
+import TripPlanItems from '../components/TripPlans/TripPlanItems'
 import { getBaseUrl } from '../utils/url'
 import axios from 'axios'
 import Select from '../components/common/Select'
@@ -51,10 +51,11 @@ const getQueryString = (params) => {
   return queryString
 }
 
-function Bills() {
-  const [billData, setBillData] = useState({})
+function Trips () {
+  // const [billData, setBillData] = useState({})
   const [loadingBills, setLoadingBills] = useState(true)
   const [errorBills, setErrorBills] = useState(null)
+  const [tripplan, setTripplan] = useState({})
 
   const [filters, setFilters] = useState({
     isPaid: 's',
@@ -82,44 +83,44 @@ function Bills() {
     setValue(newValue)
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token')
 
-    setLoadingBills(true)
-    if (token) {
-      const queryString = getQueryString({
-        ...value,
-        ...filters,
-      })
+  //   setLoadingBills(true)
+  //   if (token) {
+  //     const queryString = getQueryString({
+  //       ...value,
+  //       ...filters,
+  //     })
 
-      console.log('queryString:', queryString)
+  //     console.log('queryString:', queryString)
 
-      axios
-        .get(getBaseUrl() + queryString, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setBillData(res.data)
-          console.log(res.data)
-          setLoadingBills(false)
-          setErrorBills(null)
-        })
-        .catch((err) => {
-          setErrorBills(err)
-          console.log(err)
-          setLoadingBills(false)
-        })
-    }
-  }, [
-    value,
-    filters.isPaid,
-    filters.isVerified,
-    filters.landfillId,
-    filters.stsId,
-    filters.vehicleId,
-  ])
+  //     axios
+  //       .get(getBaseUrl() + queryString, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         setBillData(res.data)
+  //         console.log(res.data)
+  //         setLoadingBills(false)
+  //         setErrorBills(null)
+  //       })
+  //       .catch((err) => {
+  //         setErrorBills(err)
+  //         console.log(err)
+  //         setLoadingBills(false)
+  //       })
+  //   }
+  // }, [
+  //   value,
+  //   filters.isPaid,
+  //   filters.isVerified,
+  //   filters.landfillId,
+  //   filters.stsId,
+  //   filters.vehicleId,
+  // ])
 
   const colors = [
     { b: 'bg-blue-100', c: 'text-blue-700' },
@@ -140,19 +141,22 @@ function Bills() {
     const token = localStorage.getItem('token')
     if (token) {
       axios
-        .get(getBaseUrl() + '/dashboard-bills-filter', {
+        .get(getBaseUrl() + '/tripplan', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
-          setValues(res.data)
+          setTripplan(res.data)
+          console.log(res.data)
+          setLoadingBills(false)
+          setErrorBills(null)
         })
         .catch((err) => {
           console.log(err)
         })
     }
-  }, [])
+  }, [tripplan.length])
 
   return (
     <NoSSR>
@@ -261,8 +265,8 @@ function Bills() {
         ) : (
           <div>
             <div className=" my-4 flex flex-row justify-between space-x-2">
-              {billData?.additionalData &&
-                billData?.additionalData.map((item, i) => {
+              {tripplan?.additionalData &&
+                tripplan?.additionalData.map((item, i) => {
                   return (
                     <div
                       key={item.name + i}
@@ -310,16 +314,16 @@ function Bills() {
             <div className="text-red-500">Error loading data</div>
           </div>
         ) : (
-          <BillItems bills={billData?.bills} />
+          <TripPlanItems tripplan={tripplan} />
         )}
       </div>
     </NoSSR>
   )
 }
 
-export default Bills
+export default Trips
 
-Bills.getLayout = function getLayout(page) {
+Trips.getLayout = function getLayout(page) {
   // eslint-disable-next-line react/react-in-jsx-scope
   return <Layout>{page}</Layout>
 }
