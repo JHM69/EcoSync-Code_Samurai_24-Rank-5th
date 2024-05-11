@@ -10,6 +10,7 @@ import TripPlanItems from '../components/TripPlans/TripPlanItems'
 import { getBaseUrl } from '../utils/url'
 import axios from 'axios'
 import Select from '../components/common/Select'
+import AddTrip from '../components/TripPlan/AddTripPlan'
 
 const getQueryString = (params) => {
   const {
@@ -56,6 +57,7 @@ function Trips () {
   const [loadingBills, setLoadingBills] = useState(true)
   const [errorBills, setErrorBills] = useState(null)
   const [tripplan, setTripplan] = useState({})
+  const [reload, setReload] = useState(false)
 
   const [filters, setFilters] = useState({
     isPaid: 's',
@@ -156,7 +158,7 @@ function Trips () {
           console.log(err)
         })
     }
-  }, [tripplan.length])
+  }, [reload])
 
   return (
     <NoSSR>
@@ -256,6 +258,10 @@ function Trips () {
               className="rounded-md border-2 border-gray-300 p-2"
             />
           </div>
+        </div>
+
+        <div className="flex items-center space-x-2 justify-end">
+              <AddTrip reload={reload} setReload={setReload} />
         </div>
 
         {loadingBills ? (

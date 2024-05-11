@@ -11,9 +11,10 @@ const TripPlanItem = ({ id, vehicle, tripPlanStss, tripPlanLandfills }) => {
     <div className="my-4 flex flex-col md:flex-row justify-between rounded-lg smooth-effect bg-white shadow hover:bg-green-100 transition-shadow duration-300">
       <div className="flex flex-col justify-between p-4">
         <div>
+          <h3 className='text-2xl text-black font-bold'>Trip Plan Id: {id}</h3>
           <div className="flex items-center mb-2">
             <BsTruck className="text-lg text-gray-700 mr-2" />
-            <span className="text-lg font-semibold text-gray-800">Vehicle: {vehicle?.registrationNumber}</span>
+            <span className="text-lg font-semibold text-gray-800 py-1">Vehicle: {vehicle?.registrationNumber}</span>
           </div>
           <div className="flex items-center mb-2">
             <BiBuildingHouse className="text-lg text-gray-700 mr-2" />

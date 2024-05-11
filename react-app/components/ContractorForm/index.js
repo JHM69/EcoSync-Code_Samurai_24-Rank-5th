@@ -6,7 +6,7 @@ import Select from '../common/Select'
 import axios from 'axios'
 import { getBaseUrl } from '../../utils/url'
 
-const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
+const ContractorForm = ({ type, defaultValues, onFormSubmit, reload, setReload, ...props }) => {
   const {
     register,
     handleSubmit,
@@ -19,9 +19,10 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
   useEffect(() => {
     if (defaultValues) {
       setValue('companyName', defaultValues.companyName)
-      if (sts) {
-        setValue('stsId', defaultValues?.sts?.map((item) => item.id.toString()))
-      }
+      // if (sts) {
+      //   setValue('stsId', defaultValues?.sts?.map((item) => item.id.toString()))
+      // }
+      setValue('stsId', defaultValues.stsId)
       setValue('registrationId', defaultValues.registrationId)
       // Format date strings to yyyy-MM-dd
       setValue('registrationDate', formatDate(defaultValues.registrationDate))
@@ -55,7 +56,7 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
     const token = localStorage.getItem('token')
     if (token && ! type) {
       axios
-        .get(`${getBaseUrl()}/sts`, {
+        .get(getBaseUrl() + '/sts', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -64,7 +65,7 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           setSts(res.data)
         })
     }
-  }, [type, sts])
+  }, [reload])
 
   const onSubmit = handleSubmit(async (data) => {
     await onFormSubmit(data)
@@ -226,7 +227,7 @@ const ContractorForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
           })}
           value={defaultValues && defaultValues.stsId}
         >
-          <option value="" selected>Select a STS</option>
+          <option value="">Select a STS</option>
           {sts.map((sts) => (
               <option key={sts.id} value={sts.id}>
                 {sts.name}
