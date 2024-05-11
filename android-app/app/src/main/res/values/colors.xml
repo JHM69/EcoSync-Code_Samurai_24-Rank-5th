@@ -26,21 +26,11 @@
     <color name="payment_cash_back">#E1EFFB</color>
 
     <color name="button_pressed_color">#2C7143</color>
-    <color name="button_default_color">#4CAF6D</color>
     <color name="empty_text">#E1E1E1</color>
     <color name="payment_wallet">#338837</color>
 
-    <color name="edit_text_focused_border_color">#4CAF6D</color>
-    <color name="edit_text_default_border_color">#BDBDBD</color>
-    <color name="primary_text_color">#4CAF6D</color>
-    <color name="pre_booked_not_done">#D26C4C</color>
-
 
     <color name="text_black_gray">#888888</color>
-    <color name="camera_overlay">#FFFFFF</color>
-
-
-
 
 
     <color name="colorPrimaryy">#FFFFFF</color>
@@ -48,7 +38,6 @@
     <color name="colorSec">#CC488F</color>
 
 
-    <color name="Timewhite">#80FFFFFF</color>
     <color name="selectted">#52000000</color>
     <color name="backG">#CEA2FF</color>
 

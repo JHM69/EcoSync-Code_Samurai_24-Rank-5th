@@ -1,29 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">স্বচ্ছ ঢাকা (クリーンダッカ)</string>
-    <string name="play_quiz">Start Trip</string>
-    <string name="previous_quiz">Previous Quiz</string>
-    <string name="hometask_by_jahangir_hossain">EcoSync by Quantum Guys</string>
-    <string name="select_your_interests">Select your interests</string>
-    <string name="select_difficulty">Select Difficulty</string>
-    <string name="arts_amp_literature"><![CDATA[Arts & Literature]]></string>
-    <string name="film_amp_tv"><![CDATA[Film & TV]]></string>
-    <string name="food_amp_drink"><![CDATA[Food & Drink]]></string>
-    <string name="general_knowledge">General Knowledge</string>
-    <string name="geography">Geography</string>
-    <string name="history">History</string>
-    <string name="science">Science</string>
-    <string name="music">Music</string>
-    <string name="society_amp_culture"><![CDATA[Society & Culture]]></string>
-    <string name="sport_amp_leisure"><![CDATA[Sport & Leisure]]></string>
-    <string name="easy">Easy</string>
-    <string name="medium">Medium</string>
-    <string name="hard">Hard</string>
-    <string name="start">Start</string>
-    <string name="topic">Topic</string>
-    <string name="score_5">Score: 5</string>
-    <string name="time">time</string>
-    <string name="submit">Submit</string>
-    <string name="_0_0km_h">0.0km/h</string>
     <string name="google_maps_key">AIzaSyD-fWxpG3gd-rK4AxONA9e0ifvhUdBxkC4</string>
     <string name="kmh">km/h</string>
 
@@ -41,8 +17,6 @@
     <string name="web_client_id" tools:ignore="TypographyDashes">553141191660-b9vkolourdasb5rqad68bjgm8l4qvjhr.apps.googleusercontent.com</string>
     <string name="group_or_subject">Gender (Select Any)</string>
     <string name="class_level">Your Ward* (select any)</string>
-    <string name="location">Location (Select Zila)</string>
-    <string name="let_s_challenge_others_in_battle_of_quiz">Let\'s Challenge others in ত্বরণ. Currently no battle history found.</string>
     <string name="sdf">Type Latex Equation, eg x^2+3\\pi=b_5</string>
 
 
