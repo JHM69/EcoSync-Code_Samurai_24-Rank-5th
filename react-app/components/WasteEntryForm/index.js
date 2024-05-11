@@ -21,6 +21,9 @@ const WasteEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
         ? new Date(defaultValues.timeOfArrival).toISOString().slice(0, 16)
         : '' // Converts to "YYYY-MM-DDTHH:MM" format
       setValue('timeOfArrival', formattedTimeOfArrival)
+      setValue('contractorId', defaultValues.contractorId)
+      setValue('wasteType', defaultValues.wasteType)
+      setValue('vehicleType', defaultValues.vehicleType) 
     }
   }, [defaultValues, setValue])
 
@@ -51,6 +54,50 @@ const WasteEntryForm = ({ type, defaultValues, onFormSubmit, ...props }) => {
             }
           })}
         />
+
+        <Input
+          name="contractorId"
+          label="Contractor ID"
+          placeholder="Contractor ID..."
+          type="text"
+          error={errors.contractorId ? errors.contractorId.message : false}
+          register={register('contractorId', {
+            required: {
+              value: true,
+              message: 'Contractor ID is required'
+            }
+          })}
+        />
+
+        <Input
+          name="wasteType"
+          label="Waste Type"
+          placeholder="Waste Type..."
+          type="text"
+          error={errors.wasteType ? errors.wasteType.message : false}
+          register={register('wasteType', {
+            required: {
+              value: true,
+              message: 'Waste Type is required'
+            }
+          })}
+        />
+
+        <Input
+          name="vehicleType"
+          label="Vehicle Type"
+          placeholder="Vehicle Type..."
+          type="text"
+          error={errors.vehicleType ? errors.vehicleType.message : false}
+          register={register('vehicleType', {
+            required: {
+              value: true,
+              message: 'Vehicle Type is required'
+            }
+          })}
+        />
+
+        
 
         {/* <Input
           name="timeOfArrival"
