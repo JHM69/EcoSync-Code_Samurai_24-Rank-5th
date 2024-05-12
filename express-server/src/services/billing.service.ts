@@ -13,7 +13,7 @@ export const fetchDirections = async (origin: string, destination: string) => {
             params: {
                 origin: origin, 
                 destination: destination, 
-                key: "AIzaSyCePkfLfau3i98g4UC4AnOvt5Qnc-5DCHI",
+                key: "API_KEY",
             },
         });
 
