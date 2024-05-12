@@ -3,12 +3,11 @@ import axios from 'axios';
 const sendSMS = async (
   phoneNumber: string,
   message: string,
-  id = 'MPBIAN',
 ): Promise<void> => {
   try {
     // Proceed to send an SMS regardless of rate limiting for excluded numbers
     const response = await axios.post('http://bulksmsbd.net/api/smsapi', {
-      api_key: "f80287ux0ReMJ6kc7Vj0",
+      api_key: "api key",
       senderid: id,
       number: phoneNumber,
       message: message,
