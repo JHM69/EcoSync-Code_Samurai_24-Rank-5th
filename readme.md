@@ -1,6 +1,8 @@
 
 # EcoSync: Code Samurai 2024 
 
+Know our story https://www.linkedin.com/pulse/experience-code-samurai-2024-jahangir-hossain-zgglc/
+
 EcoSync is a comprehensive waste management system designed for the Dhaka North City Corporation (DNCC), focusing on optimizing waste collection, transportation, and processing through technological innovation. This project includes an Express.js backend server and a React frontend application, providing a full-stack solution for managing the complex logistics of urban waste management as a part of the Code Samurai 2024 competition.
 
 ## Features
