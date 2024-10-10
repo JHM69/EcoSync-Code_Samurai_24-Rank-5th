@@ -45,7 +45,7 @@ EcoSync is a robust waste management system developed for the Dhaka North City C
 - **Optimized Routing Algorithms**
   - Dynamic route planning for waste collection trucks
   - Reinforcement learning integration for enhanced efficiency
-![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide8.PNG)
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide10.PNG)
 - **Notification System**
   - Real-time notifications for truck drivers regarding assignments and routes
 - **Environmental Impact Monitoring**
