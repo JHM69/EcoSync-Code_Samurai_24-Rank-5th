@@ -1,92 +1,235 @@
+ 
+# EcoSync: Comprehensive Waste Management System
 
-# EcoSync: Code Samurai 2024 - Rank 5th
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide2.PNG)
 
-Know our story https://www.linkedin.com/pulse/experience-code-samurai-2024-jahangir-hossain-zgglc/
+## Table of Contents
 
-EcoSync is a comprehensive waste management system designed for the Dhaka North City Corporation (DNCC), focusing on optimizing waste collection, transportation, and processing through technological innovation. This project includes an Express.js backend server and a React frontend application, providing a full-stack solution for managing the complex logistics of urban waste management as a part of the Code Samurai 2024 competition.
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Architecture](#architecture)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [API Documentation](#api-documentation)
+- [Deployment](#deployment) 
+- [Contact](#contact)
+
+## Overview
+
+EcoSync is a robust waste management system developed for the Dhaka North City Corporation (DNCC). It optimizes waste collection, transportation, and processing through advanced technological solutions. As part of the Code Samurai 2024 competition, EcoSync integrates a scalable Express.js backend with a responsive React frontend, offering a full-stack solution tailored for urban waste management logistics.
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide8.PNG)
 
 ## Features
 
-- **User Management**: System administrators can create users, assign roles, and manage permissions.
-- **Vehicle and STS Management**: Admins can add and manage vehicles and Secondary Transfer Stations (STS) for efficient waste collection and transportation.
-- **Role-Based Access Control (RBAC)**: Securely manage access to different parts of the application based on user roles.
-- **Authentication and Authorization**: Secure user authentication and role-based authorization for API access.
-- **Environmentally Focused**: Designed to improve the efficiency of waste management processes, contributing to a healthier urban environment.
+- **User Management**
+  - Create, update, and delete user accounts
+  - Assign roles and manage permissions
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide11.PNG)
+- **Vehicle and STS Management**
+  - Add and monitor vehicles
+  - Manage Secondary Transfer Stations (STS) for efficient waste handling
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide12.PNG)
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide13.PNG)
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide14.PNG)
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide15.PNG)
+
+- **Role-Based Access Control (RBAC)**
+  - Secure access to application modules based on user roles
+- **Authentication and Authorization**
+  - JWT-based secure authentication
+  - Role-based authorization for API endpoints
+- **Real-Time Dashboard**
+  - Interactive maps displaying waste levels, truck locations, and landfill statuses
+  - Date-based controls for historical data analysis
+- **Optimized Routing Algorithms**
+  - Dynamic route planning for waste collection trucks
+  - Reinforcement learning integration for enhanced efficiency
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide8.PNG)
+- **Notification System**
+  - Real-time notifications for truck drivers regarding assignments and routes
+- **Environmental Impact Monitoring**
+  - Track and report on waste management efficiency and environmental benefits
 
 ## Technology Stack
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide5.PNG)
+- **Backend**
+  - **Node.js**: JavaScript runtime
+  - **Express.js**: Web framework
+  - **Prisma ORM**: Database ORM
+  - **PostgreSQL**: Relational database
+  - **JWT**: Authentication
+  - **Nodemailer**: Email services
+- **Frontend**
+  - **React.js**: User interface library
+  - **Next.js**: Server-side rendering
+  - **GeoJSON & ArcGIS**: Geospatial data handling
+- **DevOps**
+  - **Docker** & **Docker Compose**: Containerization
+  - **CI/CD Pipelines**: Automated testing and deployment
+- **Other Tools**
+  - **Figma**: UI/UX design
+  - **Git**: Version control
+  
+## Mobile App
+We have also developed a android app to connect all the people of City Corporation to Create Issues, Get Status updates on submitted issues, DNCC authorities has special access to update issues and many more.
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide17.PNG)
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide18.PNG)
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide19.PNG)
 
-- **Backend**: Node.js with Express.js
-- **Frontend**: Next js/React
-- **Database**: PostgreSQL
-- **Authentication**: JWT for secure authentication
-- **Email Service**: Nodemailer for email-based functionalities (e.g., password reset)
 
-## Getting Started
+## Architecture
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+EcoSync follows a modular architecture, separating concerns between the frontend, backend, and database layers. The system leverages RESTful APIs for communication between the frontend and backend, ensuring scalability and maintainability.
+
+![EcoSync Banner](https://raw.githubusercontent.com/JHM69/EcoSync-Code_Samurai_24-Rank-5th/main/images/Slide6.PNG)
+
+## Installation
 
 ### Prerequisites
 
-- Docker
-- Docker Compose
+- **Docker**: Ensure Docker is installed on your machine.
+- **Docker Compose**: Required for orchestrating multi-container Docker applications.
 
-### Installation
+### Steps
 
-1. Clone the repository to your local machine.
-   
-   ```
+1. **Clone the Repository**
+
+   ```bash
    git clone https://github.com/jhm69/CS24-p2-quantum_guys.git
    ```
 
-2. Navigate to the project directory.
+2. **Navigate to the Project Directory**
 
-   ```
+   ```bash
    cd CS24-p2-quantum_guys
    ```
 
-3. Use Docker Compose to build and start the services.
+3. **Set Up Environment Variables**
 
+   Create a `.env` file based on the provided `.env.example`.
+
+   ```bash
+   cp .env.example .env
    ```
+
+   Update the `.env` file with your specific configurations.
+
+4. **Build and Start Services with Docker Compose**
+
+   ```bash
    docker-compose up --build
    ```
 
-This command will start the Express.js backend server on port 5000 and the React frontend application on port 3000. 
+   - **Backend**: Runs on `http://localhost:5000`
+   - **Frontend**: Runs on `http://localhost:3000`
 
-``` docker system prune -a --volumes -f ``` to remove all the unused images and volumes.
+5. **Clean Up Unused Docker Resources**
+
+   To remove all unused images and volumes:
+
+   ```bash
+   docker system prune -a --volumes -f
+   ```
+
 ## Configuration
 
-Example Authentication Configuration
-```bash
-TYPE = "System Admin"
-EMAIL = "admin@admin.com"
-PASSWORD = "1234"
-```
+### Environment Variables
 
-```bash
-TYPE = "STS Manager"
-EMAIL = "jahangirhmarup@gmail.com"
-PASSWORD = "121212"
-```
-
-```bash
-TYPE = "Landfill Manager"
-EMAIL = "b190305009@cse.jnu.ac.bd"
-PASSWORD = "12345678"
-```
-
-The application is configured through environment variables specified in the `docker-compose.yaml` file. Key configurations include:
+Configure the application through environment variables specified in the `.env` file.
 
 - `JWT_SECRET`: Secret key for JWT authentication.
-- `DATABASE_URL`: Connection string for the PostgreSQL database.
-- `NODEMAILER_CONFIG`: Configuration for Nodemailer to enable email sending functionalities.
+- `DATABASE_URL`: PostgreSQL connection string.
+- `NODEMAILER_HOST`: SMTP host for Nodemailer.
+- `NODEMAILER_PORT`: SMTP port.
+- `NODEMAILER_USER`: SMTP user.
+- `NODEMAILER_PASS`: SMTP password.
 
-## API
+### Sample User Credentials
 
-The backend API provides endpoints for user management, vehicle and STS management, and authentication. Refer to the API documentation for detailed endpoint information.
+For initial setup, you can create sample users with the following credentials:
+
+```bash
+# System Admin
+TYPE="System Admin"
+EMAIL="admin@admin.com"
+PASSWORD="1234"
+
+# STS Manager
+TYPE="STS Manager"
+EMAIL="jahangirhmarup@gmail.com"
+PASSWORD="121212"
+
+# Landfill Manager
+TYPE="Landfill Manager"
+EMAIL="b190305009@cse.jnu.ac.bd"
+PASSWORD="12345678"
+```
+
+## API Documentation
+
+The backend API offers endpoints for:
+
+- **User Management**
+  - `POST /api/users`: Create a new user
+  - `GET /api/users`: Retrieve all users
+  - `PUT /api/users/:id`: Update user details
+  - `DELETE /api/users/:id`: Delete a user
+- **Vehicle Management**
+  - `POST /api/vehicles`: Add a new vehicle
+  - `GET /api/vehicles`: Retrieve all vehicles
+  - `PUT /api/vehicles/:id`: Update vehicle details
+  - `DELETE /api/vehicles/:id`: Remove a vehicle
+- **STS Management**
+  - `POST /api/sts`: Add a new STS
+  - `GET /api/sts`: Retrieve all STS
+  - `PUT /api/sts/:id`: Update STS details
+  - `DELETE /api/sts/:id`: Remove an STS
+- **Authentication**
+  - `POST /api/auth/login`: User login
+  - `POST /api/auth/register`: User registration
+- **Waste Collection**
+  - `GET /api/waste/status`: Get waste status
+  - `POST /api/waste/collect`: Record waste collection
+
+For detailed API specifications, refer to the [API Documentation](link_to_api_docs).
+
+## Deployment
+
+EcoSync can be deployed using Docker containers. For production deployment:
+
+1. **Build Docker Images**
+
+   ```bash
+   docker-compose build
+   ```
+
+2. **Run Containers in Detached Mode**
+
+   ```bash
+   docker-compose up -d
+   ```
  
-## Participants
+## Contact
 
-- **Jahangir Hossain** - *4th Year CSE, JnU, Student* - [JHM69](https://github.com/JHM69)
-- **Farhan Masud Shohag** - *4th Year CSE, JnU Student* - [fmsbyte](https://github.com/fmsbyte)
-- **MT Asfi** - *4th Year CSE Student* - [asfi50](https://github.com/asfi50)
-   
+For inquiries or support, please contact:
+
+- **Jahangir Hossain**
+  - [GitHub](https://github.com/JHM69)
+
+- **Farhan Masud Shohag**
+  - [GitHub](https://github.com/fmsbyte)
+
+- **MT Asfi**
+  - [GitHub](https://github.com/asfi50)
+
+---
+
+## Acknowledgements
+
+- **Code Samurai 2024 Organizers**
+- **Dhaka North City Corporation (DNCC)**
+- **Open-Source Community Contributors**
+
+ 
+ 
